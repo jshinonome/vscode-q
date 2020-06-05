@@ -1,0 +1,95 @@
+# regular expression 12 special chars
+# backslash \ 
+# caret ^ 
+# dollar sign $ 
+# period or dot .
+# vertical bar - 
+# pipe symbol |
+# question mark ?
+# asterisk *
+# plus sign +
+# opening parenthesis (
+# closing parenthesis )
+# opening square bracket [
+# opening curly brace {
+
+$schema: https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json
+name: q language
+scopeName: source.q
+patterns:
+  - include: "#keywords"
+  - include: "#comments"
+  - include: "#variables"
+  - include: "#functions"
+  - include: "#strings"
+  - include: "#constants"
+repository:
+  keywords:
+    patterns:
+      - name: keyword.operator.q
+        match: \b(and|or|except|inter|like|each|cross|vs|sv|within|where|in|asof|bin|binr|cor|cov|cut|ej|fby|div|ij|insert|lj|ljf|mavg|mcount|mdev|mmax|mmin|mmu|mod|msum|over|prior|peach|pj|scan|scov|setenv|ss|sublist|uj|union|upsert|wavg|wsum|xasc|xbar|xcol|xcols|xdesc|xexp|xgroup|xkey|xlog|xprev|xrank)\b
+      - name: keyword.control.q
+        match: ^[a-zA-Z]\)
+      - name: keyword.control.q
+        match: \b(do|if|while|select|update|delete|exec|from|by)\b
+  strings:
+    patterns:
+      - begin: '"'
+        beginCaptures:
+          0:
+            name: punctuation.definition.string.begin.q
+        end: '"'
+        endCaptures:
+          0:
+            name: punctuation.definition.string.end.q
+        name: string.quoted.double.q
+        patterns:
+          - name: constant.character.escape.q
+            match: \\(\\|n|t|r|")
+  comments:
+    patterns:
+      - name: comment.block.q
+        begin: ^/\s*$ # => /
+        end: ^\\\\s*$ # => \
+        comment: block comment
+      - name: comment.block.q
+        begin: ^\\\s*$ # => \
+        end: ^\b$ # til EOF
+        comment: til EOF block comment
+      - name: comment.line.q
+        match: ^/.+
+        commet: one line comment
+      - match: (\s+)(/.*)
+        capture:
+          2:
+            name: comment.line.q
+        comment: inline comment
+  constants:
+    patterns:
+      - name: constant.other.q
+        match: ^\\.+
+        comment: system command-line
+      - name: constant.language.q
+        match: 0[nNwW][hijefcpmdznuvt]?
+      - name: constant.numeric.guid.q
+        match: \b([\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})\b
+      - name: constant.numeric.timestamp.q
+        match: \b([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))(p|D|Dp|D(([01]\d|2[0-3]):?|([01]\d|2[0-3]):([0-5]\d):?|([01]\d|2[0-3]):([0-5]\d):([0-5]\d)\.?|([01]\d|2[0-3]):([0-5]\d):([0-5]\d)(\.\d+))p?)\b
+      - name: constant.numeric.datetime.q
+        match: \b([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))(z|T|Tz|T(([01]\d|2[0-3]):?|([01]\d|2[0-3]):([0-5]\d):?|([01]\d|2[0-3]):([0-5]\d):([0-5]\d)\.?|([01]\d|2[0-3]):([0-5]\d):([0-5]\d)(\.\d+))z?)\b
+  variables:
+    patterns:
+      - name: variable.language.q
+        match: \b(x|y|z)\b
+  functions:
+    patterns:
+      - name: support.function.q
+        match: \b(first|enlist|value|type|get|set|count|string|key|max|min|sum|prd|last|flip|distinct|raze|neg|til|upper|lower|abs|acos|aj|aj0|not|null|any|asc|asin|attr|avg|avgs|ceiling|cols|cos|csv|all|atan|deltas|desc|differ|dsave|dev|eval|exit|exp|fills|fkeys|floor|getenv|group|gtime|hclose|hcount|hdel|hopen|hsym|iasc|idesc|inv|keys|load|log|lsq|ltime|ltrim|maxs|md5|med|meta|mins|next|parse|plist|prds|prev|rand|rank|ratios|read0|read1|reciprocal|reverse|rload|rotate|rsave|rtrim|save|sdev|show|signum|sin|sqrt|ssr|sums|svar|system|tables|tan|trim|txf|ungroup|var|view|views|wj|wj1|ww)\b
+      - begin: "{"
+        beginCaptures:
+          0:
+            name: punctuation.definition.function.body.begin.bracket.curly.q
+        end: "}"
+        endCaptures:
+          0:
+            name: punctuation.definition.function.body.end.bracket.curly.q
