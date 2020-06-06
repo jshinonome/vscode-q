@@ -1,5 +1,5 @@
 # regular expression 12 special chars
-# backslash \ 
+# backslash \
 # caret ^ 
 # dollar sign $ 
 # period or dot .
@@ -27,11 +27,11 @@ repository:
   keywords:
     patterns:
       - name: keyword.operator.q
-        match: \b(and|or|except|inter|like|each|cross|vs|sv|within|where|in|asof|bin|binr|cor|cov|cut|ej|fby|div|ij|insert|lj|ljf|mavg|mcount|mdev|mmax|mmin|mmu|mod|msum|over|prior|peach|pj|scan|scov|setenv|ss|sublist|uj|union|upsert|wavg|wsum|xasc|xbar|xcol|xcols|xdesc|xexp|xgroup|xkey|xlog|xprev|xrank)\b
+        match: \b(and|asof|bin|binr|cor|cov|cross|cut|div|each|except|in|inter|like|mavg|mcount|mdev|mmax|mmin|mmu|mod|msum|or|over|peach|prior|scan|scov|setenv|ss|sublist|sv|union|vs|wavg|within|wsum|xasc|xbar|xcol|xcols|xdesc|xexp|xgroup|xkey|xlog|xprev|xrank)\b
       - name: keyword.control.q
-        match: ^[a-zA-Z]\)
-      - name: keyword.control.q
-        match: \b(do|if|while|select|update|delete|exec|from|by)\b
+        match: \b(do|if|while|select|update|delete|exec|from|by|where)\b
+      - name: keyword.other.DML.q
+        match: \b(select|update|delete|exec|from|by|fby|where|ej|ij|lj|ljf|uj|pj|upsert|insert)\b
   strings:
     patterns:
       - begin: '"'
@@ -50,7 +50,7 @@ repository:
     patterns:
       - name: comment.block.q
         begin: ^/\s*$ # => /
-        end: ^\\\\s*$ # => \
+        end: ^\\\s*$ # => \
         comment: block comment
       - name: comment.block.q
         begin: ^\\\s*$ # => \
@@ -59,32 +59,56 @@ repository:
       - name: comment.line.q
         match: ^/.+
         commet: one line comment
-      - match: (\s+)(/.*)
-        capture:
-          2:
-            name: comment.line.q
+      - match: \s/.*
+        name: comment.line.q
         comment: inline comment
   constants:
     patterns:
-      - name: constant.other.q
-        match: ^\\.+
-        comment: system command-line
-      - name: constant.language.q
-        match: 0[nNwW][hijefcpmdznuvt]?
+      - name: constant.language.null.q
+        match: \b0(N[ghijepmdznuvt]?|n)\b
+      - name: constant.language.boolean.q
+        match: \b[01]+b\b
+      - name: constant.language.infinity.q
+        match: \b-?0(W[hijepdnutv]?|wz?)\b
+      - name: constant.numeric.byte
+        match: \b0x[0-9a-fA-F]+\b
+      - name: constant.numeric.date
+        match: \b([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))\b
+      - name: constant.numeric.month
+        match: \b([12]\d{3}\.(0[1-9]|1[0-2])m)\b
       - name: constant.numeric.guid.q
         match: \b([\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})\b
+      - name: constant.numeric.time.q
+        match: \b([01]\d|2[0-3])(:([0-5]\d)(:([0-5]\d(\.\d{0,3})?))?)\b
+      - name: constant.numeric.timespan.q
+        match: \b\d+D(([01]\d|2[0-3])(:([0-5]\d)(:([0-5]\d(\.\d{0,9})?))?)?)?n?\b
       - name: constant.numeric.timestamp.q
-        match: \b([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))(p|D|Dp|D(([01]\d|2[0-3]):?|([01]\d|2[0-3]):([0-5]\d):?|([01]\d|2[0-3]):([0-5]\d):([0-5]\d)\.?|([01]\d|2[0-3]):([0-5]\d):([0-5]\d)(\.\d+))p?)\b
+        match: \b([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))(p|D|Dp|D(([01]\d|2[0-3])(:([0-5]\d)(:([0-5]\d(\.\d{0,9})?))?)?p?))\b
       - name: constant.numeric.datetime.q
-        match: \b([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))(z|T|Tz|T(([01]\d|2[0-3]):?|([01]\d|2[0-3]):([0-5]\d):?|([01]\d|2[0-3]):([0-5]\d):([0-5]\d)\.?|([01]\d|2[0-3]):([0-5]\d):([0-5]\d)(\.\d+))z?)\b
+        match: \b([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))(z|T|Tz|T(([01]\d|2[0-3])(:([0-5]\d)(:([0-5]\d(\.\d{0,3})?))?)?z?))\b
+      - name: constant.other.cmd.q
+        match: ^\\.+
+      - name: constant.other.namespace.q
+        match: ^[a-zA-Z]\)
+      - name: constant.other.system.info.q
+        match: \.z\.([a-fhiklno-qstuwxzDKNPTWXZ]|ex|ey|pm|zd)\b
   variables:
     patterns:
-      - name: variable.language.q
-        match: \b(x|y|z)\b
+      - name: 
   functions:
     patterns:
       - name: support.function.q
         match: \b(first|enlist|value|type|get|set|count|string|key|max|min|sum|prd|last|flip|distinct|raze|neg|til|upper|lower|abs|acos|aj|aj0|not|null|any|asc|asin|attr|avg|avgs|ceiling|cols|cos|csv|all|atan|deltas|desc|differ|dsave|dev|eval|exit|exp|fills|fkeys|floor|getenv|group|gtime|hclose|hcount|hdel|hopen|hsym|iasc|idesc|inv|keys|load|log|lsq|ltime|ltrim|maxs|md5|med|meta|mins|next|parse|plist|prds|prev|rand|rank|ratios|read0|read1|reciprocal|reverse|rload|rotate|rsave|rtrim|save|sdev|show|signum|sin|sqrt|ssr|sums|svar|system|tables|tan|trim|txf|ungroup|var|view|views|wj|wj1|ww)\b
+      - name: support.function.utility.q
+        match: \.Q\.(a|A|addmonths|addr|bt|btoa|bv|Cf|chk|cn|D|D|dd|def|dpft|dpfts|dsftg|en|ens|f|fc|ff|fk|fmt|fps|fs|fsn|ft|fu|gc|hdpf|hg|host|hp|id|ind|j10|j12|k|l|M|MAP|opt|P|par|pd|PD|pf|pn|pt|pv|PV|qp|qp|qt|qt|res|s|s1|sbt|sha1|trp|ts|ty|u|u|v|V|view|vp|w|x|x10|x12|Xf)\b
+      - name: support.function.json.q
+        match: \.j\.(j|k|jd)\b
+      - name: support.function.callback.q
+        match: \.z\.(ac|bm|exit|p[cdghiopqsw]|ts|vs|w[cos])\b
+      - name: support.function.http.q
+        match: \.h\.(br|c0|c1|cd|code|d|ed|edsn|fram|ha|hb|hc|he|hn|HOME|hp|hr|ht|hta|htac|htc|html|http|hu|hug|hy|iso8601|jx|logo|nbr|pre|sa|sb|sc|td|text|tx|ty|uh|val|xd|xmp|xs|xt)\b
+      - name: support.function.internal.q
+        match: \-([1-9]|1[0-689]|2[0-79]|3[01368]|120)!
       - begin: "{"
         beginCaptures:
           0:
@@ -93,3 +117,6 @@ repository:
         endCaptures:
           0:
             name: punctuation.definition.function.body.end.bracket.curly.q
+        patterns:
+          - name: variable.language.default.q
+            match: \b(x|y|z)\b
