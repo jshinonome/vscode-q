@@ -17,35 +17,15 @@ $schema: https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlangua
 name: q language
 scopeName: source.q
 patterns:
-  - include: "#keywords"
+  # DO NOT change orders
   - include: "#comments"
-  - include: "#variables"
-  - include: "#functions"
   - include: "#strings"
   - include: "#constants"
+  - include: "#functions"
+  - include: "#entities"
+  - include: "#keywords"
+  - include: "#invalids"
 repository:
-  keywords:
-    patterns:
-      - name: keyword.operator.q
-        match: \b(and|asof|bin|binr|cor|cov|cross|cut|div|each|except|in|inter|like|mavg|mcount|mdev|mmax|mmin|mmu|mod|msum|or|over|peach|prior|scan|scov|setenv|ss|sublist|sv|union|vs|wavg|within|wsum|xasc|xbar|xcol|xcols|xdesc|xexp|xgroup|xkey|xlog|xprev|xrank)\b
-      - name: keyword.control.q
-        match: \b(do|if|while|select|update|delete|exec|from|by|where)\b
-      - name: keyword.other.DML.q
-        match: \b(select|update|delete|exec|from|by|fby|where|ej|ij|lj|ljf|uj|pj|upsert|insert)\b
-  strings:
-    patterns:
-      - begin: '"'
-        beginCaptures:
-          0:
-            name: punctuation.definition.string.begin.q
-        end: '"'
-        endCaptures:
-          0:
-            name: punctuation.definition.string.end.q
-        name: string.quoted.double.q
-        patterns:
-          - name: constant.character.escape.q
-            match: \\(\\|n|t|r|")
   comments:
     patterns:
       - name: comment.block.q
@@ -62,6 +42,20 @@ repository:
       - match: \s/.*
         name: comment.line.q
         comment: inline comment
+  strings:
+    patterns:
+      - begin: '"'
+        beginCaptures:
+          0:
+            name: punctuation.definition.string.begin.q
+        end: '"'
+        endCaptures:
+          0:
+            name: punctuation.definition.string.end.q
+        name: string.quoted.double.q
+        patterns:
+          - name: constant.character.escape.q
+            match: \\(\\|n|t|r|"|[0-7]{3})
   constants:
     patterns:
       - name: constant.language.null.q
@@ -92,9 +86,12 @@ repository:
         match: ^[a-zA-Z]\)
       - name: constant.other.system.info.q
         match: \.z\.([a-fhiklno-qstuwxzDKNPTWXZ]|ex|ey|pm|zd)\b
-  variables:
-    patterns:
-      - name: 
+      - name: support.constant.q
+        match: '`(ss?|uu?|p|g|boolean|byte|short|int|long|real|float|char|timestamp|month|date|datetime|timespan|minute|second|time|year|mm|dd|hh)'
+      - name: support.constant.q
+        match: '::'
+      - name: constant.other.symbol.q
+        match: '`(:[a-zA-Z\d_\./:]*|[a-zA-Z\d_.:]*)'
   functions:
     patterns:
       - name: support.function.q
@@ -109,14 +106,53 @@ repository:
         match: \.h\.(br|c0|c1|cd|code|d|ed|edsn|fram|ha|hb|hc|he|hn|HOME|hp|hr|ht|hta|htac|htc|html|http|hu|hug|hy|iso8601|jx|logo|nbr|pre|sa|sb|sc|td|text|tx|ty|uh|val|xd|xmp|xs|xt)\b
       - name: support.function.internal.q
         match: \-([1-9]|1[0-689]|2[0-79]|3[01368]|120)!
+      - name: support.function.file.q
+        match: \b(0:|1:|2:)
       - begin: "{"
         beginCaptures:
           0:
             name: punctuation.definition.function.body.begin.bracket.curly.q
-        end: "}"
+        end: "}" # TODO: illegal if first }
         endCaptures:
           0:
             name: punctuation.definition.function.body.end.bracket.curly.q
         patterns:
           - name: variable.language.default.q
             match: \b(x|y|z)\b
+  entities:
+    patterns:
+      - name: entity.name.global.q
+        match: \.[a-zA-Z][a-zA-Z\d_]*(\.[a-zA-Z\d_]*)*
+  keywords:
+    patterns:
+      - name: keyword.operator.q
+        match: \b(and|asof|bin|binr|cor|cov|cross|cut|div|each|except|in|inter|like|mavg|mcount|mdev|mmax|mmin|mmu|mod|msum|or|over|peach|prior|scan|scov|setenv|ss|sublist|sv|union|vs|wavg|within|wsum|xasc|xbar|xcol|xcols|xdesc|xexp|xgroup|xkey|xlog|xprev|xrank)\b
+      - name: keyword.control.q
+        match: \b(do|if|while)\b
+      - match: (\$)(?:\[)
+        captures:
+          1:
+            name: keyword.control.q
+      - name: keyword.iterator.q
+        match: (':?|\\:?|/:?)
+      - name: keyword.other.DML.q
+        match: \b(select|update|delete|exec|from|by|fby|where|ej|ij|lj|ljf|uj|pj|upsert|insert)\b
+      - name: keyword.operator.comparison.q
+        match: (=|<=?|>=?|~|<>)
+      - name: keyword.operator.q
+        match: '[\@\.\$!?+\-\*%|&#^,]'
+  invalids:
+        patterns:
+          - name: invalid.illegal.bracket.q
+            match: ^[}\]\)].*
+
+  # TODO: list notation (3 + 4; a _ b; -20.45)
+  # TODO: table notation ([]sym:`aapl`msft`goog;price:100 200 300)
+  # TODO: bracket notation: []
+  # TODO: variables, [a-zA-Z][a-zA-Z\d\._]* 
+  # TODO: Multiline expressions (),[],{}, select from where
+  # Individual expressions can occupy more than one line in a script. Expressions can be broken after the semicolons that separate the individual expressions within compound expressions; it is necessary only to indent the continuation with one or more spaces. For example:
+  # negtive number: x-1 vs x -1
+  # TODO: apply, apply at, trap, trap at
+  # TODO: global to variable?
+  # TODO: support.constant color
