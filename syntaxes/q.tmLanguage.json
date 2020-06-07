@@ -1,5 +1,4 @@
 {
-  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "name": "q language",
   "scopeName": "source.q",
   "patterns": [
@@ -11,12 +10,6 @@
     },
     {
       "include": "#constants"
-    },
-    {
-      "include": "#functions"
-    },
-    {
-      "include": "#entities"
     },
     {
       "include": "#keywords"
@@ -31,24 +24,20 @@
         {
           "name": "comment.block.q",
           "begin": "^/\\s*$",
-          "end": "^\\\\\\s*$",
-          "comment": "block comment"
+          "end": "^\\\\\\s*$"
         },
         {
-          "name": "comment.block.q",
+          "name": "comment.block.eof.q",
           "begin": "^\\\\\\s*$",
-          "end": "^\\b$",
-          "comment": "til EOF block comment"
+          "end": "\\Z"
         },
         {
           "name": "comment.line.q",
-          "match": "^/.+",
-          "commet": "one line comment"
+          "match": "^/.+"
         },
         {
           "match": "\\s/.*",
-          "name": "comment.line.q",
-          "comment": "inline comment"
+          "name": "comment.line.inline.q"
         }
       ]
     },
@@ -77,84 +66,16 @@
         }
       ]
     },
-    "constants": {
+    "invalids": {
       "patterns": [
         {
-          "name": "constant.language.null.q",
-          "match": "\\b0(N[ghijepmdznuvt]?|n)\\b"
-        },
-        {
-          "name": "constant.language.boolean.q",
-          "match": "\\b[01]+b\\b"
-        },
-        {
-          "name": "constant.language.infinity.q",
-          "match": "\\b-?0(W[hijepdnutv]?|wz?)\\b"
-        },
-        {
-          "name": "constant.numeric.byte",
-          "match": "\\b0x[0-9a-fA-F]+\\b"
-        },
-        {
-          "name": "constant.numeric.date",
-          "match": "\\b([12]\\d{3}\\.(0[1-9]|1[0-2])\\.(0[1-9]|[12]\\d|3[01]))\\b"
-        },
-        {
-          "name": "constant.numeric.month",
-          "match": "\\b([12]\\d{3}\\.(0[1-9]|1[0-2])m)\\b"
-        },
-        {
-          "name": "constant.numeric.guid.q",
-          "match": "\\b([\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12})\\b"
-        },
-        {
-          "name": "constant.numeric.time.q",
-          "match": "\\b([01]\\d|2[0-3])(:([0-5]\\d)(:([0-5]\\d(\\.\\d{0,3})?))?)\\b"
-        },
-        {
-          "name": "constant.numeric.timespan.q",
-          "match": "\\b\\d+D(([01]\\d|2[0-3])(:([0-5]\\d)(:([0-5]\\d(\\.\\d{0,9})?))?)?)?n?\\b"
-        },
-        {
-          "name": "constant.numeric.timestamp.q",
-          "match": "\\b([12]\\d{3}\\.(0[1-9]|1[0-2])\\.(0[1-9]|[12]\\d|3[01]))(p|D|Dp|D(([01]\\d|2[0-3])(:([0-5]\\d)(:([0-5]\\d(\\.\\d{0,9})?))?)?p?))\\b"
-        },
-        {
-          "name": "constant.numeric.datetime.q",
-          "match": "\\b([12]\\d{3}\\.(0[1-9]|1[0-2])\\.(0[1-9]|[12]\\d|3[01]))(z|T|Tz|T(([01]\\d|2[0-3])(:([0-5]\\d)(:([0-5]\\d(\\.\\d{0,3})?))?)?z?))\\b"
-        },
-        {
-          "name": "constant.other.cmd.q",
-          "match": "^\\\\.+"
-        },
-        {
-          "name": "constant.other.namespace.q",
-          "match": "^[a-zA-Z]\\)"
-        },
-        {
-          "name": "constant.other.system.info.q",
-          "match": "\\.z\\.([a-fhiklno-qstuwxzDKNPTWXZ]|ex|ey|pm|zd)\\b"
-        },
-        {
-          "name": "support.constant.q",
-          "match": "`(s|u|p|g|boolean|byte|short|int|long|real|float|char|timestamp|month|date|datetime|timespan|minute|second|time|year|mm|dd|hh|uu|ss)"
-        },
-        {
-          "name": "support.constant.q",
-          "match": "::"
-        },
-        {
-          "name": "constant.other.symbol.q",
-          "match": "`(:[a-zA-Z\\d_\\./:]*|[a-zA-Z\\d_.:]*)"
+          "name": "invalid.illegal.bracket.q",
+          "match": "^[}\\]\\)].*"
         }
       ]
     },
-    "functions": {
+    "constants": {
       "patterns": [
-        {
-          "name": "support.function.q",
-          "match": "\\b(first|enlist|value|type|get|set|count|string|key|max|min|sum|prd|last|flip|distinct|raze|neg|til|upper|lower|abs|acos|aj|aj0|not|null|any|asc|asin|attr|avg|avgs|ceiling|cols|cos|csv|all|atan|deltas|desc|differ|dsave|dev|eval|exit|exp|fills|fkeys|floor|getenv|group|gtime|hclose|hcount|hdel|hopen|hsym|iasc|idesc|inv|keys|load|log|lsq|ltime|ltrim|maxs|md5|med|meta|mins|next|parse|plist|prds|prev|rand|rank|ratios|read0|read1|reciprocal|reverse|rload|rotate|rsave|rtrim|save|sdev|show|signum|sin|sqrt|ssr|sums|svar|system|tables|tan|trim|txf|ungroup|var|view|views|wj|wj1|ww)\\b"
-        },
         {
           "name": "support.function.utility.q",
           "match": "\\.Q\\.(a|A|addmonths|addr|bt|btoa|bv|Cf|chk|cn|D|D|dd|def|dpft|dpfts|dsftg|en|ens|f|fc|ff|fk|fmt|fps|fs|fsn|ft|fu|gc|hdpf|hg|host|hp|id|ind|j10|j12|k|l|M|MAP|opt|P|par|pd|PD|pf|pn|pt|pv|PV|qp|qp|qt|qt|res|s|s1|sbt|sha1|trp|ts|ty|u|u|v|V|view|vp|w|x|x10|x12|Xf)\\b"
@@ -168,17 +89,140 @@
           "match": "\\.z\\.(ac|bm|exit|p[cdghiopqsw]|ts|vs|w[cos])\\b"
         },
         {
+          "name": "support.constant.system.info.q",
+          "match": "\\.z\\.([a-fhiklno-qstuwxzDKNPTWXZ]|ex|ey|pm|zd)\\b"
+        },
+        {
           "name": "support.function.http.q",
           "match": "\\.h\\.(br|c0|c1|cd|code|d|ed|edsn|fram|ha|hb|hc|he|hn|HOME|hp|hr|ht|hta|htac|htc|html|http|hu|hug|hy|iso8601|jx|logo|nbr|pre|sa|sb|sc|td|text|tx|ty|uh|val|xd|xmp|xs|xt)\\b"
+        },
+        {
+          "name": "support.function.file.q",
+          "match": "\\b(0:|1:|2:)"
         },
         {
           "name": "support.function.internal.q",
           "match": "\\-([1-9]|1[0-689]|2[0-79]|3[01368]|120)!"
         },
         {
-          "name": "support.function.file.q",
-          "match": "\\b(0:|1:|2:)"
+          "name": "constant.language.null.q",
+          "match": "\\b0(N[ghijepmdznuvt]?|n)\\b"
         },
+        {
+          "name": "constant.language.boolean.q",
+          "match": "\\b[01]+b\\b"
+        },
+        {
+          "name": "constant.language.infinity.q",
+          "match": "\\b-?0(W[hijepdnutv]?|wz?)\\b"
+        },
+        {
+          "name": "constant.other.date",
+          "match": "\\b([12]\\d{3}\\.(0[1-9]|1[0-2])\\.(0[1-9]|[12]\\d|3[01]))\\b"
+        },
+        {
+          "name": "constant.other.date.month",
+          "match": "\\b([12]\\d{3}\\.(0[1-9]|1[0-2])m)\\b"
+        },
+        {
+          "name": "constant.other.date.time.q",
+          "match": "\\b([01]\\d|2[0-3])(:([0-5]\\d)(:([0-5]\\d(\\.\\d{0,3})?))?)\\b"
+        },
+        {
+          "name": "constant.other.date.timespan.q",
+          "match": "\\b\\d+D(([01]\\d|2[0-3])(:([0-5]\\d)(:([0-5]\\d(\\.\\d{0,9})?))?)?)?n?\\b"
+        },
+        {
+          "name": "constant.other.timestamp.q",
+          "match": "\\b([12]\\d{3}\\.(0[1-9]|1[0-2])\\.(0[1-9]|[12]\\d|3[01]))(p|D|Dp|D(([01]\\d|2[0-3])(:([0-5]\\d)(:([0-5]\\d(\\.\\d{0,9})?))?)?p?))\\b"
+        },
+        {
+          "name": "constant.other.timestamp.datetime.q",
+          "match": "\\b([12]\\d{3}\\.(0[1-9]|1[0-2])\\.(0[1-9]|[12]\\d|3[01]))(z|T|Tz|T(([01]\\d|2[0-3])(:([0-5]\\d)(:([0-5]\\d(\\.\\d{0,3})?))?)?z?))\\b"
+        },
+        {
+          "name": "constant.numeric.byte",
+          "match": "\\b0x[0-9a-fA-F]+\\b"
+        },
+        {
+          "name": "constant.numeric.guid.q",
+          "match": "\\b([\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12})\\b"
+        },
+        {
+          "name": "constant.numeric.decimal.q",
+          "match": "(?x)-?(?:\n  (?:\\b[0-9]+(\\.)[0-9]*e[+-]?[0-9]+[ef]?\\b)|    # 1.1e+3\n  (?:\\b[0-9]+(\\.)e[+-]?[0-9]+[ef]?\\b)|          # 1.e+3\n  (?:\\B(\\.)[0-9]+e[+-]?[0-9]+[ef]?\\b)|          # .1e+3\n  (?:\\b[0-9]+e[+-]?[0-9]+[ef]?\\b)|              # 1e+3\n  (?:\\b[0-9]+(\\.)[0-9]*[ef]?\\b)|                # 1.1\n  (?:\\b[0-9]+(\\.)[ef]?\\B)|                      # 1.\n  (?:\\B(\\.)[0-9]+[ef]?\\b)|                      # .1\n  (?:\\b[0-9]+[efhij]?\\b(?!\\.))                  # 1efhij\n)"
+        },
+        {
+          "name": "support.type.q",
+          "match": "`(boolean|byte|short|int|long|real|float|char|timestamp|month|date|datetime|timespan|minute|second|time|year|mm|dd|hh|uu|ss)(?=\\$)"
+        },
+        {
+          "name": "support.attribute.q",
+          "match": "`[supg](?=#)"
+        },
+        {
+          "name": "support.null.q",
+          "match": "::"
+        },
+        {
+          "name": "constant.other.symbol.q",
+          "match": "`(:[a-zA-Z\\d_\\.:/]*|[a-zA-Z\\d_\\.:]*)"
+        },
+        {
+          "name": "constant.other.cmd.q",
+          "match": "^\\\\.+"
+        },
+        {
+          "name": "constant.other.namespace.q",
+          "match": "^[a-zA-Z]\\)"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.operator.q",
+          "match": "\\b(abs|acos|all|and|any|asc|asin|asof|atan|attr|avg|avgs|bin|binr|ceiling|cols|cor|cos|count|cov|cross|csv|cut|deltas|desc|dev|differ|distinct|div|dsave|each|ema|enlist|eval|except|exec|exit|exp|fills|first|fkeys|flip|floor|get|getenv|group|gtime|hclose|hcount|hdel|hopen|hsym|iasc|idesc|in|inter|inv|key|keys|last|like|load|log|lower|lsq|ltime|ltrim|mavg|max|maxs|mcount|md5|mdev|med|meta|min|mins|mmax|mmin|mmu|mod|msum|neg|next|not|null|or|over|parse|peach|pj|prd|prds|prev|prior|rand|rank|ratios|raze|read0|read1|reciprocal|reval|reverse|rload|rotate|rsave|rtrim|save|scan|scov|sdev|set|setenv|show|signum|sin|sqrt|ss|ssr|string|sublist|sum|sums|sv|svar|system|tables|tan|til|trim|type|ungroup|union|upper|value|var|view|views|vs|wavg|within|wsum|xasc|xbar|xcol|xcols|xdesc|xexp|xgroup|xkey|xlog|xprev|xrank)\\b"
+        },
+        {
+          "name": "keyword.control.q",
+          "match": "\\b(do|if|while)\\b"
+        },
+        {
+          "name": "keyword.control.q",
+          "match": "\\$(?=\\[)"
+        },
+        {
+          "name": "keyword.iterator.q",
+          "match": "(':?|\\\\:?|/:?)"
+        },
+        {
+          "name": "keyword.other.DML.q",
+          "match": "\\b(select|update|delete|exec|from|by|fby|where|aj|aj0|ajf|ajf0|ej|ij|ijf|lj|ljf|uj|ujf|wj|wj1|upsert|insert)\\b"
+        },
+        {
+          "name": "keyword.operator.comparison.q",
+          "match": "(=|<=?|>=?|~|<>)"
+        },
+        {
+          "include": "#variables"
+        },
+        {
+          "name": "keyword.operator.q",
+          "match": "[\\@\\.\\$!?+\\-\\*%|&#^,]"
+        }
+      ]
+    },
+    "variables": {
+      "patterns": [
+        {
+          "name": "entity.name.function.q",
+          "match": "\\.[a-zA-Z][a-zA-Z\\d_]*(\\.[a-zA-Z\\d_]*)*"
+        }
+      ]
+    },
+    "function": {
+      "patterns": [
         {
           "begin": "{",
           "beginCaptures": {
@@ -194,6 +238,15 @@
           },
           "patterns": [
             {
+              "include": "#function_param"
+            },
+            {
+              "include": "#self"
+            },
+            {
+              "include": "#invalids"
+            },
+            {
               "name": "variable.language.default.q",
               "match": "\\b(x|y|z)\\b"
             }
@@ -201,55 +254,28 @@
         }
       ]
     },
-    "entities": {
+    "function_param": {
       "patterns": [
         {
-          "name": "entity.name.global.q",
-          "match": "\\.[a-zA-Z][a-zA-Z\\d_]*(\\.[a-zA-Z\\d_]*)*"
-        }
-      ]
-    },
-    "keywords": {
-      "patterns": [
-        {
-          "name": "keyword.operator.q",
-          "match": "\\b(and|asof|bin|binr|cor|cov|cross|cut|div|each|except|in|inter|like|mavg|mcount|mdev|mmax|mmin|mmu|mod|msum|or|over|peach|prior|scan|scov|setenv|ss|sublist|sv|union|vs|wavg|within|wsum|xasc|xbar|xcol|xcols|xdesc|xexp|xgroup|xkey|xlog|xprev|xrank)\\b"
-        },
-        {
-          "name": "keyword.control.q",
-          "match": "\\b(do|if|while)\\b"
-        },
-        {
-          "match": "(\\$)(?:\\[)",
-          "captures": {
-            "1": {
-              "name": "keyword.control.q"
+          "begin": "[",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.parameters.begin.bracket.square.q"
             }
-          }
-        },
-        {
-          "name": "keyword.iterator.q",
-          "match": "(':?|\\\\:?|/:?)"
-        },
-        {
-          "name": "keyword.other.DML.q",
-          "match": "\\b(select|update|delete|exec|from|by|fby|where|ej|ij|lj|ljf|uj|pj|upsert|insert)\\b"
-        },
-        {
-          "name": "keyword.operator.comparison.q",
-          "match": "(=|<=?|>=?|~|<>)"
-        },
-        {
-          "name": "keyword.operator.q",
-          "match": "[\\@\\.\\$!?+\\-\\*%|&#^,]"
-        }
-      ]
-    },
-    "invalids": {
-      "patterns": [
-        {
-          "name": "invalid.illegal.bracket.q",
-          "match": "^[}\\]\\)].*"
+          },
+          "end": "]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.parameters.end.bracket.square.q"
+            }
+          },
+          "name": "meta.parameters.q",
+          "patterns": [
+            {
+              "name": "entity.name.variable.parameter",
+              "match": "\\b(?<!\\.)[[:alpha:]][[:alnum:]\\d\\._]*"
+            }
+          ]
         }
       ]
     }
