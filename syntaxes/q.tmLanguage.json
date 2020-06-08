@@ -36,8 +36,8 @@
           "match": "^/.+"
         },
         {
-          "match": "\\s/.*",
-          "name": "comment.line.inline.q"
+          "name": "comment.line.inline.q",
+          "match": "\\s/.*"
         }
       ]
     },
@@ -161,10 +161,6 @@
           "match": "`[supg](?=#)"
         },
         {
-          "name": "support.null.q",
-          "match": "::"
-        },
-        {
           "name": "constant.other.symbol.q",
           "match": "`(:[a-zA-Z\\d_\\.:/]*|[a-zA-Z\\d_\\.:]*)"
         },
@@ -191,6 +187,10 @@
         {
           "name": "keyword.control.q",
           "match": "\\$(?=\\[)"
+        },
+        {
+          "name": "keyword.assign.q",
+          "match": "::?"
         },
         {
           "name": "keyword.iterator.q",
@@ -273,7 +273,7 @@
           "patterns": [
             {
               "name": "entity.name.variable.parameter",
-              "match": "\\b(?<!\\.)[[:alpha:]][[:alnum:]\\d\\._]*"
+              "match": "\\b(?<!\\.)[a-zA-Z][a-zA-Z\\d\\._]*"
             }
           ]
         }

@@ -10,7 +10,8 @@
 		"vscode": "^1.45.0"
 	},
 	"categories": [
-		"Programming Languages"
+		"Programming Languages",
+		"Snippets"
 	],
 	"maintainers": [
 		"Jo Shinonome <jshinonome@gmail.com>"
@@ -46,12 +47,13 @@
 				"scopeName": "source.q",
 				"path": "./syntaxes/q.tmLanguage.json"
 			}
+		],
+		"snippets": [
+			{
+				"language": "q",
+				"path": "./snippets/q.json"
+			}
 		]
 	},
-	"devDependencies": {},
-	"__metadata": {
-		"id": "60c9939c-3592-42c0-832a-a3c4f2101cfd",
-		"publisherId": "35328b94-6af1-4ad8-91cb-d1cda95c9d40",
-		"publisherDisplayName": "jshinonome"
-	}
+	"devDependencies": {}
 }

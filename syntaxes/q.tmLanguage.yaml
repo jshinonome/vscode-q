@@ -1,9 +1,3 @@
-# TODO: list notation (3 + 4; a _ b; -20.45)
-# TODO: table notation ([]sym:`aapl`msft`goog;price:100 200 300)
-# TODO: bracket notation: {}, []
-# TODO: Multiline expressions (),[],{}, select from where, indent/space
-# TODO: apply, apply at, trap, trap at
-# TODO; function suppport
 name: q language
 scopeName: source.q
 patterns:
@@ -25,8 +19,8 @@ repository:
         end: \Z
       - name: comment.line.q
         match: ^/.+
-      - match: \s/.*
-        name: comment.line.inline.q
+      - name: comment.line.inline.q
+        match: \s/.*
   strings:
     patterns:
       - begin: '"'
@@ -99,8 +93,8 @@ repository:
         match: '`(boolean|byte|short|int|long|real|float|char|timestamp|month|date|datetime|timespan|minute|second|time|year|mm|dd|hh|uu|ss)(?=\$)'
       - name: support.attribute.q
         match: '`[supg](?=#)'
-      - name: support.null.q
-        match: '::'
+      # - name: support.cast.q
+      #   match: \"[b-jmnps-vxzB-JMNPS-VXZ]\"(?=\$)
       - name: constant.other.symbol.q
         match: '`(:[a-zA-Z\d_\.:/]*|[a-zA-Z\d_\.:]*)'
         #<--
@@ -118,6 +112,8 @@ repository:
         match: \b(do|if|while)\b
       - name: keyword.control.q
         match: \$(?=\[)
+      - name: keyword.assign.q
+        match: '::?'
       - name: keyword.iterator.q
         match: (':?|\\:?|/:?)
       - name: keyword.other.DML.q
