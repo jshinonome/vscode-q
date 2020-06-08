@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to the "vscode-q" extension will be documented in this file.
 
-## 1.0.2
+## 1.0.3
 ### Added
 - snippets for .Q.dpft(s), .Q.en(s), select, update
 
