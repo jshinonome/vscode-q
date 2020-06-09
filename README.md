@@ -1,4 +1,5 @@
 # q for Visual Studio Code
+[![](https://vsmarketplacebadge.apphb.com/version/jshinonome.vscode-q.svg)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 
 This extension adds syntaxes for the q language to VS Code.
 Recommend to use theme [dracula/visual-studio-code](https://marketplace.visualstudio.com/items?itemName=dracula-theme.theme-dracula)

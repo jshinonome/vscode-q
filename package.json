@@ -7,11 +7,12 @@
 	"publisher": "jshinonome",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.45.0"
+		"vscode": "^1.45.1"
 	},
 	"categories": [
 		"Programming Languages",
-		"Snippets"
+		"Snippets",
+		"Formatters"
 	],
 	"maintainers": [
 		"Jo Shinonome <jshinonome@gmail.com>"
@@ -26,6 +27,17 @@
 		"q"
 	],
 	"icon": "icon.png",
+	"main": "./out/extension",
+	"activationEvents": [
+		"*"
+	],
+	"scripts": {
+		"vscode:package": "vsce package",
+		"vscode:publish": "vsce publish",
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc --watch -p ./"
+	},
 	"contributes": {
 		"languages": [
 			{
@@ -55,5 +67,10 @@
 			}
 		]
 	},
-	"devDependencies": {}
+	"devDependencies": {
+		"@types/vscode": "^1.45.1",
+		"eslint": "^7.2.0",
+		"typescript": "^3.9.5",
+		"vscode-test": "^1.4.0"
+	}
 }
