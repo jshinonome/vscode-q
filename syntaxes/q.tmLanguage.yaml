@@ -127,7 +127,7 @@ repository:
     patterns:
       # gloabl function/variables
       - name: entity.name.function.q
-        match: \.[a-zA-Z][a-zA-Z\d_]*(\.[a-zA-Z\d_]*)*
+        match: (?<![a-zA-Z\d])\.[a-zA-Z][a-zA-Z\d_]*(\.[a-zA-Z\d_]+)*
   function:
     patterns:
       - begin: '{'
