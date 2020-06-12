@@ -7,7 +7,7 @@
 	"publisher": "jshinonome",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.45.1"
+		"vscode": "^1.46.0"
 	},
 	"categories": [
 		"Programming Languages",
@@ -29,7 +29,8 @@
 	"icon": "icon.png",
 	"main": "./out/extension",
 	"activationEvents": [
-		"*"
+		"onView:qservers",
+		"onCommand:qservers.refreshEntry"
 	],
 	"scripts": {
 		"vscode:package": "vsce package",
@@ -66,22 +67,90 @@
 				"path": "./snippets/q.json"
 			}
 		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "q-server-explorer",
+					"title": "q Server Explorer",
+					"icon": "media/server-svgrepo-com.svg"
+				}
+			]
+		},
+		"views": {
+			"q-server-explorer": [
+				{
+					"id": "qservers",
+					"name": "q Servers",
+					"icon": "media/storage-24px.svg",
+					"contextualTitle": "q Servers"
+				}
+			]
+		},
 		"commands": [
 			{
-				"command": "qext.connect",
-				"title": "qext connect"
+				"command": "qservers.refreshEntry",
+				"title": "Refresh q Server List",
+				"icon": {
+					"light": "resources/dark/delete-24px.svg",
+					"dark": "resources/light/delete-24px.svg"
+				}
 			},
 			{
-				"command": "qext.query",
-				"title": "qext query"
+				"command": "qservers.addEntry",
+				"title": "Add q Server",
+				"icon": {
+					"light": "resources/dark/add-24px.svg",
+					"dark": "resources/light/add-24px.svg"
+				}
+			},
+			{
+				"command": "qservers.editEntry",
+				"title": "Edit q Server",
+				"icon": {
+					"light": "resources/dark/edit-24px.svg",
+					"dark": "resources/light/edit-24px.svg"
+				}
+			},
+			{
+				"command": "qservers.deleteEntry",
+				"title": "Delete q Server",
+				"icon": {
+					"light": "resources/dark/delete-24px.svg",
+					"dark": "resources/light/delete-24px.svg"
+				}
 			}
-
-		]
+		],
+		"menu": {
+			"view/title": [
+				{
+					"command": "qservers.refreshEntry",
+					"when": "view == qservers",
+					"group": "navigation"
+				},
+				{
+					"command": "qservers.addEntry",
+					"when": "view == qservers",
+					"group": "navigation"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "qservers.editEntry",
+					"when": "view == qservers && viewItem == qconn",
+					"group": "inline"
+				},
+				{
+					"command": "qservers.deleteEntry",
+					"when": "view == qservers && viewItem == qconn",
+					"group": "inline"
+				}
+			]
+		}
 	},
 	"devDependencies": {
 		"@types/long": "^4.0.1",
 		"@types/node": "^14.0.13",
-		"@types/vscode": "^1.45.1",
+		"@types/vscode": "^1.46.0",
 		"eslint": "^7.2.0",
 		"node-q": "^2.5.0",
 		"typescript": "^3.9.5",

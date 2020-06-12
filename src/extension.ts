@@ -1,5 +1,6 @@
-import { window, ExtensionContext, languages, IndentAction, DebugConsoleMode, commands } from 'vscode';
-import { QConnManager } from "./q-conn-manager";
+import { window, ExtensionContext, languages, IndentAction, commands } from 'vscode';
+import { QServerTreeProvider } from './q-server-tree';
+import { QConn } from './q-conn';
 export function activate(context: ExtensionContext) {
 
     console.log("q ext for vscode is on");
@@ -12,20 +13,35 @@ export function activate(context: ExtensionContext) {
             }
         ]
     });
-    const qConnManager = new QConnManager()
 
-    const disposable = commands.registerCommand('qext.connect', () => {
-        qConnManager.connect('local')
-    });
+    // q-server-explorer
+    const qServers = new QServerTreeProvider();
+    window.registerTreeDataProvider('qservers', qServers);
+    commands.registerCommand('qservers.refreshEntry', () => qServers.refresh());
+    commands.registerCommand('qservers.addEntry', () => window.showInformationMessage(`Successfully called add entry.`));
+    commands.registerCommand('qservers.editEntry', (node: QConn) => window.showInformationMessage(`Successfully called edit entry on ${node.label}.`));
+    commands.registerCommand('qservers.deleteEntry', (node: QConn) => window.showInformationMessage(`Successfully called delete entry on ${node.label}.`));
 
-    const disposable2 = commands.registerCommand('qext.query', () => {
-        qConnManager.getConn("local")?.k("dict", function (err, res) {
-            if (err) throw err;
-            console.log('resutl: ', res);
-        })
-    });
+    // commands.registerCommand(
+    //     'extension.openPackageOnNpm',
+    //     moduleName => commands.executeCommand('vscode.open', Uri.parse(`https://www.npmjs.com/package/${moduleName}`)));
 
-    context.subscriptions.push(disposable);
-};
+
+
+    // const qConnManager = new QConnManager()
+
+    // const disposable = commands.registerCommand('qext.connect', () => {
+    //     qConnManager.connect('local');
+    // });
+
+    // const disposable2 = commands.registerCommand('qext.query', () => {
+    //     qConnManager.getConn("local")?.k("dict", function (err, res) {
+    //         if (err) throw err;
+    //         console.log('resutl: ', res);
+    //     });
+    // });
+
+    // context.subscriptions.push(disposable);
+}
 
 export function deactivate() { }
