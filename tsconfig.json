@@ -2,11 +2,19 @@
 	"compilerOptions": {
 		"module": "commonjs",
 		"target": "es2019",
-		"lib": ["ES2019"],
+		"lib": [
+			"ES2019",
+			"DOM"
+		],
 		"outDir": "out",
 		"sourceMap": true,
 		"strict": true,
-		"rootDir": "src"
+		"rootDir": "src",
+		"plugins": [
+			{
+				"name": "typescript-tslint-plugin"
+			}
+		]
 	},
 	"exclude": [
 		"node_modules",

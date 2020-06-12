@@ -1,0 +1,12 @@
+{
+    "rules": {
+        "file-name-casing": [
+            true,
+            "kebab-case"
+        ],
+        "semicolon": [
+            true,
+            "always"
+        ]
+    }
+}
