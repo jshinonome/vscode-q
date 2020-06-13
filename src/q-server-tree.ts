@@ -1,11 +1,12 @@
-import { TreeDataProvider, TreeItem, EventEmitter, Event, CommentThreadCollapsibleState } from 'vscode';
+import { TreeDataProvider, TreeItem, EventEmitter, Event } from 'vscode';
 import { QConn } from './q-conn';
 import { QConnManager } from './q-conn-manager';
 
 export class QServerTreeProvider implements TreeDataProvider<QConn> {
-    private qConnManager: QConnManager;
     private _onDidChangeTreeData: EventEmitter<QConn | undefined> = new EventEmitter<QConn | undefined>();
     readonly onDidChangeTreeData: Event<QConn | undefined> = this._onDidChangeTreeData.event;
+
+    private qConnManager: QConnManager;
 
     constructor() {
         this.qConnManager = new QConnManager();

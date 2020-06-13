@@ -30,7 +30,7 @@
 	"main": "./out/extension",
 	"activationEvents": [
 		"onView:qservers",
-		"onCommand:qservers.refreshEntry"
+		"onLanguage:q"
 	],
 	"scripts": {
 		"vscode:package": "vsce package",
@@ -91,32 +91,32 @@
 				"command": "qservers.refreshEntry",
 				"title": "Refresh q Server List",
 				"icon": {
-					"light": "resources/dark/delete-24px.svg",
-					"dark": "resources/light/delete-24px.svg"
+					"light": "resources/light/refresh-svgrepo-com.svg",
+					"dark": "resources/dark/refresh-svgrepo-com.svg"
 				}
 			},
 			{
 				"command": "qservers.addEntry",
 				"title": "Add q Server",
 				"icon": {
-					"light": "resources/dark/add-24px.svg",
-					"dark": "resources/light/add-24px.svg"
+					"light": "resources/light/add-svgrepo-com.svg",
+					"dark": "resources/dark/add-svgrepo-com.svg"
 				}
 			},
 			{
 				"command": "qservers.editEntry",
 				"title": "Edit q Server",
 				"icon": {
-					"light": "resources/dark/edit-24px.svg",
-					"dark": "resources/light/edit-24px.svg"
+					"light": "resources/light/edit-svgrepo-com.svg",
+					"dark": "resources/dark/edit-svgrepo-com.svg"
 				}
 			},
 			{
 				"command": "qservers.deleteEntry",
 				"title": "Delete q Server",
 				"icon": {
-					"light": "resources/dark/delete-24px.svg",
-					"dark": "resources/light/delete-24px.svg"
+					"light": "resources/light/delete-svgrepo-com.svg",
+					"dark": "resources/dark/delete-svgrepo-com.svg"
 				}
 			}
 		],
@@ -151,12 +151,12 @@
 		"@types/long": "^4.0.1",
 		"@types/node": "^14.0.13",
 		"@types/vscode": "^1.46.0",
+		"@typescript-eslint/eslint-plugin": "^3.2.0",
+		"@typescript-eslint/parser": "^3.2.0",
 		"eslint": "^7.2.0",
 		"node-q": "^2.5.0",
 		"typescript": "^3.9.5",
 		"vscode-test": "^1.4.0"
 	},
-	"dependencies": {
-		"tslint": "^6.1.2"
-	}
+	"dependencies": {}
 }

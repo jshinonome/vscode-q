@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import { window } from "vscode";
 import * as q from "node-q";
 import { homedir } from "os";
@@ -12,13 +13,13 @@ export class QConnManager {
         this.loadCfg();
     }
 
-    getConn(name: string) {
+    getConn(name: string): QConn | undefined {
         return this.qConnPool.get(name);
     }
 
-    connect(name: string) {
+    connect(name: string): void {
         try {
-            let qConn = this.getConn(name);
+            const qConn = this.getConn(name);
             if (qConn) {
                 q.connect(qConn,
                     (err, conn) => {
@@ -35,11 +36,11 @@ export class QConnManager {
         }
     }
 
-    loadCfg() {
+    loadCfg(): void {
         // read the q server configuration file from home dir
         this.qCfg = JSON.parse(fs.readFileSync(homedir() + '/.vscode/q-server-cfg.json', 'utf8'));
         this.qCfg.forEach((element: QConn) => {
-            this.qConnPool.set(element["name"], new QConn(element));
+            this.qConnPool.set(element['name'], new QConn(element));
         });
     }
 }
