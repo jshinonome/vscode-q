@@ -1,4 +1,4 @@
-import { TreeItem, TreeItemCollapsibleState } from 'vscode';
+import { TreeItem, TreeItemCollapsibleState, Command } from 'vscode';
 import * as q from 'node-q';
 import path = require('path');
 
@@ -11,8 +11,8 @@ export class QConn extends TreeItem {
     socketNoDelay: boolean;
     socketTimeout: number;
     conn?: q.Connection;
-
-    constructor(cfg: any) {
+    command?: Command;
+    constructor(cfg: QConn) {
         super(cfg['name'], TreeItemCollapsibleState.None);
         this.host = ('host' in cfg) ? cfg['host'] : 'localhost';
         if (~'port' in cfg) {
@@ -24,6 +24,11 @@ export class QConn extends TreeItem {
         this.password = ('password' in cfg) ? cfg['password'] : '';
         this.socketNoDelay = ('socketNoDelay' in cfg) ? cfg['socketNoDelay'] : false;
         this.socketTimeout = ('socketTimeout' in cfg) ? cfg['socketTimeout'] : 0;
+        this.command = {
+            command: 'qservers.connect',
+            title: 'connect to q server',
+            arguments: [this.name]
+        };
     }
 
     setConn(conn: q.Connection): void {
@@ -33,6 +38,14 @@ export class QConn extends TreeItem {
     get tooltip(): string {
         return `${this.host}:${this.port}`;
     }
+
+    // get description(): string {
+    //     if(this.conn){
+    //         return 'connected';
+    //     }else{
+    //         return '';
+    //     }
+    // }
 
     iconPath = {
         light: path.join(__filename, '..', '..', 'resources', 'light', 'cpu-svgrepo-com.svg'),

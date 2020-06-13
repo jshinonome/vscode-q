@@ -72,7 +72,7 @@
 				{
 					"id": "q-server-explorer",
 					"title": "q Server Explorer",
-					"icon": "media/server-svgrepo-com.svg"
+					"icon": "media/server.svg"
 				}
 			]
 		},
@@ -91,36 +91,36 @@
 				"command": "qservers.refreshEntry",
 				"title": "Refresh q Server List",
 				"icon": {
-					"light": "resources/light/refresh-svgrepo-com.svg",
-					"dark": "resources/dark/refresh-svgrepo-com.svg"
+					"light": "resources/light/refresh.svg",
+					"dark": "resources/dark/refresh.svg"
 				}
 			},
 			{
 				"command": "qservers.addEntry",
 				"title": "Add q Server",
 				"icon": {
-					"light": "resources/light/add-svgrepo-com.svg",
-					"dark": "resources/dark/add-svgrepo-com.svg"
+					"light": "resources/light/add.svg",
+					"dark": "resources/dark/add.svg"
 				}
 			},
 			{
 				"command": "qservers.editEntry",
 				"title": "Edit q Server",
 				"icon": {
-					"light": "resources/light/edit-svgrepo-com.svg",
-					"dark": "resources/dark/edit-svgrepo-com.svg"
+					"light": "resources/light/edit.svg",
+					"dark": "resources/dark/edit.svg"
 				}
 			},
 			{
 				"command": "qservers.deleteEntry",
 				"title": "Delete q Server",
 				"icon": {
-					"light": "resources/light/delete-svgrepo-com.svg",
-					"dark": "resources/dark/delete-svgrepo-com.svg"
+					"light": "resources/light/trash.svg",
+					"dark": "resources/dark/trash.svg"
 				}
 			}
 		],
-		"menu": {
+		"menus": {
 			"view/title": [
 				{
 					"command": "qservers.refreshEntry",

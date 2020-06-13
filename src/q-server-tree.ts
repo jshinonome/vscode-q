@@ -6,12 +6,12 @@ export class QServerTreeProvider implements TreeDataProvider<QConn> {
     private _onDidChangeTreeData: EventEmitter<QConn | undefined> = new EventEmitter<QConn | undefined>();
     readonly onDidChangeTreeData: Event<QConn | undefined> = this._onDidChangeTreeData.event;
 
-    private qConnManager: QConnManager;
+    public qConnManager: QConnManager;
 
     constructor() {
         this.qConnManager = new QConnManager();
     }
-
+    // TODO: keep active conns after refresh
     refresh(): void {
         this.qConnManager.loadCfg();
         this._onDidChangeTreeData.fire(undefined);

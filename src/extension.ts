@@ -23,9 +23,7 @@ export function activate(context: ExtensionContext) {
     commands.registerCommand('qservers.editEntry', (node: QConn) => window.showInformationMessage(`Successfully called edit entry on ${node.label}.`));
     commands.registerCommand('qservers.deleteEntry', (node: QConn) => window.showInformationMessage(`Successfully called delete entry on ${node.label}.`));
 
-    // commands.registerCommand(
-    //     'extension.openPackageOnNpm',
-    //     moduleName => commands.executeCommand('vscode.open', Uri.parse(`https://www.npmjs.com/package/${moduleName}`)));
+    commands.registerCommand('qservers.connect', name => qServers.qConnManager.connect(name));
 
 
 
@@ -45,4 +43,6 @@ export function activate(context: ExtensionContext) {
     // context.subscriptions.push(disposable);
 }
 
-export function deactivate() { }
+export function deactivate(): void {
+    window.showInformationMessage('Decativate vscode-q');
+}
