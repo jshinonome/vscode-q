@@ -1,9 +1,10 @@
 import { TreeItem, TreeItemCollapsibleState, Command } from 'vscode';
 import * as q from 'node-q';
 import path = require('path');
+import { QCfg } from './q-conn-manager';
 
 export class QConn extends TreeItem {
-    name: string;
+    label: string;
     host: string;
     port: number;
     user: string;
@@ -12,13 +13,13 @@ export class QConn extends TreeItem {
     socketTimeout: number;
     conn?: q.Connection;
     command?: Command;
-    constructor(cfg: QConn) {
-        super(cfg['name'], TreeItemCollapsibleState.None);
+    constructor(cfg: QCfg) {
+        super(cfg['label'], TreeItemCollapsibleState.None);
         this.host = ('host' in cfg) ? cfg['host'] : 'localhost';
         if (~'port' in cfg) {
             throw new Error('No port found in cfg file');
         }
-        this.name = cfg['name'];
+        this.label = cfg['label'];
         this.port = cfg['port'];
         this.user = ('user' in cfg) ? cfg['user'] : '';
         this.password = ('password' in cfg) ? cfg['password'] : '';
@@ -27,11 +28,11 @@ export class QConn extends TreeItem {
         this.command = {
             command: 'qservers.connect',
             title: 'connect to q server',
-            arguments: [this.name]
+            arguments: [this.label]
         };
     }
 
-    setConn(conn: q.Connection): void {
+    setConn(conn: q.Connection | undefined): void {
         this.conn = conn;
     }
 

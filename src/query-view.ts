@@ -85,7 +85,7 @@ export class QueryView {
                 <title>Query Result</title>
             </head>
             <body>
-                ${JSON.stringify(result)}
+                ${JSON.stringify(result, null, 4)}
             </body>
             </html>`;
     }

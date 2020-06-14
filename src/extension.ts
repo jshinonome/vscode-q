@@ -2,6 +2,7 @@ import { window, ExtensionContext, languages, IndentAction, commands, WebviewPan
 import { QServerTreeProvider } from './q-server-tree';
 import { QConn } from './q-conn';
 import { QueryView } from './query-view';
+import { qCfgInput } from './q-cfg-input';
 
 let connStatusBar: StatusBarItem;
 
@@ -37,25 +38,39 @@ export function activate(context: ExtensionContext): void {
     commands.registerCommand(
         'qservers.refreshEntry', () => qServers.refresh());
 
+    // q cfg input
     commands.registerCommand(
         'qservers.addEntry',
-        () =>
-            window.showInformationMessage('Successfully called add entry.'));
+        async () => {
+            const qcfg = await qCfgInput(undefined);
+            qServers.qConnManager.addCfg(qcfg);
+        });
 
     commands.registerCommand(
         'qservers.editEntry',
-        (node: QConn) =>
-            window.showInformationMessage(`Successfully called edit entry on ${node.label}.`));
+        async (qConn: QConn) => {
+            const qcfg = await qCfgInput(qConn, false);
+            qServers.qConnManager.addCfg(qcfg);
+
+        });
 
     commands.registerCommand(
         'qservers.deleteEntry',
-        (node: QConn) =>
-            window.showInformationMessage(`Successfully called delete entry on ${node.label}.`));
+        (qConn: QConn) => {
+            window.showInputBox(
+                { prompt: `Confirm to Remove Server '${qConn.label}' (Y/n)` }
+            ).then(value => {
+                if (value === 'Y') {
+                    qServers.qConnManager.removeCfg(qConn.label);
+
+                }
+            });
+        });
 
     commands.registerCommand(
         'qservers.connect',
-        name => {
-            qServers.qConnManager.connect(name);
+        label => {
+            qServers.qConnManager.connect(label);
         });
 
     context.subscriptions.push(
@@ -105,20 +120,6 @@ export function activate(context: ExtensionContext): void {
         });
     }
 
-    // const qConnManager = new QConnManager()
-
-    // const disposable = commands.registerCommand('qext.connect', () => {
-    //     qConnManager.connect('local');
-    // });
-
-    // const disposable2 = commands.registerCommand('qext.query', () => {
-    //     qConnManager.getConn("local")?.k("dict", function (err, res) {
-    //         if (err) throw err;
-    //         console.log('resutl: ', res);
-    //     });
-    // });
-
-    // context.subscriptions.push(disposable);
 }
 
 function updateConnStatus(name: string) {

@@ -7,13 +7,16 @@ import { QConn } from "./q-conn";
 import { QueryView } from "./query-view";
 import { QueryResultType } from "./query-result";
 
+const cfgDir = homedir() + '/.vscode/';
+const cfgPath = cfgDir + 'q-server-cfg.json';
+
 export class QConnManager {
     public static current: QConnManager | undefined;
     qConnPool = new Map<string, QConn>();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    qCfg: any;
+    qCfg: QCfg[] = [];
     activeConn: q.Connection | undefined;
-    activeConnName: string | undefined;
+    activeConnLabel: string | undefined;
     queryWrapper = '{r:value x;`type`data!(type r;r)}';
 
     public static create(): QConnManager {
@@ -28,19 +31,19 @@ export class QConnManager {
         this.loadCfg();
     }
 
-    getConn(name: string): QConn | undefined {
-        return this.qConnPool.get(name);
+    getConn(label: string): QConn | undefined {
+        return this.qConnPool.get(label);
     }
 
-    connect(name: string): void {
+    connect(label: string): void {
         try {
-            const qConn = this.getConn(name);
+            const qConn = this.getConn(label);
             if (qConn) {
                 const conn = qConn.conn;
                 if (conn) {
                     this.activeConn = conn;
-                    this.activeConnName = name;
-                    commands.executeCommand('qservers.updateStatusBar', name);
+                    this.activeConnLabel = label;
+                    commands.executeCommand('qservers.updateStatusBar', label);
                 } else {
                     q.connect(qConn,
                         (err, conn) => {
@@ -48,15 +51,15 @@ export class QConnManager {
                             if (conn) {
                                 qConn?.setConn(conn);
                                 this.activeConn = conn;
-                                this.activeConnName = name;
-                                commands.executeCommand('qservers.updateStatusBar', name);
+                                this.activeConnLabel = label;
+                                commands.executeCommand('qservers.updateStatusBar', label);
                             }
                         }
                     );
                 }
             }
         } catch (error) {
-            window.showErrorMessage(`Failed to connect to '${name}', please check q-server-cfg.json`);
+            window.showErrorMessage(`Failed to connect to '${label}', please check q-server-cfg.json`);
         }
     }
 
@@ -79,9 +82,54 @@ export class QConnManager {
 
     loadCfg(): void {
         // read the q server configuration file from home dir
-        this.qCfg = JSON.parse(fs.readFileSync(homedir() + '/.vscode/q-server-cfg.json', 'utf8'));
-        this.qCfg.forEach((element: QConn) => {
-            this.qConnPool.set(element['name'], new QConn(element));
-        });
+        if (fs.existsSync(cfgPath)) {
+            this.qCfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
+            // reserver current conn
+            const currentQconnPool = new Map(this.qConnPool);
+            this.qConnPool.clear();
+            this.qCfg.forEach((qcfg: QCfg) => {
+                if (qcfg.label in currentQconnPool) {
+                    const qConn = new QConn(qcfg);
+                    qConn.setConn(currentQconnPool.get(qcfg.label)?.conn);
+                    this.qConnPool.set(qcfg.label, qConn);
+                } else {
+                    this.qConnPool.set(qcfg['label'], new QConn(qcfg));
+                }
+            });
+        } else {
+            if (!fs.existsSync(cfgDir)) {
+                fs.mkdirSync(cfgDir);
+            }
+            fs.writeFileSync(cfgPath, '[]', 'utf8');
+        }
     }
+
+    addCfg(qcfg: QCfg): void {
+        const label = qcfg.label;
+        this.qCfg = this.qCfg.filter(qcfg => qcfg.label !== label);
+        this.qCfg.push(qcfg);
+        this.qCfg.sort((q1, q2) => q1.label.localeCompare(q2.label));
+        this.dumpCfg();
+        commands.executeCommand('qservers.refreshEntry');
+    }
+
+    removeCfg(label: string): void {
+        this.qCfg = this.qCfg.filter(qcfg => qcfg.label !== label);
+        this.dumpCfg();
+        commands.executeCommand('qservers.refreshEntry');
+    }
+
+    dumpCfg(): void {
+        fs.writeFileSync(cfgPath, JSON.stringify(this.qCfg, null, 4), 'utf8');
+    }
+}
+
+export type QCfg = {
+    host: string;
+    port: number;
+    user: string;
+    password: string;
+    socketNoDelay: boolean;
+    socketTimeout: number;
+    label: string;
 }
