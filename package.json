@@ -90,6 +90,7 @@
 			{
 				"command": "qservers.refreshEntry",
 				"title": "Refresh q Server List",
+				"category": "kdb+/q ext",
 				"icon": {
 					"light": "resources/light/refresh.svg",
 					"dark": "resources/dark/refresh.svg"
@@ -98,6 +99,7 @@
 			{
 				"command": "qservers.addEntry",
 				"title": "Add q Server",
+				"category": "kdb+/q ext",
 				"icon": {
 					"light": "resources/light/add.svg",
 					"dark": "resources/dark/add.svg"
@@ -106,6 +108,7 @@
 			{
 				"command": "qservers.editEntry",
 				"title": "Edit q Server",
+				"category": "kdb+/q ext",
 				"icon": {
 					"light": "resources/light/edit.svg",
 					"dark": "resources/dark/edit.svg"
@@ -114,10 +117,26 @@
 			{
 				"command": "qservers.deleteEntry",
 				"title": "Delete q Server",
+				"category": "kdb+/q ext",
 				"icon": {
 					"light": "resources/light/trash.svg",
 					"dark": "resources/dark/trash.svg"
 				}
+			},
+			{
+				"command": "qservers.queryCurrentLine",
+				"title": "Query current line",
+				"category": "kdb+/q ext"
+			},
+			{
+				"command": "qservers.querySelection",
+				"title": "Query current selection",
+				"category": "kdb+/q ext"
+			},
+			{
+				"command": "queryview.start",
+				"title": "Start Query Result View",
+				"category": "kdb+/q ext"
 			}
 		],
 		"menus": {
@@ -145,7 +164,17 @@
 					"group": "inline"
 				}
 			]
-		}
+		},
+		"keybindings": [
+			{
+				"command": "qservers.queryCurrentLine",
+				"key": "ctrl+q"
+			},
+			{
+				"command": "qservers.querySelection",
+				"key": "ctrl+r"
+			}
+		]
 	},
 	"devDependencies": {
 		"@types/long": "^4.0.1",

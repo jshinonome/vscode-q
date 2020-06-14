@@ -9,7 +9,7 @@ export class QServerTreeProvider implements TreeDataProvider<QConn> {
     public qConnManager: QConnManager;
 
     constructor() {
-        this.qConnManager = new QConnManager();
+        this.qConnManager = QConnManager.create();
     }
     // TODO: keep active conns after refresh
     refresh(): void {

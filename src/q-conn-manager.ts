@@ -1,17 +1,30 @@
 /* eslint-disable quotes */
-import { window } from "vscode";
+import { window, commands } from "vscode";
 import * as q from "node-q";
 import { homedir } from "os";
 import * as fs from "fs";
 import { QConn } from "./q-conn";
+import { QueryView } from "./query-view";
+import { QueryResultType } from "./query-result";
 
 export class QConnManager {
+    public static current: QConnManager | undefined;
     qConnPool = new Map<string, QConn>();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     qCfg: any;
     activeConn: q.Connection | undefined;
+    activeConnName: string | undefined;
+    queryWrapper = '{r:value x;`type`data!(type r;r)}';
 
-    constructor() {
+    public static create(): QConnManager {
+        if (this.current) {
+            return this.current;
+        } else {
+            return new QConnManager();
+        }
+    }
+
+    private constructor() {
         this.loadCfg();
     }
 
@@ -26,14 +39,17 @@ export class QConnManager {
                 const conn = qConn.conn;
                 if (conn) {
                     this.activeConn = conn;
+                    this.activeConnName = name;
+                    commands.executeCommand('qservers.updateStatusBar', name);
                 } else {
                     q.connect(qConn,
                         (err, conn) => {
-                            if (err) window.showWarningMessage(err.message);
+                            if (err) window.showErrorMessage(err.message);
                             if (conn) {
-                                window.showInformationMessage(`Connected to '${name}'`);
                                 qConn?.setConn(conn);
                                 this.activeConn = conn;
+                                this.activeConnName = name;
+                                commands.executeCommand('qservers.updateStatusBar', name);
                             }
                         }
                     );
@@ -46,16 +62,18 @@ export class QConnManager {
 
     sync(query: string): void {
         if (this.activeConn) {
-            this.activeConn.k(query,
+            this.activeConn.k(this.queryWrapper, query,
                 (err, res) => {
                     if (err) {
-                        console.log(err);
+                        QueryView.currentPanel?.update({ type: QueryResultType.STDERR, data: err });
                     }
-                    console.log(res);
+                    if (res) {
+                        QueryView.currentPanel?.update(res);
+                    }
                 }
             );
         } else {
-            window.showWarningMessage('No active q connection');
+            window.showErrorMessage('No Active q Connection');
         }
     }
 
