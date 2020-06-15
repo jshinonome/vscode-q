@@ -17,7 +17,7 @@ export class QConnManager {
     qCfg: QCfg[] = [];
     activeConn: q.Connection | undefined;
     activeConnLabel: string | undefined;
-    queryWrapper = '{r:value x;`type`data!(type r;r)}';
+    queryWrapper = '{r:value x;`type`data`cols!(type r;r;cols r)}';
 
     public static create(): QConnManager {
         if (this.current) {
@@ -68,7 +68,7 @@ export class QConnManager {
             this.activeConn.k(this.queryWrapper, query,
                 (err, res) => {
                     if (err) {
-                        QueryView.currentPanel?.update({ type: QueryResultType.STDERR, data: err });
+                        QueryView.currentPanel?.update({ type: QueryResultType.STDERR, data: err, cols: [] });
                     }
                     if (res) {
                         QueryView.currentPanel?.update(res);

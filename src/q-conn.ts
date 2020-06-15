@@ -49,8 +49,8 @@ export class QConn extends TreeItem {
     // }
 
     iconPath = {
-        light: path.join(__filename, '..', '..', 'resources', 'light', 'cpu-svgrepo-com.svg'),
-        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'cpu-svgrepo-com.svg')
+        light: path.join(__filename, '..', '..', 'resources', 'light', 'cpu.svg'),
+        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'cpu.svg')
     };
 
     contextValue = 'qconn';

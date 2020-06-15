@@ -1,6 +1,9 @@
 import { WebviewPanel, Disposable, window, ViewColumn, Uri, Webview } from 'vscode';
 import path = require('path');
 import { QueryResult } from './query-result';
+import * as fs from 'fs';
+
+const templatePath = './media/qview';
 
 export class QueryView {
     public static currentPanel: QueryView | undefined;
@@ -8,6 +11,7 @@ export class QueryView {
     private readonly _panel: WebviewPanel;
     private readonly _extensionPath: string;
     private _disposables: Disposable[] = [];
+    private _template = '';
 
     public static createOrShow(extensionPath: string): void {
         const column = window.activeTextEditor ? window.activeTextEditor.viewColumn : undefined;
@@ -41,8 +45,9 @@ export class QueryView {
         this._panel = panel;
         this._extensionPath = extensionPath;
         // Set the webview's initial html content
-        this.update({ type: 0, data: '' });
+        this.update({ type: 0, data: '', cols: [] });
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
+        this._template = this._getHtmlForWebview();
     }
 
     public dispose(): void {
@@ -59,35 +64,36 @@ export class QueryView {
     }
 
     public update(result: QueryResult): void {
-        const webview = this._panel.webview;
         this._panel.title = 'Query Result';
-        this._panel.webview.html = this._getHtmlForWebview(
-            webview, result);
-
+        this._panel.webview.html = this._template;
+        this._panel.webview.postMessage(result);
     }
 
-    private _getHtmlForWebview(webview: Webview, result: QueryResult) {
-
-        // Local path to main script run in the webview
-        // const scriptPathOnDisk = Uri.file(
-        //     path.join(this._extensionPath, 'media', 'main.js')
-        // );
-
+    private _getHtmlForWebview() {
+        // Local path to javascript run in the webview
+        const tableJsFile = Uri.file(
+            path.join(this._extensionPath, templatePath, 'tabulator.min.js')
+        );
+        const tableCssFile = Uri.file(
+            path.join(this._extensionPath, templatePath, 'tabulator.min.css')
+        );
+        const pureCssFile = Uri.file(
+            path.join(this._extensionPath, templatePath, 'pure-min.css')
+        );
+        const webview = this._panel.webview;
         // And the uri we use to load this script in the webview
-        // const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
+        const tableJsUri = webview.asWebviewUri(tableJsFile);
+        const tableCssUri = webview.asWebviewUri(tableCssFile);
+        const pureCssUri = webview.asWebviewUri(pureCssFile);
 
-        // Use a nonce to whitelist which scripts can be run
-        // const nonce = getNonce();
+        let template = fs.readFileSync(
+            path.join(this._extensionPath, templatePath, 'main.html')).toString();
 
-        return `<!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <title>Query Result</title>
-            </head>
-            <body>
-                ${JSON.stringify(result, null, 4)}
-            </body>
-            </html>`;
+        template = template.replace('{table-js}', tableJsUri.toString());
+        template = template.replace('{table-css}', tableCssUri.toString());
+        template = template.replace('{pure-css}', pureCssUri.toString());
+        this._template = template;
+        return template;
     }
 
 }

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" type="text/css" href="{pure-css}">
+  <link rel="stylesheet" type="text/css" href="{table-css}">
+  <script type="text/javascript" src="{table-js}"></script>
+  <script type="text/javascript">
+    window.addEventListener('message', event => {
+      const message = event.data; // The json data that the extension sent
+      console.log(message.type);
+      console.log(message.data);
+      switch (message.type) {
+        case 98:
+          var table = new Tabulator("#qview-table-data", {
+            clipboard: "copy",
+            data: message.data,
+            layout: "fitColumns",
+            pagination: "local",
+            paginationSize: 30,
+            paginationSizeSelector: [10, 30, 50, 100, 1000],
+            autoColumns: true,
+            selectable: true,
+            movableColumns: true
+          });
+
+          var cols = table.getColumnDefinitions();
+          var newCols = [];
+          cols.forEach(col => {
+            newCols[message.cols.indexOf(col.field)] = col;
+          });
+          table.setColumns(newCols);
+          //select row on "select all" button click
+          document.getElementById("select-all").addEventListener("click", function () {
+            table.selectRow();
+          });
+
+          //deselect row on "deselect all" button click
+          document.getElementById("deselect-all").addEventListener("click", function () {
+            table.deselectRow();
+          });
+
+          document.getElementById("copy-selected").addEventListener("click", function () {
+            table.copyToClipboard("selected");
+          });
+          document.getElementById('qview-table-ctrl').style.display = "block";
+          // document.getElementById("download-as-csv").addEventListener("click", function () {
+          //   table.download("csv", "data.csv");
+          // });
+          break;
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <div id="qview-table-ctrl" style="display: none;">
+    <button id="select-all" class="pure-button pure-button-primary">Select All</button>
+    <button id="deselect-all" class="pure-button pure-button-primary">Deselect All</button>
+    <button id="copy-selected" class="pure-button pure-button-primary">Copy Selected</button>
+    <!-- <button id="download-as-csv" class="pure-button pure-button-primary">Download as csv</button> -->
+  </div>
+  <div id="qview-table-data"></div>
+</body>
+
+</html>
