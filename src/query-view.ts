@@ -77,21 +77,26 @@ export class QueryView {
         const tableCssFile = Uri.file(
             path.join(this._extensionPath, templatePath, 'tabulator.min.css')
         );
-        const pureCssFile = Uri.file(
-            path.join(this._extensionPath, templatePath, 'pure-min.css')
+        const frameJsFile = Uri.file(
+            path.join(this._extensionPath, templatePath, 'bootstrap.min.js')
+        );
+        const frameCssFile = Uri.file(
+            path.join(this._extensionPath, templatePath, 'bootstrap.min.css')
         );
         const webview = this._panel.webview;
         // And the uri we use to load this script in the webview
         const tableJsUri = webview.asWebviewUri(tableJsFile);
         const tableCssUri = webview.asWebviewUri(tableCssFile);
-        const pureCssUri = webview.asWebviewUri(pureCssFile);
+        const frameJsUri = webview.asWebviewUri(frameJsFile);
+        const frameCssUri = webview.asWebviewUri(frameCssFile);
 
         let template = fs.readFileSync(
             path.join(this._extensionPath, templatePath, 'main.html')).toString();
 
         template = template.replace('{table-js}', tableJsUri.toString());
         template = template.replace('{table-css}', tableCssUri.toString());
-        template = template.replace('{pure-css}', pureCssUri.toString());
+        template = template.replace('{frame-js}', frameJsUri.toString());
+        template = template.replace('{frame-css}', frameCssUri.toString());
         this._template = template;
         return template;
     }

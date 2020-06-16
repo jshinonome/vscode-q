@@ -2,8 +2,9 @@
 <html lang="en">
 
 <head>
-  <link rel="stylesheet" type="text/css" href="{pure-css}">
+  <link rel="stylesheet" type="text/css" href="{frame-css}">
   <link rel="stylesheet" type="text/css" href="{table-css}">
+  <script type="text/javascript" src="{frame-js}"></script>
   <script type="text/javascript" src="{table-js}"></script>
   <script type="text/javascript">
     window.addEventListener('message', event => {
@@ -15,7 +16,7 @@
           var table = new Tabulator("#qview-table-data", {
             clipboard: "copy",
             data: message.data,
-            layout: "fitColumns",
+            layout:"fitData",
             pagination: "local",
             paginationSize: 30,
             paginationSizeSelector: [10, 30, 50, 100, 1000],
@@ -43,7 +44,7 @@
           document.getElementById("copy-selected").addEventListener("click", function () {
             table.copyToClipboard("selected");
           });
-          document.getElementById('qview-table-ctrl').style.display = "block";
+          document.getElementById('qview-table').style.display = "block";
           // document.getElementById("download-as-csv").addEventListener("click", function () {
           //   table.download("csv", "data.csv");
           // });
@@ -54,13 +55,33 @@
 </head>
 
 <body>
-  <div id="qview-table-ctrl" style="display: none;">
-    <button id="select-all" class="pure-button pure-button-primary">Select All</button>
-    <button id="deselect-all" class="pure-button pure-button-primary">Deselect All</button>
-    <button id="copy-selected" class="pure-button pure-button-primary">Copy Selected</button>
-    <!-- <button id="download-as-csv" class="pure-button pure-button-primary">Download as csv</button> -->
+  <style type="text/css">
+    body {
+      background: rgba(0, 0, 0, 0.00) !important;
+    }
+  </style>
+
+  <div class="container-fluid">
+    <div id="query-stats" class="row justify-content-start bg-light mr-0 pt-2 pb-2">
+      <div class="col-2">
+        <b>Query Stats</b>
+      </div>
+      <div class="col-10">
+        <span class="border">Success</span>
+      </div>
+    </div>
+    <div id="qview-table" class="row justify-content-start bg-light mr-0 pb-3" style="display: none;">
+      <div class="col-12">
+        <div id="buttons" class="m-0 pb-2">
+          <button id="select-all" class="btn btn-primary btn-sm">Select All</button>
+          <button id="deselect-all" class="btn btn-primary btn-sm">Deselect All</button>
+          <button id="copy-selected" class="btn btn-primary btn-sm">Copy Selected</button>
+        </div>
+        <!-- <button id="download-as-csv" class="pure-button pure-button-primary">Download as csv</button> -->
+        <div id="qview-table-data"></div>
+      </div>
+    </div>
   </div>
-  <div id="qview-table-data"></div>
 </body>
 
 </html>
