@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+  <script type="text/javascript" src="{jquery-js}"></script>
   <link rel="stylesheet" type="text/css" href="{frame-css}">
   <link rel="stylesheet" type="text/css" href="{table-css}">
   <script type="text/javascript" src="{frame-js}"></script>
@@ -11,46 +12,60 @@
       const message = event.data; // The json data that the extension sent
       console.log(message.type);
       console.log(message.data);
-      switch (message.type) {
-        case 98:
-          var table = new Tabulator("#qview-table-data", {
-            clipboard: "copy",
-            data: message.data,
-            layout:"fitData",
-            pagination: "local",
-            paginationSize: 30,
-            paginationSizeSelector: [10, 30, 50, 100, 1000],
-            autoColumns: true,
-            selectable: true,
-            movableColumns: true
-          });
+      if (message.exception) {
+        $("#qview-stats-data").css("color", "#F44336");
+        $("#qview-stats-data").val('Exception: ' + message.data);
+      } else {
+        $("#qview-stats-data").css("color", "#009688");
+        $("#qview-stats-data").val('Success');
+        switch (message.type) {
+          case 97:
+          case 98:
+            var table = new Tabulator("#qview-table-data", {
+              clipboard: "copy",
+              data: message.data,
+              layout: "fitData",
+              pagination: "local",
+              paginationSize: 30,
+              paginationSizeSelector: [10, 30, 50, 100, 1000],
+              autoColumns: true,
+              selectable: true,
+              movableColumns: true
+            });
 
-          var cols = table.getColumnDefinitions();
-          var newCols = [];
-          cols.forEach(col => {
-            newCols[message.cols.indexOf(col.field)] = col;
-          });
-          table.setColumns(newCols);
-          //select row on "select all" button click
-          document.getElementById("select-all").addEventListener("click", function () {
-            table.selectRow();
-          });
+            var cols = table.getColumnDefinitions();
+            var newCols = [];
+            cols.forEach(col => {
+              newCols[message.cols.indexOf(col.field)] = col;
+            });
+            table.setColumns(newCols);
+            //select row on "select all" button click
+            document.getElementById("select-all").addEventListener("click", function () {
+              table.selectRow();
+            });
 
-          //deselect row on "deselect all" button click
-          document.getElementById("deselect-all").addEventListener("click", function () {
-            table.deselectRow();
-          });
+            //deselect row on "deselect all" button click
+            document.getElementById("deselect-all").addEventListener("click", function () {
+              table.deselectRow();
+            });
 
-          document.getElementById("copy-selected").addEventListener("click", function () {
-            table.copyToClipboard("selected");
-          });
-          document.getElementById('qview-table').style.display = "block";
-          // document.getElementById("download-as-csv").addEventListener("click", function () {
-          //   table.download("csv", "data.csv");
-          // });
-          break;
+            document.getElementById("copy-selected").addEventListener("click", function () {
+              table.copyToClipboard("selected");
+            });
+            $('#nav-table-tab').trigger('click');
+            break;
+          default:
+            $('#qview-plain-data').val(message.data);
+            $('#nav-plain-tab').trigger('click');
+        }
       }
     });
+
+    // $('#nab-tab a').on('click', function (e) {
+    //   e.preventDefault()
+    //   $(this).tab('show')
+    // })
+
   </script>
 </head>
 
@@ -62,26 +77,59 @@
   </style>
 
   <div class="container-fluid">
-    <div id="query-stats" class="row justify-content-start bg-light mr-0 pt-2 pb-2">
+    <div id="query-stats-row" class="row justify-content-start align-items-center bg-light pt-2 pb-2">
       <div class="col-2">
         <b>Query Stats</b>
       </div>
       <div class="col-10">
-        <span class="border">Success</span>
+        <input type="text" readonly class="form-control-plaintext font-weight-bold" id="qview-stats-data" value="">
       </div>
     </div>
-    <div id="qview-table" class="row justify-content-start bg-light mr-0 pb-3" style="display: none;">
+    <div id="qview-tab-row" class="row justify-content-start bg-light pt-2 pb-2">
       <div class="col-12">
-        <div id="buttons" class="m-0 pb-2">
-          <button id="select-all" class="btn btn-primary btn-sm">Select All</button>
-          <button id="deselect-all" class="btn btn-primary btn-sm">Deselect All</button>
-          <button id="copy-selected" class="btn btn-primary btn-sm">Copy Selected</button>
+        <nav>
+          <div class="nav nav-pills mb-1" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link mr-1 px-2 py-1" id="nav-table-tab" data-toggle="pill" href="#nav-table"
+              role="tab" aria-controls="nav-table" aria-selected="true">Table</a>
+            <a class="nav-item nav-link px-2 py-1" id="nav-plain-tab" data-toggle="pill" href="#nav-plain" role="tab"
+              aria-controls="plain" aria-selected="false">Plain</a>
+          </div>
+        </nav>
+        <div class="tab-content" id="qviewContent">
+          <div class="tab-pane fade" id="nav-table" role="tabpanel" aria-labelledby="nav-table-tab">
+            <div id="buttons" class="m-0 pb-2">
+              <button id="select-all" class="btn btn-primary btn-sm">Select All</button>
+              <button id="deselect-all" class="btn btn-primary btn-sm">Deselect All</button>
+              <button id="copy-selected" class="btn btn-primary btn-sm">Copy Selected</button>
+            </div>
+            <div id="qview-table-data"></div>
+          </div>
+          <div class="tab-pane fade" id="nav-plain" role="tabpanel" aria-labelledby="nav-plain-tab">
+            <input type="text" readonly class="form-control-plaintext" id="qview-plain-data" value="">
+          </div>
         </div>
-        <!-- <button id="download-as-csv" class="pure-button pure-button-primary">Download as csv</button> -->
-        <div id="qview-table-data"></div>
       </div>
     </div>
   </div>
+
+
+  <!-- <div id="qview-table" class="row justify-content-start bg-light mr-0 pb-3" style="display: none;">
+    <div class="col-12">
+      <div id="buttons" class="m-0 pb-2">
+        <button id="select-all" class="btn btn-primary btn-sm">Select All</button>
+        <button id="deselect-all" class="btn btn-primary btn-sm">Deselect All</button>
+        <button id="copy-selected" class="btn btn-primary btn-sm">Copy Selected</button>
+      </div>
+      <button id="download-as-csv" class="pure-button pure-button-primary">Download as csv</button>
+      <div id="qview-table-data"></div>
+    </div>
+  </div>
+  <div id="qview-plain" class="row justify-content-start bg-light mr-0 pb-3" style="display: none;">
+    <div class="col-12"> -->
+
+  </div>
+  </div>
+
 </body>
 
 </html>

@@ -5,7 +5,6 @@ import { homedir } from "os";
 import * as fs from "fs";
 import { QConn } from "./q-conn";
 import { QueryView } from "./query-view";
-import { QueryResultType } from "./query-result";
 
 const cfgDir = homedir() + '/.vscode/';
 const cfgPath = cfgDir + 'q-server-cfg.json';
@@ -17,7 +16,11 @@ export class QConnManager {
     qCfg: QCfg[] = [];
     activeConn: q.Connection | undefined;
     activeConnLabel: string | undefined;
-    queryWrapper = '{r:value x;`type`data`cols!(type r;r;cols r)}';
+    // exception: true|false
+    // type: number
+    // data: return
+    // cols: columns of table
+    queryWrapper = '@[{r:value x;`exception`type`data`cols!(0b;t;r;$[(t:type r) in 98 99h;cols r;()])};;{`exception`data!(1b;x)}]';
 
     public static create(): QConnManager {
         if (this.current) {
@@ -68,7 +71,12 @@ export class QConnManager {
             this.activeConn.k(this.queryWrapper, query,
                 (err, res) => {
                     if (err) {
-                        QueryView.currentPanel?.update({ type: QueryResultType.STDERR, data: err, cols: [] });
+                        QueryView.currentPanel?.update(
+                            {
+                                exception: true,
+                                data: err
+                            }
+                        );
                     }
                     if (res) {
                         QueryView.currentPanel?.update(res);

@@ -154,7 +154,7 @@
         },
         {
           "name": "support.type.q",
-          "match": "`(boolean|byte|short|int|long|real|float|char|timestamp|month|date|datetime|timespan|minute|second|time|year|mm|dd|hh|uu|ss)(?=\\$)"
+          "match": "`(boolean|byte|short|int|long|real|float|char|symbol|timestamp|month|date|datetime|timespan|minute|second|time|year|mm|dd|hh|uu|ss)(?=\\$)"
         },
         {
           "name": "support.attribute.q",

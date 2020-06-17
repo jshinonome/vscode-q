@@ -1,4 +1,4 @@
-import { WebviewPanel, Disposable, window, ViewColumn, Uri, Webview } from 'vscode';
+import { WebviewPanel, Disposable, window, ViewColumn, Uri } from 'vscode';
 import path = require('path');
 import { QueryResult } from './query-result';
 import * as fs from 'fs';
@@ -11,7 +11,6 @@ export class QueryView {
     private readonly _panel: WebviewPanel;
     private readonly _extensionPath: string;
     private _disposables: Disposable[] = [];
-    private _template = '';
 
     public static createOrShow(extensionPath: string): void {
         const column = window.activeTextEditor ? window.activeTextEditor.viewColumn : undefined;
@@ -45,9 +44,9 @@ export class QueryView {
         this._panel = panel;
         this._extensionPath = extensionPath;
         // Set the webview's initial html content
-        this.update({ type: 0, data: '', cols: [] });
+        this.update({ exception: false, data: '' });
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
-        this._template = this._getHtmlForWebview();
+        this._panel.webview.html = this._getHtmlForWebview();
     }
 
     public dispose(): void {
@@ -65,12 +64,15 @@ export class QueryView {
 
     public update(result: QueryResult): void {
         this._panel.title = 'Query Result';
-        this._panel.webview.html = this._template;
+        console.log(result);
         this._panel.webview.postMessage(result);
     }
 
     private _getHtmlForWebview() {
         // Local path to javascript run in the webview
+        const jqueryJsFile = Uri.file(
+            path.join(this._extensionPath, templatePath, 'jquery.min.js')
+        );
         const tableJsFile = Uri.file(
             path.join(this._extensionPath, templatePath, 'tabulator.min.js')
         );
@@ -85,6 +87,7 @@ export class QueryView {
         );
         const webview = this._panel.webview;
         // And the uri we use to load this script in the webview
+        const jqueryJsUri = webview.asWebviewUri(jqueryJsFile);
         const tableJsUri = webview.asWebviewUri(tableJsFile);
         const tableCssUri = webview.asWebviewUri(tableCssFile);
         const frameJsUri = webview.asWebviewUri(frameJsFile);
@@ -93,11 +96,11 @@ export class QueryView {
         let template = fs.readFileSync(
             path.join(this._extensionPath, templatePath, 'main.html')).toString();
 
+        template = template.replace('{jquery-js}', jqueryJsUri.toString());
         template = template.replace('{table-js}', tableJsUri.toString());
         template = template.replace('{table-css}', tableCssUri.toString());
         template = template.replace('{frame-js}', frameJsUri.toString());
         template = template.replace('{frame-css}', frameCssUri.toString());
-        this._template = template;
         return template;
     }
 

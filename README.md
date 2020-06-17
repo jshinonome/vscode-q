@@ -17,6 +17,7 @@ Thanks to the following package that makes this happen.
 - [node-q](https://github.com/michaelwittig/node-q)
 - [Bootstrap](https://getbootstrap.com/)
 - [Tabulator](http://tabulator.info/)
+- [jQuery](https://jquery.com/)
 
 ## Contributing
 The json is generated from yaml, so contributors should hand-modify the YAML file.
