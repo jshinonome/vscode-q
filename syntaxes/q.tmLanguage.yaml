@@ -1,0 +1,166 @@
+name: q language
+scopeName: source.q
+patterns:
+  # DO NOT change orders
+  - include: "#comments"
+  - include: "#strings"
+  - include: "#constants"
+  - include: "#keywords"
+  - include: "#function"
+  - include: "#invalids"
+repository:
+  comments:
+    patterns:
+      - name: comment.block.q
+        begin: ^/\s*$
+        end: ^\\\s*$
+      - name: comment.block.eof.q
+        begin: ^\\\s*$
+        end: \z
+      - begin: (^(/)(?:\s*)(?:(@[pr])\s+([a-zA-Z][a-zA-Z\d_]*))?(?:\s*\w*))
+        beginCaptures:
+          1: { name: comment.line.slash.q }
+          2: { name: punctuation.definition.comment.q }
+          3: { name: storage.type.class.q }
+          4: { name: variable.parameter.q }
+        end: (?=^)
+        contentName: comment.line.q
+      - name: comment.line.inline.q
+        match: \s/.*
+  strings:
+    patterns:
+      - begin: '"'
+        beginCaptures:
+          0: { name: punctuation.definition.string.begin.q }
+        end: '"'
+        endCaptures:
+          0: { name: punctuation.definition.string.end.q }
+        name: string.quoted.double.q
+        patterns:
+          - name: constant.character.escape.q
+            match: \\(\\|n|t|r|"|[0-7]{3})
+  invalids:
+    patterns:
+      - name: invalid.illegal.bracket.q
+        match: ^[}\]\)].*
+  constants:
+    patterns:
+      - name: support.function.utility.q
+        match: \.Q\.(a|A|addmonths|addr|bt|btoa|bv|Cf|chk|cn|D|D|dd|def|dpft|dpfts|dsftg|en|ens|f|fc|ff|fk|fmt|fps|fs|fsn|ft|fu|gc|hdpf|hg|host|hp|id|ind|j10|j12|k|l|M|MAP|opt|P|par|pd|PD|pf|pn|pt|pv|PV|qp|qp|qt|qt|res|s|s1|sbt|sha1|trp|ts|ty|u|u|v|V|view|vp|w|x|x10|x12|Xf)\b
+      - name: support.function.json.q
+        match: \.j\.(j|k|jd)\b
+      - name: support.function.callback.q
+        match: \.z\.(ac|bm|exit|p[cdghiopqsw]|ts|vs|w[cos])\b
+      - name: support.constant.system.info.q
+        match: \.z\.([a-fhiklno-qstuwxzDKNPTWXZ]|ex|ey|pm|zd)\b
+      - name: support.function.http.q
+        match: \.h\.(br|c0|c1|cd|code|d|ed|edsn|fram|ha|hb|hc|he|hn|HOME|hp|hr|ht|hta|htac|htc|html|http|hu|hug|hy|iso8601|jx|logo|nbr|pre|sa|sb|sc|td|text|tx|ty|uh|val|xd|xmp|xs|xt)\b
+      - name: support.function.file.q
+        match: \b(0:|1:|2:)
+      - name: support.function.internal.q
+        match: \-([1-9]|1[0-689]|2[0-79]|3[01368]|120)!
+      - name: constant.language.null.q
+        match: \b0(N[ghijepmdznuvt]?|n)\b
+      - name: constant.language.boolean.q
+        match: \b[01]+b\b
+      - name: constant.language.infinity.q
+        match: \b-?0(W[hijepdnutv]?|wz?)\b
+      - name: constant.other.date
+        match: \b([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))\b
+      - name: constant.other.date.month
+        match: \b([12]\d{3}\.(0[1-9]|1[0-2])m)\b
+      - name: constant.other.date.time.q
+        match: \b([01]\d|2[0-3])(:([0-5]\d)(:([0-5]\d(\.\d{0,3})?))?)\b
+      - name: constant.other.date.timespan.q
+        match: \b\d+D(([01]\d|2[0-3])(:([0-5]\d)(:([0-5]\d(\.\d{0,9})?))?)?)?n?\b
+      - name: constant.other.timestamp.q
+        match: \b([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))(p|D|Dp|D(([01]\d|2[0-3])(:([0-5]\d)(:([0-5]\d(\.\d{0,9})?))?)?p?))\b
+      - name: constant.other.timestamp.datetime.q
+        match: \b([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))(z|T|Tz|T(([01]\d|2[0-3])(:([0-5]\d)(:([0-5]\d(\.\d{0,3})?))?)?z?))\b
+      - name: constant.numeric.byte
+        match: \b0x[0-9a-fA-F]+\b
+      - name: constant.numeric.guid.q
+        match: \b([\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})\b
+      - name: constant.numeric.decimal.q
+        match: |-
+          (?x)-?(?:
+            (?:\b[0-9]+(\.)[0-9]*e[+-]?[0-9]+[ef]?\b)|    # 1.1e+3
+            (?:\b[0-9]+(\.)e[+-]?[0-9]+[ef]?\b)|          # 1.e+3
+            (?:\B(\.)[0-9]+e[+-]?[0-9]+[ef]?\b)|          # .1e+3
+            (?:\b[0-9]+e[+-]?[0-9]+[ef]?\b)|              # 1e+3
+            (?:\b[0-9]+(\.)[0-9]*[ef]?\b)|                # 1.1
+            (?:\b[0-9]+(\.)[ef]?\B)|                      # 1.
+            (?:\B(\.)[0-9]+[ef]?\b)|                      # .1
+            (?:\b[0-9]+[efhij]?\b(?!\.))                  # 1efhij
+          )
+      - name: support.type.q
+        match: '`(boolean|byte|short|int|long|real|float|char|symbol|timestamp|month|date|datetime|timespan|minute|second|time|year|mm|dd|hh|uu|ss)(?=\$)'
+      - name: support.attribute.q
+        match: "`[supg](?=#)"
+      # - name: support.cast.q
+      #   match: \"[b-jmnps-vxzB-JMNPS-VXZ]\"(?=\$)
+      - name: constant.other.symbol.q
+        match: '`(:[a-zA-Z\d_\.:/]*|[a-zA-Z\d_\.:]*)'
+        #<--
+      - name: constant.other.cmd.q
+        match: ^\\.+
+      - name: constant.other.namespace.q
+        match: ^[a-zA-Z]\)
+        # to capture `float$, `s# entity.name.type
+        #-->
+  keywords:
+    patterns:
+      - name: keyword.operator.q
+        match: \b(abs|acos|all|and|any|asc|asin|asof|atan|attr|avg|avgs|bin|binr|ceiling|cols|cor|cos|count|cov|cross|csv|cut|deltas|desc|dev|differ|distinct|div|dsave|each|ema|enlist|eval|except|exec|exit|exp|fills|first|fkeys|flip|floor|get|getenv|group|gtime|hclose|hcount|hdel|hopen|hsym|iasc|idesc|in|inter|inv|key|keys|last|like|load|log|lower|lsq|ltime|ltrim|mavg|max|maxs|mcount|md5|mdev|med|meta|min|mins|mmax|mmin|mmu|mod|msum|neg|next|not|null|or|over|parse|peach|pj|prd|prds|prev|prior|rand|rank|ratios|raze|read0|read1|reciprocal|reval|reverse|rload|rotate|rsave|rtrim|save|scan|scov|sdev|set|setenv|show|signum|sin|sqrt|ss|ssr|string|sublist|sum|sums|sv|svar|system|tables|tan|til|trim|type|ungroup|union|upper|value|var|view|views|vs|wavg|within|wsum|xasc|xbar|xcol|xcols|xdesc|xexp|xgroup|xkey|xlog|xprev|xrank)\b
+      - name: keyword.control.q
+        match: \b(do|if|while)\b
+      - name: keyword.control.q
+        match: \$(?=\[)
+      - name: keyword.assign.q
+        match: "::?"
+      - name: keyword.iterator.q
+        match: (':?|\\:?|/:?)
+      - name: keyword.other.DML.q
+        match: \b(select|update|delete|exec|from|by|fby|where|aj|aj0|ajf|ajf0|ej|ij|ijf|lj|ljf|uj|ujf|wj|wj1|upsert|insert)\b
+      - name: keyword.operator.comparison.q
+        match: (=|<=?|>=?|~|<>)
+      - include: "#variables"
+      - name: keyword.operator.q
+        match: '[\@\.\$!?+\-\*%|&#^,]'
+  variables:
+    patterns:
+      # gloabl function/variables
+      - name: entity.name.function.q
+        match: (?<![a-zA-Z\d])\.[a-zA-Z][a-zA-Z\d_]*(\.[a-zA-Z\d_]+)*
+  function:
+    patterns:
+      - begin: "{"
+        beginCaptures:
+          0: { name: punctuation.definition.function.body.begin.q }
+        end: "}"
+        endCaptures:
+          0: { name: punctuation.definition.function.body.end.q }
+        patterns:
+          - include: "#function_param"
+          - include: "#comments"
+          - include: "#strings"
+          - include: "#constants"
+          - include: "#keywords"
+          - include: "#invalids"
+          - include: "#function"
+          - name: variable.language.default.q
+            match: \b(x|y|z)\b
+  function_param:
+    patterns:
+      - name: meta.parameters.q
+        begin: (?<={)\[
+        beginCaptures:
+          0: { name: punctuation.definition.parameters.begin.q }
+        end: "]"
+        endCaptures:
+          0: { name: punctuation.definition.parameters.end.q }
+        patterns:
+          - name: variable.parameter.q
+            match: \b[a-zA-Z][a-zA-Z\d_]*
+          - name: punctuation.separator.parameter.q
+            match: ";"

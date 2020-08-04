@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="q view">
+  <title>q view</title>
+  <link rel="stylesheet" type="text/css" href="{assets}/css/{theme}.css">
+  <link rel="stylesheet" type="text/css" href="{assets}/css/q-view.css">
+  <link rel="stylesheet" type="text/css" href="{assets}/js/perspective.js">
+  <!-- <script src="https://unpkg.com/@finos/perspective-viewer@0.5.1/dist/umd/perspective-viewer.js"></script> -->
+  <!-- <script type="text/javascript" src="{assets}/js/perspective.js"></script> -->
+  <script type="text/javascript" src="{assets}/js/perspective.inline.js"></script>
+  <script type="text/javascript" src="{assets}/js/perspective-viewer.js"></script>
+  <script type="text/javascript" src="{assets}/js/perspective-viewer-hypergrid.js"></script>
+  <script type="text/javascript" src="{assets}/js/perspective-viewer-{chart}.js"></script>
+</head>
+
+<body>
+  <div id="toolbar">
+    <div id="toolbar-left">
+      <!--<a id="buy-coffee" title="buy me a coffee" href="#" style="color: orangered; font-weight: bold"
+        onclick="buyCoffee()">buy me a coffee</a> -->
+      <select id="save-file-type-selector" title="save data as" onChange="saveData()">
+        <option value="">Save as</option>
+        <option value=".csv">csv</option>
+        <option value=".xlsx">xlsx</option>
+      </select>
+    </div>
+    <div id="toolbar-right">
+      <input id="data-view-stats" type="text" readonly="readonly" title="data stats" />
+    </div>
+  </div>
+  <perspective-viewer id="data-viewer" plugin="hypergrid" editable="true" selectable="true"
+    style="--select--background-color: {dataViewBg}"></perspective-viewer>
+  <script type="text/javascript" src="{assets}/js/q-view.js"></script>
+</body>
+
+</html>
