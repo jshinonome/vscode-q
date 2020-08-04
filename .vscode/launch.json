@@ -1,0 +1,50 @@
+// A launch configuration that launches the extension inside a new window
+// Use IntelliSense to learn about possible attributes.
+// Hover to view descriptions of existing attributes.
+// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Webpack & Launch Extension",
+            "type": "extensionHost",
+            "request": "launch",
+            "preLaunchTask": "npm: webpack",
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}"
+            ]
+        },
+        {
+            "name": "Launch Extension",
+            "type": "extensionHost",
+            "request": "launch",
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach to Language Server",
+            "port": 6018,
+            "restart": true,
+            "outFiles": [
+                "${workspaceRoot}/dist/*.js"
+            ]
+        },
+    ],
+    "exclude": [
+        "local"
+    ],
+    "compounds": [
+        {
+            "name": "Client & Server",
+            "configurations": [
+                "Launch Extension",
+                "Attach to Language Server"
+            ]
+        }
+    ]
+}
