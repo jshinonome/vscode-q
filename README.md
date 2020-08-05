@@ -21,16 +21,12 @@ This extension provides kdb+\q language support.
     - completion resolve
     - signature help
 
-Recommend to use theme [dracula/visual-studio-code](https://marketplace.visualstudio.com/items?itemName=dracula-theme.theme-dracula).
-
-Recommend to use font [FiraCode](https://github.com/tonsky/FiraCode).
-
 See the [Changelog](https://github.com/jshinonome/vscode-q/blob/master/CHANGELOG.md).
 
 [Submit an issue](https://github.com/jshinonome/vscode-q/issues).
 
 ## Configuration
-Type `ctrl+,` to open Settings, search for following configuration and change the value.
+Type <kbd>ctrl</kbd>+<kbd>,</kbd> to open Settings, search for following configuration and change the value.
 
 | configuration           | type    | default value                    | description                           |
 | ----------------------- | ------- | -------------------------------- | ------------------------------------- |
@@ -84,6 +80,10 @@ Thanks to the following packages that makes this happen.
 - https://github.com/tree-sitter/tree-sitter-javascript
 - https://github.com/bash-lsp/bash-language-server
 - https://github.com/RandomFractals/vscode-data-preview
+
+## Recommended Packages
+- [dracula/visual-studio-code](https://marketplace.visualstudio.com/items?itemName=dracula-theme.theme-dracula).
+- [FiraCode](https://github.com/tonsky/FiraCode).
 
 ## License
 [MIT](https://github.com/jshinonome/vscode-q/blob/master/LICENSE)

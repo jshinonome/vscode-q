@@ -98,7 +98,6 @@ export class QConnManager {
                                 this.activeConn = qConn;
                                 commands.executeCommand('qservers.refreshEntry');
                                 QStatusBarManager.updateConnStatus(label);
-                                this.updateQueryWrapper();
                             }
                         }
                     );

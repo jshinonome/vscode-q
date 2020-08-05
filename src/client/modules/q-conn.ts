@@ -21,7 +21,7 @@ export class QConn extends TreeItem {
     conn?: q.Connection;
     command?: Command;
     // kdb+ version
-    version = 3.5;
+    version = 3.0;
     constructor(cfg: QCfg, conn: q.Connection | undefined = undefined) {
         super(cfg['label'], TreeItemCollapsibleState.None);
         this.host = ('host' in cfg) ? cfg['host'] : 'localhost';
@@ -49,6 +49,7 @@ export class QConn extends TreeItem {
                 console.log('Cannot retrieve kdb+ version');
             if (res)
                 this.version = res;
+            QConnManager.current?.updateQueryWrapper();
         });
     }
 
