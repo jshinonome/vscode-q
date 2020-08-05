@@ -3,9 +3,6 @@
 [![](https://vsmarketplacebadge.apphb.com/downloads/jshinonome.vscode-q.svg?color=blue&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 [![](https://vsmarketplacebadge.apphb.com/installs/jshinonome.vscode-q.svg?color=success&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 
-
-![demo.gif](assets/demo/demo.gif)
-
 This extension provides kdb+\q language support.
 - syntaxes
 - server explorer
@@ -24,6 +21,28 @@ This extension provides kdb+\q language support.
 See the [Changelog](https://github.com/jshinonome/vscode-q/blob/master/CHANGELOG.md).
 
 [Submit an issue](https://github.com/jshinonome/vscode-q/issues).
+
+### Demo
+## Connect to a Server
+Create a server and click to connect
+
+![connect-to-a-server](assets/demo/1-connect-to-a-server.gif)
+
+## Query a Table
+
+![query-a-table](assets/demo/2-query-a-table.gif)
+
+## Define a Function
+- Highlight `@p,@r` in comments, p stands for param, r stands for return.
+- Highlight parameters for functions. There shouldn't be any space between `{` and `[`.
+
+![define-a-function](assets/demo/3-define-a-function.gif)
+
+## Call a Function
+- Autocomplete based on source code(Plan to add server variables/functions later).
+- Signature help based on function definition.
+
+![call-a-function](assets/demo/4-call-a-function.gif)
 
 ## Configuration
 Type <kbd>ctrl</kbd>+<kbd>,</kbd> to open Settings, search for following configuration and change the value.
@@ -50,16 +69,6 @@ The query view, powered by [perspective](https://perspective.finos.org/), can pi
 
 ### Query Console
 Output just like q console to an output channel. The console size is set to the same as q console. Use `system "c rows columns"` to change console size.
-
-## Highlight Comments
-Highlight `@p,@r` in comments, p stands for param, r stands for return.
-
-![highlight_comment.png](assets/demo/highlight_comment.png)
-
-## Semantic Highlight
-Highlight parameters for functions. There shouldn't be any space between `{` and `[`.
-
-![semantic_highlight.png](assets/demo/semantic_highlight.png)
 
 ## Formatter
 Append space to `},],)` by formatting the file. Turn on `Editor: Format On Save` to automatically append space.
