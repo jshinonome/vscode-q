@@ -6,7 +6,7 @@ vscode = acquireVsCodeApi();
 // add vscode message handler
 window.addEventListener('message', event => {
     const message = event.data;
-    console.log(`got a vscode message, type: ${message.type}`)
+    console.log(`got a vscode message, type: ${message.type}`);
     switch (message.type) {
         // raw byte array
         case 'rba':
@@ -38,7 +38,7 @@ function updateStats() {
     numberOfRows.then(rowCount => {
         const colCount = viewer['columns'].length;
         // notify webview for data stats status update
-        document.getElementById("data-view-stats").value = `Row ${rowCount}, Col ${colCount}`;
+        document.getElementById('data-view-stats').value = `Row ${rowCount}, Col ${colCount}`;
     });
 }
 
@@ -46,15 +46,21 @@ function updateStats() {
 function loadData(msg) {
     try {
         switch (msg.type) {
-            case "rba":
+            case 'rba':
                 var table = perspective.worker().table(Uint8Array.from(msg.data).buffer);
                 viewer.load(table)
-                    .then(_ => updateStats());
+                    .then(_ => {
+                        viewer.reset();
+                        updateStats();
+                    });
                 break;
-            case "json":
-                var table = perspective.worker().table(msg.data)
+            case 'json':
+                var table = perspective.worker().table(msg.data);
                 viewer.load(table)
-                    .then(_ => updateStats());;
+                    .then(_ => {
+                        viewer.reset();
+                        updateStats();
+                    });
                 break;
         }
     } catch (error) {

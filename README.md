@@ -22,23 +22,23 @@ See the [Changelog](https://github.com/jshinonome/vscode-q/blob/master/CHANGELOG
 
 [Submit an issue](https://github.com/jshinonome/vscode-q/issues).
 
-### Demo
-## Connect to a Server
+## Demo
+### Connect to a Server
 Create a server and click to connect
 
 ![connect-to-a-server](assets/demo/1-connect-to-a-server.gif)
 
-## Query a Table
+### Query a Table
 
 ![query-a-table](assets/demo/2-query-a-table.gif)
 
-## Define a Function
+### Define a Function
 - Highlight `@p,@r` in comments, p stands for param, r stands for return.
 - Highlight parameters for functions. There shouldn't be any space between `{` and `[`.
 
 ![define-a-function](assets/demo/3-define-a-function.gif)
 
-## Call a Function
+### Call a Function
 - Autocomplete based on source code(Plan to add server variables/functions later).
 - Signature help based on function definition.
 
