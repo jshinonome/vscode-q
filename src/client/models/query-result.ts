@@ -9,5 +9,7 @@ export type QueryResult = {
     type: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data: any,
-    cols?: string[]
+    cols?: string[],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    meta?: any
 }

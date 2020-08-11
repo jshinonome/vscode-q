@@ -55,7 +55,8 @@ function loadData(msg) {
                     });
                 break;
             case 'json':
-                var table = perspective.worker().table(msg.data);
+                var table = perspective.worker().table(msg.meta);
+                table.update(msg.data);
                 viewer.load(table)
                     .then(_ => {
                         viewer.reset();

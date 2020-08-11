@@ -1,6 +1,10 @@
 # change log
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.6.9
+### added
+- append data type to query view
+
 ## 1.6.3
 ### added
 - add signature help

@@ -55,7 +55,7 @@ export class QConnManager {
         const limit = this.isLimited ? '1000 sublist ' : '';
         const wrapper = QConnManager.consoleMode
             ? '{`t`r!(0b;.Q.S[system"c";0j;value x])}'
-            : `{res:value x;$[(count res) & .Q.qt res;:\`t\`r!(1b;${limit}0!res);:\`t\`r!(0b;.Q.S[system"c";0j;res])]}`;
+            : `{res:value x;$[(count res) & .Q.qt res;:\`t\`r\`m!(1b;${limit}0!res;0!meta res);:\`t\`r!(0b;.Q.S[system"c";0j;res])]}`;
         if (this.activeConn && this.activeConn.version < 3.5)
             this.queryWrapper = wrapper;
         else
@@ -132,9 +132,10 @@ export class QConnManager {
                                 QueryView.createOrShow();
                                 QueryView.currentPanel?.update({
                                     type: 'json',
-                                    data: res.r
+                                    data: res.r,
+                                    meta: res.m
                                 });
-                                QueryConsole.current?.append(`${res.r.length} row(s) returned`, Date.now() - time);
+                                QueryConsole.current?.append(`${res.r[Object.keys(res.r)[0]].length} row(s) returned`, Date.now() - time);
                             }
                             else {
                                 QueryConsole.current?.append(res.r, Date.now() - time);

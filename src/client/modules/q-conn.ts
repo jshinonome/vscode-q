@@ -20,6 +20,7 @@ export class QConn extends TreeItem {
     socketTimeout: number;
     conn?: q.Connection;
     command?: Command;
+    flipTables = false;
     // kdb+ version
     version = 3.0;
     constructor(cfg: QCfg, conn: q.Connection | undefined = undefined) {
