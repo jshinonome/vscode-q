@@ -47,6 +47,10 @@ export function isSeparator(n: SyntaxNode): boolean {
     return n.type === 'separator';
 }
 
+export function isSymbol(n: SyntaxNode): boolean {
+    return n.type === 'constant_symbol';
+}
+
 export function isNamespace(n: SyntaxNode): boolean {
     return n.type === 'namespace';
 }

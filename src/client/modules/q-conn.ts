@@ -36,7 +36,7 @@ export class QConn extends TreeItem {
         this.socketNoDelay = ('socketNoDelay' in cfg) ? cfg['socketNoDelay'] : false;
         this.socketTimeout = ('socketTimeout' in cfg) ? cfg['socketTimeout'] : 0;
         this.command = {
-            command: 'qservers.connect',
+            command: 'q-servers.connect',
             title: 'connect to q server',
             arguments: [this.label]
         };

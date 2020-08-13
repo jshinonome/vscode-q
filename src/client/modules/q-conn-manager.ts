@@ -81,7 +81,7 @@ export class QConnManager {
                 if (conn) {
                     this.activeConn = qConn;
                     QStatusBarManager.updateConnStatus(label);
-                    commands.executeCommand('qservers.refreshEntry');
+                    commands.executeCommand('q-servers.refreshEntry');
                     this.updateQueryWrapper();
                 } else {
                     q.connect(qConn,
@@ -96,7 +96,8 @@ export class QConnManager {
                                 });
                                 qConn?.setConn(conn);
                                 this.activeConn = qConn;
-                                commands.executeCommand('qservers.refreshEntry');
+                                commands.executeCommand('q-servers.refreshEntry');
+                                commands.executeCommand('q-explorer.refreshEntry');
                                 QStatusBarManager.updateConnStatus(label);
                             }
                         }
@@ -180,13 +181,13 @@ export class QConnManager {
         this.qCfg.push(qcfg);
         this.qCfg.sort((q1, q2) => q1.label.localeCompare(q2.label));
         this.dumpCfg();
-        commands.executeCommand('qservers.refreshEntry');
+        commands.executeCommand('q-servers.refreshEntry');
     }
 
     removeCfg(label: string): void {
         this.qCfg = this.qCfg.filter(qcfg => qcfg.label !== label);
         this.dumpCfg();
-        commands.executeCommand('qservers.refreshEntry');
+        commands.executeCommand('q-servers.refreshEntry');
     }
 
     dumpCfg(): void {
@@ -200,7 +201,7 @@ export class QConnManager {
             this.activeConn = undefined;
             QStatusBarManager.updateConnStatus(undefined);
         }
-        commands.executeCommand('qservers.refreshEntry');
+        commands.executeCommand('q-servers.refreshEntry');
         window.showWarningMessage(`Lost connection to ${label.toUpperCase()}`);
     }
 }

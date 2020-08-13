@@ -5,6 +5,13 @@
  * https://opensource.org/licenses/MIT
  */
 
+/**
+ * Copyright (c) 2020 Jo Shinonome
+ *
+ * This software is released under the MIT License.
+ * https://opensource.org/licenses/MIT
+ */
+
 import { Event, EventEmitter, TreeDataProvider, TreeItem } from 'vscode';
 import { QConn } from './q-conn';
 import { QConnManager } from './q-conn-manager';
@@ -18,7 +25,7 @@ export class QServerTreeProvider implements TreeDataProvider<QConn> {
     constructor() {
         this.qConnManager = QConnManager.create();
     }
-    // TODO: keep active conns after refresh
+
     refresh(): void {
         this.qConnManager.loadCfg();
         this._onDidChangeTreeData.fire(undefined);

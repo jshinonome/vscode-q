@@ -89,16 +89,13 @@ export default class QAnalyzer {
     }
 
     private parser: Parser
-
     private uriToTextDocument = new Map<string, TextDocument>();
-
     private uriToTree = new Map<DocumentUri, Parser.Tree>();
-
     private uriToFileContent = new Map<DocumentUri, string>();
-
     private uriToDefinition = new Map<DocumentUri, nameToSymbolInfo>();
-
+    private uriToSymbol = new Map<DocumentUri, string[]>();
     private nameToSigHelp = new Map<string, SignatureHelp>();
+    private serverIds: string[] = [];
 
     public constructor(parser: Parser) {
         this.parser = parser;
@@ -251,6 +248,7 @@ export default class QAnalyzer {
         this.uriToTree.set(uri, tree);
         this.uriToDefinition.set(uri, new Map<string, SymbolInformation[]>());
         this.uriToFileContent.set(uri, content);
+        this.uriToSymbol.set(uri, []);
 
         const problems: Diagnostic[] = [];
 
@@ -318,6 +316,8 @@ export default class QAnalyzer {
                 namespace = n.firstChild?.text ?? '';
             } else if (TreeSitterUtil.isNamespaceEnd(n)) {
                 namespace = '';
+            } else if (TreeSitterUtil.isSymbol(n)) {
+                this.uriToSymbol.get(uri)?.push(n.text.trim());
             }
         });
 
@@ -338,6 +338,37 @@ export default class QAnalyzer {
         findMissingNodes(tree.rootNode);
 
         return problems;
+    }
+
+    public analyzeServerCache(content: string): void {
+        const tree = this.parser.parse(content);
+        this.serverIds = [];
+        TreeSitterUtil.forEach(tree.rootNode, (n: Parser.SyntaxNode) => {
+            if (TreeSitterUtil.isDefinition(n)) {
+                const named = n.firstChild;
+                if (named === null) {
+                    return;
+                }
+                const name = named.text.trim();
+                const functionNode = n.children[2]?.firstChild;
+                const symbolKind = functionNode?.type === 'function_body' ? SymbolKind.Function : SymbolKind.Variable;
+
+                this.serverIds.push(name);
+
+                if (symbolKind === SymbolKind.Function && functionNode?.firstNamedChild?.type === 'formal_parameters') {
+                    const params = functionNode.firstNamedChild.namedChildren.map(n => ParameterInformation.create(n.text));
+                    if (params.length > 0) {
+                        const sigInfo = SignatureInformation.create(`${name}[${params.map(p => p.label).join(';')}]`, undefined, ...params);
+                        this.nameToSigHelp.set(name, {
+                            signatures: [sigInfo],
+                            activeParameter: 0,
+                            activeSignature: 0
+                        });
+                    }
+                }
+
+            }
+        });
     }
 
     public remove(uri: string): void {
@@ -431,4 +462,24 @@ export default class QAnalyzer {
     public getSigHelp(query: string): SignatureHelp | undefined {
         return this.nameToSigHelp.get(query);
     }
+
+    public getServerIds(): string[] {
+        return this.serverIds;
+    }
+
+    public getSyms(uri: DocumentUri): string[] {
+        return this.uriToSymbol.get(uri) ?? [];
+    }
+
+    public getLocalIds(uri: DocumentUri, containerName: string): string[] {
+        const ids = this.getAllSymbols().filter(s => s.containerName === '' && !s.name.startsWith('.')).map(s => s.name);
+        if (containerName !== '') {
+            this.uriToDefinition.get(uri)?.forEach(symInfos => symInfos.forEach(s => {
+                if (s.containerName === containerName)
+                    ids.push(s.name);
+            }));
+        }
+        return ids;
+    }
+
 }

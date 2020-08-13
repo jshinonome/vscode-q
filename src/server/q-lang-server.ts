@@ -38,7 +38,6 @@ export default class QLangServer {
         this.documents.listen(this.connection);
 
         this.documents.onDidChangeContent(this.onDidChangeContent.bind(this));
-
         this.connection.onHover(this.onHover.bind(this));
         this.connection.onDefinition(this.onDefinition.bind(this));
         this.connection.onWorkspaceSymbol(this.onWorkspaceSymbol.bind(this));
@@ -51,6 +50,7 @@ export default class QLangServer {
         this.connection.onPrepareRename(this.onPrepareRename.bind(this));
         this.connection.onRenameRequest(this.onRenameRequest.bind(this));
         this.connection.onSignatureHelp(this.onSignatureHelp.bind(this));
+        this.connection.onNotification('$/analyze-server-cache', (code => this.analyzer.analyzeServerCache(code)));
     }
 
     public static async initialize(
@@ -83,13 +83,14 @@ export default class QLangServer {
             signatureHelpProvider: {
                 triggerCharacters: ['['],
                 retriggerCharacters: [';']
-            }
+            },
         };
     }
 
     // todo - when add more rules, extract to a package
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private onDidChangeContent(change: any) {
+        this.connection.console.log(`Analyzing ${change.document.uri}`);
         this.analyzer.analyze(change.document.uri, change.document);
         const diagnostics = this.validateTextDocument(change.document);
         // Send the computed diagnostics to VSCode.
@@ -104,6 +105,7 @@ export default class QLangServer {
                     this.analyzer.remove(event.uri);
                 } else {
                     const fileContent = fs.readFileSync(event.uri, 'utf8');
+                    this.connection.console.log(`Analyzing ${event.uri}`);
                     this.analyzer.analyze(event.uri, TextDocument.create(event.uri, 'q', 1, fileContent));
                 }
 
@@ -128,18 +130,19 @@ export default class QLangServer {
         // console.log(word?.text)
 
         if (word?.text.startsWith('.')) {
-            completionItem = this.buildInFsRef.filter(item => item.label.startsWith(word.text));
-            globalId = this.analyzer
-                .getAllSymbols().map(sym => sym.name).filter(id => id.startsWith('.'));
+            completionItem = this.buildInFsRef.filter(item => item.label.startsWith('.'));
+            globalId = this.analyzer.getServerIds().concat(
+                this.analyzer.getAllSymbols().map(sym => sym.name)).filter(id => id.startsWith('.'));
             new Set(globalId).forEach(id => completionItem.push(CompletionItem.create(id)));
         } else if (word?.text.startsWith('`')) {
             symbols = this.analyzer
-                .findSynNodeByType(params.textDocument.uri, 'constant_symbol').map(n => n.text.trim()).filter(s => s.startsWith(word.text));
+                .getSyms(params.textDocument.uri);
             new Set(symbols).forEach(id => completionItem.push(CompletionItem.create(id)));
         } else {
             completionItem = this.buildInFsRef.filter(item => !item.label.startsWith('.'));
-            localId = this.analyzer
-                .findSynNodeByType(params.textDocument.uri, 'local_identifier').map(n => n.text.trim());
+            localId = this.analyzer.getServerIds().filter(id => !id.startsWith('.')).concat(
+                this.analyzer.getLocalIds(params.textDocument.uri, word?.containerName ?? '')
+            );
             new Set(localId).forEach(id => completionItem.push(CompletionItem.create(id)));
         }
         // console.log(completionItem)s

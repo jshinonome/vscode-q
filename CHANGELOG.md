@@ -1,6 +1,11 @@
 # change log
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.7.0
+### added
+- support autocomplete for server variables
+- support signature help for server functions(only for type 100:lambda)
+
 ## 1.6.9
 ### added
 - append data type to query view

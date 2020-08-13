@@ -78,24 +78,29 @@
 		"viewsContainers": {
 			"activitybar": [
 				{
-					"id": "q-server-explorer",
+					"id": "q-ext-explorer",
 					"title": "q Ext",
 					"icon": "assets/svg/server.svg"
 				}
 			]
 		},
 		"views": {
-			"q-server-explorer": [
+			"q-ext-explorer": [
 				{
-					"id": "qservers",
+					"id": "q-servers",
 					"name": "Servers",
 					"contextualTitle": "q Servers"
+				},
+				{
+					"id": "q-explorer",
+					"name": "Server Explorer",
+					"contextualTitle": "q Server Explorer"
 				}
 			]
 		},
 		"commands": [
 			{
-				"command": "qservers.refreshEntry",
+				"command": "q-servers.refreshEntry",
 				"title": "Refresh q Server List",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -104,7 +109,7 @@
 				}
 			},
 			{
-				"command": "qservers.addEntry",
+				"command": "q-servers.addEntry",
 				"title": "Add q Server",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -113,7 +118,7 @@
 				}
 			},
 			{
-				"command": "qservers.editEntry",
+				"command": "q-servers.editEntry",
 				"title": "Edit q Server",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -122,7 +127,7 @@
 				}
 			},
 			{
-				"command": "qservers.deleteEntry",
+				"command": "q-servers.deleteEntry",
 				"title": "Delete q Server",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -131,7 +136,7 @@
 				}
 			},
 			{
-				"command": "qservers.toggleLimitQuery",
+				"command": "q-servers.toggleLimitQuery",
 				"title": "Toggle Unlimited Query",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -140,68 +145,111 @@
 				}
 			},
 			{
-				"command": "qservers.queryCurrentLine",
+				"command": "q-servers.queryCurrentLine",
 				"title": "Query Current Line",
 				"category": "kdb+/q ext"
 			},
 			{
-				"command": "qservers.querySelection",
+				"command": "q-servers.querySelection",
 				"title": "Query Current Selection",
 				"category": "kdb+/q ext"
 			},
 			{
-				"command": "qservers.toggleMode",
+				"command": "q-servers.toggleMode",
 				"title": "Toggle Console Mode",
 				"category": "kdb+/q ext",
 				"icon": {
 					"light": "assets/svg/light/console.svg",
 					"dark": "assets/svg/dark/console.svg"
 				}
+			},
+			{
+				"command": "q-explorer.refreshEntry",
+				"title": "Refresh q Explorer",
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/refresh.svg",
+					"dark": "assets/svg/dark/refresh.svg"
+				}
+			},
+			{
+				"command": "q-explorer.insert",
+				"title": "Insert",
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/diff-added.svg",
+					"dark": "assets/svg/dark/diff-added.svg"
+				}
 			}
 		],
 		"menus": {
 			"view/title": [
 				{
-					"command": "qservers.toggleLimitQuery",
-					"when": "view == qservers",
+					"command": "q-servers.toggleLimitQuery",
+					"when": "view == q-servers",
 					"group": "navigation"
 				},
 				{
-					"command": "qservers.addEntry",
-					"when": "view == qservers",
+					"command": "q-servers.addEntry",
+					"when": "view == q-servers",
 					"group": "navigation"
 				},
 				{
-					"command": "qservers.toggleMode",
-					"when": "view == qservers",
+					"command": "q-servers.toggleMode",
+					"when": "view == q-servers",
 					"group": "navigation"
 				},
 				{
-					"command": "qservers.refreshEntry",
-					"when": "view == qservers",
+					"command": "q-servers.refreshEntry",
+					"when": "view == q-servers",
+					"group": "navigation"
+				},
+				{
+					"command": "q-explorer.refreshEntry",
+					"when": "view == q-explorer",
 					"group": "navigation"
 				}
 			],
 			"view/item/context": [
 				{
-					"command": "qservers.editEntry",
-					"when": "view == qservers && viewItem == qconn",
+					"command": "q-servers.editEntry",
+					"when": "view == q-servers && viewItem == qconn",
 					"group": "inline"
 				},
 				{
-					"command": "qservers.deleteEntry",
-					"when": "view == qservers && viewItem == qconn",
+					"command": "q-servers.deleteEntry",
+					"when": "view == q-servers && viewItem == qconn",
+					"group": "inline"
+				},
+				{
+					"command": "q-explorer.insert",
+					"when": "view == q-explorer && viewItem == qdict",
+					"group": "inline"
+				},
+				{
+					"command": "q-explorer.insert",
+					"when": "view == q-explorer && viewItem == qvar",
+					"group": "inline"
+				},
+				{
+					"command": "q-explorer.insert",
+					"when": "view == q-explorer && viewItem == qtable",
+					"group": "inline"
+				},
+				{
+					"command": "q-explorer.insert",
+					"when": "view == q-explorer && viewItem == qfunction",
 					"group": "inline"
 				}
 			]
 		},
 		"keybindings": [
 			{
-				"command": "qservers.queryCurrentLine",
+				"command": "q-servers.queryCurrentLine",
 				"key": "ctrl+q"
 			},
 			{
-				"command": "qservers.querySelection",
+				"command": "q-servers.querySelection",
 				"key": "ctrl+r"
 			}
 		],
@@ -289,7 +337,6 @@
 		"@finos/perspective-viewer": "^0.5.2",
 		"@finos/perspective-viewer-d3fc": "^0.5.2",
 		"@finos/perspective-viewer-datagrid": "^0.5.2",
-		"@finos/perspective-viewer-highcharts": "^0.5.2",
 		"@finos/perspective-viewer-hypergrid": "^0.5.2",
 		"@typescript-eslint/eslint-plugin": "^3.9.0",
 		"csv-parser": "^2.3.3",
