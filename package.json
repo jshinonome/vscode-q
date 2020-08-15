@@ -33,7 +33,7 @@
 	"icon": "icon.png",
 	"main": "./dist/q-ext.js",
 	"activationEvents": [
-		"onView:qservers",
+		"onView:q-servers",
 		"onLanguage:q"
 	],
 	"scripts": {
