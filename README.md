@@ -39,8 +39,8 @@ Create a server and click to connect
 ![define-a-function](assets/demo/3-define-a-function.gif)
 
 ### Call a Function
-- Autocomplete based on source code(Plan to add server variables/functions later).
-- Signature help based on function definition.
+- Autocomplete for defined identifiers and server identifiers.
+- Signature help for defined functions and server functions(type:100).
 
 ![call-a-function](assets/demo/4-call-a-function.gif)
 
