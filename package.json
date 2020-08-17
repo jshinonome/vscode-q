@@ -155,6 +155,11 @@
 				"category": "kdb+/q ext"
 			},
 			{
+				"command": "q-servers.abortQuery",
+				"title": "Abort Current Query",
+				"category": "kdb+/q ext"
+			},
+			{
 				"command": "q-servers.toggleMode",
 				"title": "Toggle Console Mode",
 				"category": "kdb+/q ext",

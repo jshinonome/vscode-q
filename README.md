@@ -14,7 +14,10 @@ This extension provides kdb+\q language support.
     - workspace symbol (Ctrl+T)
     - document highlight
     - document symbol (Ctrl+Shift+O)
-    - completion (include all global namespace variables in the src folder)
+    - completion
+        - identifiers defined in code
+        - identifiers defined on kdb+ process
+        - column names define on kdb+ process
     - completion resolve
     - signature help
 

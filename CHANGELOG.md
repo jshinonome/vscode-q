@@ -1,6 +1,10 @@
 # change log
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.7.2
+- support autocomplete for column names
+- enable timeout(server configuration) on kdb+ process
+
 ## 1.7.0
 ### added
 - support autocomplete for server variables

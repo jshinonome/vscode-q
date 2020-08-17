@@ -143,11 +143,12 @@ export default class QDictTreeItem extends TreeItem
                                 break;
                             case (type == 99):
                                 itemMap.set(name, new QDictTreeItem(name, parent));
-                                code.push(`${res.n[i]}:([]);`);
+                                code.push(`${res.n[i]}:!;`);
                                 break;
                             case (type == 98):
                                 new QTableTreeItem(name, parent, res.c[i]);
-                                code.push(`${res.n[i]}:!;`);
+                                code.push(`${res.n[i]}:([]);`);
+                                res.c[i].forEach((col: string) => code.push(`${col}:\`${col};`));
                                 break;
                             case (type >= 20 && type <= 76):
                                 new QVarTreeItem(name, parent, 'enums');

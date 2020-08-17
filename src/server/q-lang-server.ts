@@ -135,8 +135,7 @@ export default class QLangServer {
                 this.analyzer.getAllSymbols().map(sym => sym.name)).filter(id => id.startsWith('.'));
             new Set(globalId).forEach(id => completionItem.push(CompletionItem.create(id)));
         } else if (word?.text.startsWith('`')) {
-            symbols = this.analyzer
-                .getSyms(params.textDocument.uri);
+            symbols = this.analyzer.getSyms(params.textDocument.uri);
             new Set(symbols).forEach(id => completionItem.push(CompletionItem.create(id)));
         } else {
             completionItem = this.buildInFsRef.filter(item => !item.label.startsWith('.'));

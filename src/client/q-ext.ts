@@ -164,6 +164,13 @@ export function activate(context: ExtensionContext): void {
         });
 
     commands.registerCommand(
+        'q-servers.abortQuery',
+        () => {
+            QConnManager.current?.abortQuery();
+        });
+
+
+    commands.registerCommand(
         'q-explorer.refreshEntry', () => qRoot.refresh());
 
     commands.registerCommand('q-explorer.insert', (item: TreeItem) => {

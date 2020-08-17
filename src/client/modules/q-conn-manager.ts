@@ -24,6 +24,7 @@ export class QConnManager {
     qCfg: QCfg[] = [];
     activeConn: QConn | undefined;
     isBusy = false;
+    busyConn: QConn | undefined = undefined;
     queryWrapper = '';
     isLimited = true;
     // exception: true|false
@@ -82,6 +83,7 @@ export class QConnManager {
                     this.activeConn = qConn;
                     QStatusBarManager.updateConnStatus(label);
                     commands.executeCommand('q-servers.refreshEntry');
+                    commands.executeCommand('q-explorer.refreshEntry');
                     this.updateQueryWrapper();
                 } else {
                     q.connect(qConn,
@@ -117,6 +119,7 @@ export class QConnManager {
                 query = query.slice(0, -1);
             }
             this.isBusy = true;
+            this.busyConn = this.activeConn;
             QStatusBarManager.updateQueryStatus(this.isBusy);
             const time = Date.now();
             this.activeConn?.conn?.k(this.queryWrapper, query,
@@ -144,6 +147,7 @@ export class QConnManager {
                         }
                     }
                     this.isBusy = false;
+                    this.busyConn = undefined;
                     QStatusBarManager.updateQueryStatus(this.isBusy);
                 }
             );
@@ -173,6 +177,13 @@ export class QConnManager {
             }
             fs.writeFileSync(cfgPath, '[]', 'utf8');
         }
+    }
+
+    abortQuery(): void {
+        this.busyConn?.conn?.destroy();
+        this.isBusy = false;
+        this.busyConn = undefined;
+        QStatusBarManager.updateQueryStatus(this.isBusy);
     }
 
     addCfg(qcfg: QCfg): void {

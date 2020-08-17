@@ -96,6 +96,7 @@ export default class QAnalyzer {
     private uriToSymbol = new Map<DocumentUri, string[]>();
     private nameToSigHelp = new Map<string, SignatureHelp>();
     private serverIds: string[] = [];
+    private serverSyms: string[] = [];
 
     public constructor(parser: Parser) {
         this.parser = parser;
@@ -343,6 +344,7 @@ export default class QAnalyzer {
     public analyzeServerCache(content: string): void {
         const tree = this.parser.parse(content);
         this.serverIds = [];
+        this.serverSyms = [];
         TreeSitterUtil.forEach(tree.rootNode, (n: Parser.SyntaxNode) => {
             if (TreeSitterUtil.isDefinition(n)) {
                 const named = n.firstChild;
@@ -366,7 +368,9 @@ export default class QAnalyzer {
                         });
                     }
                 }
-
+            } else if (TreeSitterUtil.isSymbol(n)) {
+                if (this.getContainerName(n) === '')
+                    this.serverSyms.push(n.text.trim());
             }
         });
     }
@@ -468,7 +472,7 @@ export default class QAnalyzer {
     }
 
     public getSyms(uri: DocumentUri): string[] {
-        return this.uriToSymbol.get(uri) ?? [];
+        return this.serverSyms.concat(this.uriToSymbol.get(uri) ?? []);
     }
 
     public getLocalIds(uri: DocumentUri, containerName: string): string[] {

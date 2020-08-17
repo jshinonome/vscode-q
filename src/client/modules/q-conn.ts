@@ -41,11 +41,20 @@ export class QConn extends TreeItem {
             arguments: [this.label]
         };
         this.conn = conn;
+        if (conn) {
+            this.getKdbVersion();
+            this.setTimeout();
+        }
     }
 
     setConn(conn: q.Connection | undefined): void {
         this.conn = conn;
-        conn?.k('.z.K', (err, res) => {
+        this.getKdbVersion();
+        this.setTimeout();
+    }
+
+    getKdbVersion(): void {
+        this.conn?.k('.z.K', (err, res) => {
             if (err)
                 console.log('Cannot retrieve kdb+ version');
             if (res)
@@ -54,8 +63,16 @@ export class QConn extends TreeItem {
         });
     }
 
+    setTimeout(): void {
+        const timeout = Math.round(this.socketTimeout / 1000);
+        this.conn?.k(`system"T ${timeout}"`, (err, _res) => {
+            if (err)
+                console.log('Fail to set timeout');
+        });
+    }
+
     get tooltip(): string {
-        return `${this.host}:${this.port}`;
+        return `${this.host}:${this.port}:${this.user} - t/o:${this.socketTimeout}(ms) - v${this.version}`;
     }
 
     // get description(): string {
