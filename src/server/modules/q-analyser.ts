@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as fs from 'fs';
+// import * as fs from 'fs';
 import Fuse from 'fuse.js';
 import { homedir } from 'os';
 import {
@@ -17,8 +17,9 @@ import * as Parser from 'web-tree-sitter';
 import * as TreeSitterUtil from '../util/tree-sitter';
 
 
-import walkSync = require('walk-sync');
-import path = require('path');
+import klaw = require('klaw');
+import fs = require('graceful-fs');
+import picomatch = require('picomatch');
 
 type nameToSymbolInfo = Map<string, SymbolInformation[]>;
 
@@ -54,36 +55,40 @@ export default class QAnalyzer {
             const getTimePassed = (): string =>
                 `${(Date.now() - lookupStartTime) / 1000} seconds`;
 
-            const qSrcFiles = walkSync(rootPath, {
-                directories: false,
-                globs: globsPattern,
-                ignore: ignorePattern
-            });
+            const ignoreMatch = picomatch(ignorePattern);
+            const includeMatch = picomatch(globsPattern);
+            const qSrcFiles: string[] = [];
+            klaw(rootPath, { filter: item => !ignoreMatch(item) })
+                .on('error', (err: Error, _item: klaw.Item) => {
+                    connection.console.warn(err.message);
+                })
+                .on('data', item => { if (includeMatch(item.path)) qSrcFiles.push(item.path); })
+                .on('end', () => {
+                    if (qSrcFiles.length == 0) {
+                        connection.window.showWarningMessage(
+                            `Failed to find any q source files using the glob "${globsPattern}". Some feature will not be available.`,
+                        );
+                    }
 
-            if (qSrcFiles.length == 0) {
-                connection.window.showWarningMessage(
-                    `Failed to find any q source files using the glob "${globsPattern}". Some feature will not be available.`,
-                );
-            }
+                    connection.console.info(
+                        `Glob found ${qSrcFiles.length} files after ${getTimePassed()}`,
+                    );
 
-            connection.console.log(
-                `Glob found ${qSrcFiles.length} files after ${getTimePassed()}`,
-            );
+                    qSrcFiles.forEach((filepath: string) => {
+                        const uri = `file://${filepath}`;
 
-            qSrcFiles.forEach((filepath: string) => {
-                const fullPath = path.join(rootPath, filepath);
-                const uri = `file://${fullPath}`;
+                        connection.console.info(`Analyzing ${uri}`);
+                        try {
+                            const fileContent = fs.readFileSync(filepath, 'utf8');
+                            analyzer.analyze(uri, TextDocument.create(uri, 'q', 1, fileContent));
+                        } catch (error) {
+                            connection.console.warn(`Failed analyzing ${uri}.`);
+                            connection.console.warn(`Error: ${error.message}`);
+                        }
+                    });
 
-                connection.console.log(`Analyzing ${uri}`);
-                try {
-                    const fileContent = fs.readFileSync(fullPath, 'utf8');
-                    analyzer.analyze(uri, TextDocument.create(uri, 'q', 1, fileContent));
-                } catch (error) {
-                    connection.console.warn(`Failed analyzing ${uri}. Error: ${error.message}`);
-                }
-            });
-
-            connection.console.log(`Analyzing took ${getTimePassed()}`);
+                    connection.console.info(`Analyzing took ${getTimePassed()}`);
+                });
         }
         return analyzer;
     }
