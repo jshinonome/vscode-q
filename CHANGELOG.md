@@ -1,7 +1,12 @@
 # change log
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.7.3
+### change
+- enable to start from directory contains no permission file/sub-directory
+
 ## 1.7.2
+### added
 - support autocomplete for column names
 - enable timeout(server configuration) on kdb+ process
 
