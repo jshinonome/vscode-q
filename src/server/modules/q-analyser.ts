@@ -47,7 +47,7 @@ export default class QAnalyzer {
             const globsPattern = qServerCfg.src.globsPattern ?? ['**/src/**/*.q'];
             const ignorePattern = qServerCfg.src.ignorePattern ?? ['**/build', '**/node_modules'];
 
-            connection.console.log(
+            connection.console.info(
                 `Analyzing files matching glob "${globsPattern}" inside ${rootPath}`,
             );
 

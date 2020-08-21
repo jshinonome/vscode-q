@@ -57,7 +57,7 @@ export default class QLangServer {
         connection: Connection,
         { rootPath }: InitializeParams,
     ): Promise<QLangServer> {
-        console.log(`Initializing q Lang Server at ${rootPath}`);
+        connection.console.info(`Initializing q Lang Server at ${rootPath}`);
         const parser = await initializeParser();
         return QAnalyzer.fromRoot(connection, rootPath, parser).then(
             analyzer => { return new QLangServer(connection, analyzer); }
@@ -90,7 +90,7 @@ export default class QLangServer {
     // todo - when add more rules, extract to a package
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private onDidChangeContent(change: any) {
-        this.connection.console.log(`Analyzing ${change.document.uri}`);
+        this.connection.console.info(`Analyzing ${change.document.uri}`);
         this.analyzer.analyze(change.document.uri, change.document);
         const diagnostics = this.validateTextDocument(change.document);
         // Send the computed diagnostics to VSCode.
@@ -98,14 +98,14 @@ export default class QLangServer {
     }
 
     private onDidChangeWatchedFiles(change: DidChangeWatchedFilesParams) {
-        this.connection.console.log('Received file change event(s)');
+        this.connection.console.info('Received file change event(s)');
         change.changes.forEach(event => {
             if (/.*\/src\/.*\.q/.test(event.uri)) {
                 if (event.type === FileChangeType.Deleted) {
                     this.analyzer.remove(event.uri);
                 } else {
                     const fileContent = fs.readFileSync(event.uri, 'utf8');
-                    this.connection.console.log(`Analyzing ${event.uri}`);
+                    this.connection.console.info(`Analyzing ${event.uri}`);
                     this.analyzer.analyze(event.uri, TextDocument.create(event.uri, 'q', 1, fileContent));
                 }
 
@@ -335,7 +335,7 @@ export default class QLangServer {
         word?: word | null
     ) {
         const wordLog = word ? JSON.stringify(word) : 'null';
-        this.connection.console.log(
+        this.connection.console.info(
             `${request} ${params.position.line}:${params.position.character} word=${wordLog}`,
         );
     }

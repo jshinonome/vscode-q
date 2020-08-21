@@ -185,9 +185,9 @@ export function activate(context: ExtensionContext): void {
 
     context.subscriptions.push(
         commands.registerCommand('q-servers.queryCurrentLine', () => {
-            const n = window.activeTextEditor?.selection.active.line;
-            if (n) {
-                const query = window.activeTextEditor?.document.lineAt(n).text;
+            if (window.activeTextEditor) {
+                const n = window.activeTextEditor.selection.active.line;
+                const query = window.activeTextEditor.document.lineAt(n).text;
                 if (query) {
                     qServers.qConnManager.sync(query);
                 }
