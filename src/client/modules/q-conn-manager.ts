@@ -8,11 +8,12 @@
 import * as fs from 'fs';
 import * as q from 'node-q';
 import { homedir } from 'os';
-import { commands, window } from 'vscode';
+import { commands, window, workspace, Uri } from 'vscode';
 import { QConn } from './q-conn';
 import { QStatusBarManager } from './q-status-bar-manager';
 import { QueryConsole } from './query-console';
 import { QueryView } from './query-view';
+import path = require('path');
 
 const cfgDir = homedir() + '/.vscode/';
 const cfgPath = cfgDir + 'q-server-cfg.json';
@@ -179,6 +180,68 @@ export class QConnManager {
         }
     }
 
+    async importCfg(): Promise<void> {
+        if (!workspace.workspaceFolders) {
+            window.showErrorMessage('No opened workspace folder');
+            return;
+        }
+        const workspaceFolder = workspace.workspaceFolders[0].uri;
+        const paths = await window.showOpenDialog({
+            defaultUri: workspaceFolder,
+            canSelectMany: false
+        });
+        let path = '';
+        if (paths && paths.length > 0) {
+            path = paths[0].fsPath;
+        }
+        if (fs.existsSync(path)) {
+            try {
+                const qCfg = JSON.parse(fs.readFileSync(path, 'utf8'));
+                this.qCfg = qCfg.map((qcfg: QCfg) => {
+                    if (qcfg.port && qcfg.label) {
+                        if (!parseInt(qcfg.port as unknown as string)) {
+                            window.showErrorMessage(`Please input an integer for port of '${qcfg.label}'`);
+                        }
+                        return {
+                            host: qcfg.host,
+                            port: qcfg.port,
+                            user: qcfg.user ?? '',
+                            password: qcfg.password ?? '',
+                            socketNoDelay: qcfg.socketNoDelay ?? false,
+                            socketTimeout: qcfg.socketTimeout ?? 0,
+                            label: qcfg.label as string,
+                            tags: qcfg.tags ?? ''
+                        };
+                    } else {
+                        throw new Error('Please make sure to include port and label');
+                    }
+                });
+                this.dumpCfg();
+                commands.executeCommand('q-servers.refreshEntry');
+            } catch (error) {
+                window.showErrorMessage(error.message);
+            }
+        }
+    }
+
+    async exportCfg(): Promise<void> {
+        if (fs.existsSync(cfgPath)) {
+            const cfg = fs.readFileSync(cfgPath, 'utf8');
+            if (!workspace.workspaceFolders) {
+                window.showErrorMessage('No opened workspace folder');
+                return;
+            }
+            const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
+            const filePath = path.join(workspaceFolder, 'q-server-cfg.json');
+            const fileUri = await window.showSaveDialog({
+                defaultUri: Uri.parse(filePath).with({ scheme: 'file' })
+            });
+            if (fileUri) {
+                fs.writeFile(fileUri.fsPath, cfg, err => window.showErrorMessage(err?.message ?? ''));
+            }
+        }
+    }
+
     abortQuery(): void {
         this.busyConn?.conn?.destroy();
         this.isBusy = false;
@@ -202,7 +265,18 @@ export class QConnManager {
     }
 
     dumpCfg(): void {
-        fs.writeFileSync(cfgPath, JSON.stringify(this.qCfg, null, 4), 'utf8');
+        fs.writeFileSync(cfgPath, JSON.stringify(this.qCfg.map(qcfg => {
+            return {
+                host: qcfg.host,
+                port: qcfg.port,
+                user: qcfg.user,
+                password: qcfg.password,
+                socketNoDelay: qcfg.socketNoDelay,
+                socketTimeout: qcfg.socketTimeout,
+                label: qcfg.label,
+                tags: qcfg.tags,
+            };
+        }), null, 4), 'utf8');
     }
 
     removeConn(label: string): void {
@@ -225,4 +299,5 @@ export type QCfg = {
     socketNoDelay: boolean;
     socketTimeout: number;
     label: string;
+    tags: string;
 }

@@ -169,6 +169,33 @@
 				}
 			},
 			{
+				"command": "q-servers.importServers",
+				"title": "Import Server List",
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/import.svg",
+					"dark": "assets/svg/dark/import.svg"
+				}
+			},
+			{
+				"command": "q-servers.exportServers",
+				"title": "Export Server List",
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/export.svg",
+					"dark": "assets/svg/dark/export.svg"
+				}
+			},
+			{
+				"command": "q-servers.tagEntry",
+				"title": "Tag Server",
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/tag.svg",
+					"dark": "assets/svg/dark/tag.svg"
+				}
+			},
+			{
 				"command": "q-explorer.refreshEntry",
 				"title": "Refresh q Explorer",
 				"category": "kdb+/q ext",
@@ -210,6 +237,16 @@
 					"group": "navigation"
 				},
 				{
+					"command": "q-servers.importServers",
+					"when": "view == q-servers",
+					"group": "navigation"
+				},
+				{
+					"command": "q-servers.exportServers",
+					"when": "view == q-servers",
+					"group": "navigation"
+				},
+				{
 					"command": "q-explorer.refreshEntry",
 					"when": "view == q-explorer",
 					"group": "navigation"
@@ -223,6 +260,11 @@
 				},
 				{
 					"command": "q-servers.deleteEntry",
+					"when": "view == q-servers && viewItem == qconn",
+					"group": "inline"
+				},
+				{
+					"command": "q-servers.tagEntry",
 					"when": "view == q-servers && viewItem == qconn",
 					"group": "inline"
 				},
@@ -332,7 +374,7 @@
 		"@types/vscode": "^1.48.0",
 		"@typescript-eslint/parser": "^3.9.1",
 		"ts-loader": "^8.0.2",
-		"typescript": "^4.0.2",
+		"typescript": "^3.9.7",
 		"vscode-test": "^1.4.0",
 		"webpack": "^4.44.1",
 		"webpack-cli": "^3.3.12"

@@ -19,7 +19,7 @@ import { qCfgInput } from './modules/q-cfg-input';
 import { QConn } from './modules/q-conn';
 import { QConnManager } from './modules/q-conn-manager';
 import { semanticTokensProvider } from './modules/q-semantic-token';
-import { QServerTreeProvider } from './modules/q-server-tree';
+import { QServerTree } from './modules/q-server-tree';
 import { QStatusBarManager } from './modules/q-status-bar-manager';
 import { QueryConsole } from './modules/query-console';
 import { QueryView } from './modules/query-view';
@@ -82,10 +82,11 @@ export function activate(context: ExtensionContext): void {
     QStatusBarManager.updateConnStatus(undefined);
     QStatusBarManager.updateModeStatus();
     // q-server-explorer
-    const qServers = new QServerTreeProvider();
+    const qServers = new QServerTree('root', null);
     const qRoot = new QDictTreeItem('root', null);
     window.registerTreeDataProvider('q-servers', qServers);
     window.registerTreeDataProvider('q-explorer', qRoot);
+    qServers.refresh();
     QueryConsole.createOrShow();
     QueryView.setExtensionPath(context.extensionPath);
     // --> init
@@ -112,15 +113,14 @@ export function activate(context: ExtensionContext): void {
         'q-servers.addEntry',
         async () => {
             const qcfg = await qCfgInput(undefined);
-            qServers.qConnManager.addCfg(qcfg);
+            QConnManager.current?.addCfg(qcfg);
         });
 
     commands.registerCommand(
         'q-servers.editEntry',
         async (qConn: QConn) => {
             const qcfg = await qCfgInput(qConn, false);
-            qServers.qConnManager.addCfg(qcfg);
-
+            QConnManager.current?.addCfg(qcfg);
         });
 
     commands.registerCommand(
@@ -130,7 +130,7 @@ export function activate(context: ExtensionContext): void {
                 { prompt: `Confirm to Remove Server '${qConn.label}' (Y/n)` }
             ).then(value => {
                 if (value === 'Y') {
-                    qServers.qConnManager.removeCfg(qConn.label);
+                    QConnManager.current?.removeCfg(qConn.label);
 
                 }
             });
@@ -139,7 +139,16 @@ export function activate(context: ExtensionContext): void {
     commands.registerCommand(
         'q-servers.connect',
         label => {
-            qServers.qConnManager.connect(label);
+            QConnManager.current?.connect(label);
+        });
+
+    commands.registerCommand(
+        'q-servers.tagEntry',
+        async (qConn: QConn) => {
+            qConn.tags = await window.showInputBox({
+                prompt: `Tags for '${qConn.label}' separate by ',' (e.g. 'dev,quant,tca')`
+            }) ?? '';
+            QConnManager.current?.addCfg(qConn);
         });
 
     commands.registerCommand(
@@ -169,6 +178,18 @@ export function activate(context: ExtensionContext): void {
             QConnManager.current?.abortQuery();
         });
 
+    commands.registerCommand(
+        'q-servers.exportServers',
+        () => {
+            QConnManager.current?.exportCfg();
+        });
+
+    commands.registerCommand(
+        'q-servers.importServers',
+        () => {
+            QConnManager.current?.importCfg();
+        });
+
 
     commands.registerCommand(
         'q-explorer.refreshEntry', () => qRoot.refresh());
@@ -189,7 +210,7 @@ export function activate(context: ExtensionContext): void {
                 const n = window.activeTextEditor.selection.active.line;
                 const query = window.activeTextEditor.document.lineAt(n).text;
                 if (query) {
-                    qServers.qConnManager.sync(query);
+                    QConnManager.current?.sync(query);
                 }
             }
         })
@@ -201,7 +222,7 @@ export function activate(context: ExtensionContext): void {
                 new Range(window.activeTextEditor.selection.start, window.activeTextEditor.selection.end)
             );
             if (query) {
-                qServers.qConnManager.sync(query);
+                QConnManager.current?.sync(query);
             }
         })
     );
@@ -249,7 +270,7 @@ export function activate(context: ExtensionContext): void {
         documentSelector: [{ scheme: 'file', language: 'q' }],
         synchronize: {
             // Notify the server about q file changes
-            fileEvents: workspace.createFileSystemWatcher('**/src/**/*.q')
+            fileEvents: workspace.createFileSystemWatcher('**/*.q')
         }
     };
 

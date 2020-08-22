@@ -23,6 +23,7 @@ export class QConn extends TreeItem {
     flipTables = false;
     // kdb+ version
     version = 3.0;
+    tags: string;
     constructor(cfg: QCfg, conn: q.Connection | undefined = undefined) {
         super(cfg['label'], TreeItemCollapsibleState.None);
         this.host = ('host' in cfg) ? cfg['host'] : 'localhost';
@@ -41,6 +42,7 @@ export class QConn extends TreeItem {
             arguments: [this.label]
         };
         this.conn = conn;
+        this.tags = cfg.tags ?? '';
         if (conn) {
             this.getKdbVersion();
             this.setTimeout();

@@ -32,7 +32,7 @@ export async function qCfgInput(qcfg: QCfg | undefined, requireUnique = true): P
         state.host = await input.showInputBox({
             title,
             step: 1,
-            totalSteps: 7,
+            totalSteps: 8,
             value: state.host,
             prompt: 'Input q server hostname',
             validate: validateNothing,
@@ -45,7 +45,7 @@ export async function qCfgInput(qcfg: QCfg | undefined, requireUnique = true): P
         const value = await input.showInputBox({
             title,
             step: 2,
-            totalSteps: 7,
+            totalSteps: 8,
             value: state.port.toString(),
             prompt: 'Input q server port',
             validate: validateNumber,
@@ -59,7 +59,7 @@ export async function qCfgInput(qcfg: QCfg | undefined, requireUnique = true): P
         state.user = await input.showInputBox({
             title,
             step: 3,
-            totalSteps: 7,
+            totalSteps: 8,
             value: state.user,
             prompt: `Input user for ${state.host}:${state.port}`,
             validate: validateNothing,
@@ -72,7 +72,7 @@ export async function qCfgInput(qcfg: QCfg | undefined, requireUnique = true): P
         state.password = await input.showInputBox({
             title,
             step: 4,
-            totalSteps: 7,
+            totalSteps: 8,
             value: state.password,
             prompt: `Input password for ${state.host}:${state.port}:${state.user}`,
             password: true,
@@ -86,7 +86,7 @@ export async function qCfgInput(qcfg: QCfg | undefined, requireUnique = true): P
         const value = await input.showInputBox({
             title,
             step: 5,
-            totalSteps: 7,
+            totalSteps: 8,
             value: `${state.socketNoDelay}`,
             prompt: 'Set Socket No Delay (true|false)',
             validate: validateBoolean,
@@ -100,7 +100,7 @@ export async function qCfgInput(qcfg: QCfg | undefined, requireUnique = true): P
         const value = await input.showInputBox({
             title,
             step: 6,
-            totalSteps: 7,
+            totalSteps: 8,
             value: state.socketTimeout.toString(),
             prompt: 'Input query timeout(ms)',
             validate: validateNumber,
@@ -117,10 +117,26 @@ export async function qCfgInput(qcfg: QCfg | undefined, requireUnique = true): P
         state.label = await input.showInputBox({
             title,
             step: 7,
-            totalSteps: 7,
+            totalSteps: 8,
             value: state.label,
             prompt: `Input label for ${state.host}:${state.port}`,
             validate: validateUnique,
+            shouldResume: shouldResume
+        });
+        if (state.label === '') {
+            state.label = state.host + '-' + state.port;
+        }
+        return (input: QCfgInput) => inputTags(input, state);
+    }
+
+    async function inputTags(input: QCfgInput, state: QCfg) {
+        state.tags = await input.showInputBox({
+            title,
+            step: 8,
+            totalSteps: 8,
+            value: state.tags,
+            prompt: `Input tags for ${state.label}, separate by ','`,
+            validate: validateNothing,
             shouldResume: shouldResume
         });
     }

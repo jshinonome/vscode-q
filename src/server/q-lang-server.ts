@@ -97,18 +97,28 @@ export default class QLangServer {
         this.connection.sendDiagnostics({ uri: change.document.uri, diagnostics });
     }
 
-    private onDidChangeWatchedFiles(change: DidChangeWatchedFilesParams) {
+    private async onDidChangeWatchedFiles(change: DidChangeWatchedFilesParams) {
         this.connection.console.info('Received file change event(s)');
+        const changedFiles: string[] = [];
         change.changes.forEach(event => {
-            if (/.*\/src\/.*\.q/.test(event.uri)) {
-                if (event.type === FileChangeType.Deleted) {
+            switch (event.type) {
+                case FileChangeType.Deleted:
+                    this.connection.console.info(`Removing ${event.uri} from cache`);
                     this.analyzer.remove(event.uri);
-                } else {
-                    const fileContent = fs.readFileSync(event.uri, 'utf8');
-                    this.connection.console.info(`Analyzing ${event.uri}`);
-                    this.analyzer.analyze(event.uri, TextDocument.create(event.uri, 'q', 1, fileContent));
-                }
-
+                    break;
+                default:
+                    changedFiles.push(event.uri);
+            }
+        });
+        changedFiles.forEach(file => {
+            const filepath = file.replace('file://', '');
+            if (!QAnalyzer.matchFile(filepath))
+                return;
+            try {
+                this.connection.console.info(`Analyzing ${file}`);
+                this.analyzer.analyze(file, TextDocument.create(file, 'q', 1, fs.readFileSync(filepath, 'utf8')));
+            } catch (error) {
+                this.connection.console.warn(`Cannot analyze ${file}`);
             }
         });
     }

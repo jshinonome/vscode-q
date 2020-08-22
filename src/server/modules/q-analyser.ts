@@ -33,6 +33,7 @@ export type word = {
  * The Analyzer analyze Abstract Syntax Trees of tree-sitter-q
  */
 export default class QAnalyzer {
+    static matchFile: (test: string) => boolean;
     public static async fromRoot(
         connection: Connection,
         rootPath: string | undefined | null,
@@ -57,6 +58,7 @@ export default class QAnalyzer {
 
             const ignoreMatch = picomatch(ignorePattern);
             const includeMatch = picomatch(globsPattern);
+            this.matchFile = (test) => !ignoreMatch(test) && includeMatch(test);
             const qSrcFiles: string[] = [];
             klaw(rootPath, { filter: item => !ignoreMatch(item) })
                 .on('error', (err: Error, _item: klaw.Item) => {
@@ -102,7 +104,6 @@ export default class QAnalyzer {
     private nameToSigHelp = new Map<string, SignatureHelp>();
     private serverIds: string[] = [];
     private serverSyms: string[] = [];
-
     public constructor(parser: Parser) {
         this.parser = parser;
     }

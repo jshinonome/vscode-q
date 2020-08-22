@@ -101,6 +101,9 @@ export default class QDictTreeItem extends TreeItem
     }
 
     refresh(): void {
+        if (this._parent) {
+            return;
+        }
         const conn = QConnManager.current?.activeConn?.conn;
         const query = `{
             r: flip \`n\`p!"SS"$\\:();
