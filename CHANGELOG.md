@@ -1,8 +1,13 @@
 # change log
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.7.4
+### added
+- add tags(folders) for server list
+- monitor q file changes
+
 ## 1.7.3
-### change
+### changed
 - enable to start from directory contains no permission file/sub-directory
 
 ## 1.7.2

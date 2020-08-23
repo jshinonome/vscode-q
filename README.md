@@ -5,6 +5,7 @@
 
 This extension provides kdb+\q language support.
 - syntaxes
+- server list with tags
 - server explorer
 - virtualization powered by [perspective](https://perspective.finos.org/)
 - language server powered by [tree-sitter](https://tree-sitter.github.io/tree-sitter/)
@@ -61,8 +62,17 @@ Type <kbd>ctrl</kbd>+<kbd>,</kbd> to open Settings, search for following configu
 ## q Language Server(local server, no connection to the internet)
 The server will analyze q source files in all 'src' folder. Insert ';' to indicated end of statement if necessary.
 
+## Server List
+List servers, click to switch server. Generate tree structure from tags.
+Special tag color:
+- green: dev, development
+- blue: uat
+- red: prd, prod.
+
+![server-list](assets/demo/5-server-list.png)
+
 ## Server Explorer
-All q servers list in the q Server Explorer, and it is easy to switch server.
+List variables defined on the active server.
 
 ## Query Mode
 Type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd> and call `kdb+/q ext: Toggle Query Mode` to switch Query Console.
