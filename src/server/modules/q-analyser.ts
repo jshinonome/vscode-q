@@ -9,10 +9,10 @@
 import Fuse from 'fuse.js';
 import { homedir } from 'os';
 import {
-    Connection, Diagnostic, DiagnosticSeverity, Location, ParameterInformation,
+    Connection, Diagnostic, DiagnosticSeverity,
+    DocumentUri, Location, ParameterInformation,
     Range, SignatureHelp, SignatureInformation, SymbolInformation, SymbolKind, TextDocument
 } from 'vscode-languageserver';
-import { DocumentUri } from 'vscode-languageserver-textdocument';
 import * as Parser from 'web-tree-sitter';
 import * as TreeSitterUtil from '../util/tree-sitter';
 
