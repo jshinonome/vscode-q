@@ -64,7 +64,9 @@ The server will analyze q source files in all 'src' folder. Insert ';' to indica
 
 ## Server List
 List servers, click to switch server. Generate tree structure from tags.
+
 Special tag color:
+
 - green: dev, development
 - blue: uat
 - red: prd, prod.
@@ -90,8 +92,32 @@ Append space to `},],)` by formatting the file. Turn on `Editor: Format On Save`
 - <kbd>ctrl</kbd>+<kbd>q</kbd>: query current line
 - <kbd>ctrl</kbd>+<kbd>r</kbd>: query selected line(s)
 
+## Version Compatibility
+To use this extension in an earlier version of vscode.
+1. git clone this repo
+2. change 'vscode' of 'engine' in the package.json and '@types/vscode' of devDependencies to target version 1.**
+```
+...
+	"engines": {
+		"vscode": "^1.**.*"
+	},
+...
+	"devDependencies": {
+...
+		"@types/vscode": "^1.**.*",
+...
+	},
+```
+3. run the following commands from this repo folder to get a earlier version compatible package
+```
+npm i
+sudo npm i -g vsce
+vsce package
+```
+
+
 ## Packages
-Thanks to the following packages that makes this happen.
+Special thanks to the following packages.
 - [node-q](https://github.com/michaelwittig/node-q)
 - [perspective](https://github.com/finos/perspective/)
 - [tree-sitter](https://github.com/tree-sitter/tree-sitter)
@@ -104,8 +130,8 @@ Thanks to the following packages that makes this happen.
 - https://github.com/RandomFractals/vscode-data-preview
 
 ## Recommended Packages
-- [dracula/visual-studio-code](https://marketplace.visualstudio.com/items?itemName=dracula-theme.theme-dracula).
-- [FiraCode](https://github.com/tonsky/FiraCode).
+- [Theme: Dracula](https://marketplace.visualstudio.com/items?itemName=dracula-theme.theme-dracula)
+- [Fira Code](https://github.com/tonsky/FiraCode)
 
 ## License
 [MIT](https://github.com/jshinonome/vscode-q/blob/master/LICENSE)
