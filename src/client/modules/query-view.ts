@@ -6,7 +6,7 @@
  */
 
 import * as fs from 'fs';
-import { Disposable, Uri, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
+import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
 import * as xlsx from 'xlsx';
 import { QueryResult } from '../models/query-result';
 import path = require('path');
@@ -107,7 +107,7 @@ export class QueryView implements Disposable {
     private configure(): void {
         const cfg = workspace.getConfiguration('q-ext.qview');
         let isLightTheme = false;
-        isLightTheme = cfg.theme === 'light';
+        isLightTheme = window.activeColorTheme.kind === ColorThemeKind.Light;
         this._theme = cfg.dense ? 'material-dense' : 'material';
         this._theme = isLightTheme ? this._theme : this._theme + '.dark';
         this._dataViewBg = isLightTheme ? '#eeeeee' : this._dataViewBg;

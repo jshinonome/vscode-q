@@ -7,7 +7,6 @@
 
 // import * as fs from 'fs';
 import Fuse from 'fuse.js';
-import { homedir } from 'os';
 import {
     Connection, Diagnostic, DiagnosticSeverity,
     DocumentUri, Location, ParameterInformation,
@@ -34,65 +33,15 @@ export type word = {
  */
 export default class QAnalyzer {
     static matchFile: (test: string) => boolean;
+    private connection: Connection;
+    private rootPath: string | undefined | null;
+
     public static async fromRoot(
         connection: Connection,
         rootPath: string | undefined | null,
         parser: Parser
     ): Promise<QAnalyzer> {
-        const analyzer = new QAnalyzer(parser);
-
-        if (rootPath) {
-            const qServerCfgPath = homedir() + '/.vscode/q-lang-server-cfg.json';
-            const qServerCfg = JSON.parse(fs.readFileSync(qServerCfgPath, 'utf-8'));
-
-            const globsPattern = qServerCfg.src.globsPattern ?? ['**/src/**/*.q'];
-            const ignorePattern = qServerCfg.src.ignorePattern ?? ['**/build', '**/node_modules'];
-
-            connection.console.info(
-                `Analyzing files matching glob "${globsPattern}" inside ${rootPath}`,
-            );
-
-            const lookupStartTime = Date.now();
-            const getTimePassed = (): string =>
-                `${(Date.now() - lookupStartTime) / 1000} seconds`;
-
-            const ignoreMatch = picomatch(ignorePattern);
-            const includeMatch = picomatch(globsPattern);
-            this.matchFile = (test) => !ignoreMatch(test) && includeMatch(test);
-            const qSrcFiles: string[] = [];
-            klaw(rootPath, { filter: item => !ignoreMatch(item) })
-                .on('error', (err: Error, _item: klaw.Item) => {
-                    connection.console.warn(err.message);
-                })
-                .on('data', item => { if (includeMatch(item.path)) qSrcFiles.push(item.path); })
-                .on('end', () => {
-                    if (qSrcFiles.length == 0) {
-                        connection.window.showWarningMessage(
-                            `Failed to find any q source files using the glob "${globsPattern}". Some feature will not be available.`,
-                        );
-                    }
-
-                    connection.console.info(
-                        `Glob found ${qSrcFiles.length} files after ${getTimePassed()}`,
-                    );
-
-                    qSrcFiles.forEach((filepath: string) => {
-                        const uri = `file://${filepath}`;
-
-                        connection.console.info(`Analyzing ${uri}`);
-                        try {
-                            const fileContent = fs.readFileSync(filepath, 'utf8');
-                            analyzer.analyze(uri, TextDocument.create(uri, 'q', 1, fileContent));
-                        } catch (error) {
-                            connection.console.warn(`Failed analyzing ${uri}.`);
-                            connection.console.warn(`Error: ${error.message}`);
-                        }
-                    });
-
-                    connection.console.info(`Analyzing took ${getTimePassed()}`);
-                });
-        }
-        return analyzer;
+        return new QAnalyzer(parser, connection, rootPath);
     }
 
     private parser: Parser
@@ -104,8 +53,11 @@ export default class QAnalyzer {
     private nameToSigHelp = new Map<string, SignatureHelp>();
     private serverIds: string[] = [];
     private serverSyms: string[] = [];
-    public constructor(parser: Parser) {
+
+    public constructor(parser: Parser, connection: Connection, rootPath: string | undefined | null) {
         this.parser = parser;
+        this.connection = connection;
+        this.rootPath = rootPath;
     }
 
     /**
@@ -241,14 +193,72 @@ export default class QAnalyzer {
         return symbols;
     }
 
+    public analyzeWorkspace(cfg: { globsPattern: string[]; ignorePattern: string[] }): void {
+        if (this.rootPath && fs.existsSync(this.rootPath)) {
+
+            this.uriToTextDocument = new Map<string, TextDocument>();
+            this.uriToTree = new Map<DocumentUri, Parser.Tree>();
+            this.uriToFileContent = new Map<DocumentUri, string>();
+            this.uriToDefinition = new Map<DocumentUri, nameToSymbolInfo>();
+            this.uriToSymbol = new Map<DocumentUri, string[]>();
+            this.nameToSigHelp = new Map<string, SignatureHelp>();
+
+            const globsPattern = cfg.globsPattern ?? ['**/src/**/*.q'];
+            const ignorePattern = cfg.ignorePattern ?? ['**/tmp'];
+
+            this.connection.console.info(
+                `Analyzing files matching glob "${globsPattern}" inside ${this.rootPath}`,
+            );
+
+            const lookupStartTime = Date.now();
+            const getTimePassed = (): string =>
+                `${(Date.now() - lookupStartTime) / 1000} seconds`;
+
+            const ignoreMatch = picomatch(ignorePattern);
+            const includeMatch = picomatch(globsPattern);
+            QAnalyzer.matchFile = (test) => !ignoreMatch(test) && includeMatch(test);
+            const qSrcFiles: string[] = [];
+            klaw(this.rootPath, { filter: item => !ignoreMatch(item) })
+                .on('error', (err: Error, _item: klaw.Item) => {
+                    this.connection.console.warn(err.message);
+                })
+                .on('data', item => { if (includeMatch(item.path)) qSrcFiles.push(item.path); })
+                .on('end', () => {
+                    if (qSrcFiles.length == 0) {
+                        this.connection.window.showWarningMessage(
+                            `Failed to find any q source files using the glob "${globsPattern}". Some feature will not be available.`,
+                        );
+                    }
+
+                    this.connection.console.info(
+                        `Glob found ${qSrcFiles.length} files after ${getTimePassed()}`,
+                    );
+
+                    qSrcFiles.forEach((filepath: string) => {
+                        const uri = `file://${filepath}`;
+                        try {
+                            const fileContent = fs.readFileSync(filepath, 'utf8');
+                            this.analyzeDoc(uri, TextDocument.create(uri, 'q', 1, fileContent));
+                        } catch (error) {
+                            this.connection.console.warn(`Failed analyzing ${uri}.`);
+                            this.connection.console.warn(`Error: ${error.message}`);
+                        }
+                    });
+
+                    this.connection.console.info(`Analyzing took ${getTimePassed()}`);
+                });
+        }
+
+    }
+
     /**
      * Analyze the given document, cache the tree-sitter AST, and iterate over the
      * tree to find declarations.
      * Returns all, if any, syntax errors that occurred while parsing the file.
      */
-    public analyze(uri: DocumentUri, document: TextDocument): Diagnostic[] {
+    public analyzeDoc(uri: DocumentUri, document: TextDocument): Diagnostic[] {
+        this.connection.console.info(`Analyzing ${uri}`);
         const content = document.getText();
-
         const tree = this.parser.parse(content);
 
         this.uriToTextDocument.set(uri, document);

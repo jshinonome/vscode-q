@@ -1,6 +1,11 @@
 # change log
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.7.5
+### changed
+- Query View uses same theme kind as vscode theme kind(light/dark)
+- enable to set extension configuration for each workspace
+
 ## 1.7.4
 ### added
 - add tags(folders) for server list

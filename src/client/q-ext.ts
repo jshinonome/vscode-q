@@ -5,8 +5,6 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as fs from 'fs';
-import { homedir } from 'os';
 import {
     commands, ExtensionContext, IndentAction, languages,
     Range, TextDocument, TextEdit,
@@ -100,9 +98,6 @@ export function activate(context: ExtensionContext): void {
         QStatusBarManager.updateModeStatus();
         QStatusBarManager.updateConnStatusColor();
     }
-    const qServerCfg = workspace.getConfiguration('q-ser');
-    const qServerCfgPath = homedir() + '/.vscode/q-lang-server-cfg.json';
-    fs.writeFileSync(qServerCfgPath, JSON.stringify(qServerCfg), 'utf-8');
     // -->
 
     commands.registerCommand(
@@ -241,8 +236,11 @@ export function activate(context: ExtensionContext): void {
 
 
     workspace.onDidChangeConfiguration(e => {
-        if (e.affectsConfiguration('q-ext') || e.affectsConfiguration('q-ser')) {
+        if (e.affectsConfiguration('q-ext')) {
             window.showInformationMessage('Reload/Restart vscode to Making the Configuration Take Effect.');
+        } else if (e.affectsConfiguration('q-ser')) {
+            const cfg = workspace.getConfiguration('q-ser.src');
+            client.sendNotification('$/analyze-source-code', { globsPattern: cfg.get('globsPattern'), ignorePattern: cfg.get('ignorePattern') });
         }
     });
 
@@ -291,6 +289,11 @@ export function activate(context: ExtensionContext): void {
             client.sendNotification('$/analyze-server-cache', code);
         })
     );
+
+    client.onReady().then(() => {
+        const cfg = workspace.getConfiguration('q-ser.src');
+        client.sendNotification('$/analyze-source-code', { globsPattern: cfg.get('globsPattern'), ignorePattern: cfg.get('ignorePattern') });
+    });
 }
 
 export function deactivate(): void {

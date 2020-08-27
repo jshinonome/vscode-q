@@ -51,6 +51,7 @@ export default class QLangServer {
         this.connection.onRenameRequest(this.onRenameRequest.bind(this));
         this.connection.onSignatureHelp(this.onSignatureHelp.bind(this));
         this.connection.onNotification('$/analyze-server-cache', (code => this.analyzer.analyzeServerCache(code)));
+        this.connection.onNotification('$/analyze-source-code', (cfg => this.analyzer.analyzeWorkspace(cfg)));
     }
 
     public static async initialize(
@@ -90,8 +91,7 @@ export default class QLangServer {
     // todo - when add more rules, extract to a package
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private onDidChangeContent(change: any) {
-        this.connection.console.info(`Analyzing ${change.document.uri}`);
-        this.analyzer.analyze(change.document.uri, change.document);
+        this.analyzer.analyzeDoc(change.document.uri, change.document);
         const diagnostics = this.validateTextDocument(change.document);
         // Send the computed diagnostics to VSCode.
         this.connection.sendDiagnostics({ uri: change.document.uri, diagnostics });
@@ -115,8 +115,7 @@ export default class QLangServer {
             if (!QAnalyzer.matchFile(filepath))
                 return;
             try {
-                this.connection.console.info(`Analyzing ${file}`);
-                this.analyzer.analyze(file, TextDocument.create(file, 'q', 1, fs.readFileSync(filepath, 'utf8')));
+                this.analyzer.analyzeDoc(file, TextDocument.create(file, 'q', 1, fs.readFileSync(filepath, 'utf8')));
             } catch (error) {
                 this.connection.console.warn(`Cannot analyze ${file}`);
             }
@@ -324,8 +323,8 @@ export default class QLangServer {
         if (node) {
             const callNode = this.analyzer.getCallNode(node);
             const sigHelp = this.analyzer.getSigHelp(callNode?.firstNamedChild?.text ?? '');
-            if (callNode && sigHelp) {
-                let child = callNode.firstNamedChild!;
+            if (callNode && sigHelp && callNode.firstNamedChild) {
+                let child = callNode.firstNamedChild;
                 let index = -1;
                 while (child.nextNamedSibling !== null && node.startIndex > child.endIndex) {
                     index += 1;

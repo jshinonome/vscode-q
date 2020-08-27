@@ -48,10 +48,10 @@ export class QStatusBarManager {
 
     public static updateConnStatus(name: string | undefined): void {
         if (QConnManager.consoleMode) {
-            this.current!.connStatusBar.text = name?.toUpperCase() ?? 'Disconnected';
+            this.current!.connStatusBar.text = name ?? 'No Connection';
             this.current!.connStatusBar.color = '#FF79C6';
         } else {
-            this.current!.connStatusBar.text = name?.toUpperCase() ?? 'Disconnected';
+            this.current!.connStatusBar.text = name ?? 'No Connection';
             this.current!.connStatusBar.color = '#8BE9FD';
         }
     }

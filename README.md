@@ -49,14 +49,14 @@ Create a server and click to connect
 ![call-a-function](assets/demo/4-call-a-function.gif)
 
 ## Configuration
-Type <kbd>ctrl</kbd>+<kbd>,</kbd> to open Settings, search for following configuration and change the value.
+- To configure globally, type <kbd>ctrl</kbd>+<kbd>,</kbd> to open Settings and change the following values.
+- To configure for workspace, type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd>, call `Preferences: Open Workspace Settings` and change the following values.
 
 | configuration           | type    | default value                    | description                           |
 | ----------------------- | ------- | -------------------------------- | ------------------------------------- |
 | q-ser.src.globsPattern  | array   | `["**/src/**/*.q"]`              | source folder to be included          |
 | q-ser.src.ignorePattern | array   | `["**/build","**/node_modules"]` | folder to be excluded                 |
 | q-ext.queryMode         | string  | `Console`                        | query mode, Console or Virtualization |
-| q-ext.qview.theme       | string  | `dark`                           | q view in dark or light theme         |
 | q-ext.qview.dense       | boolean | `false`                          | q view in dense mode                  |
 
 ## q Language Server(local server, no connection to the internet)
