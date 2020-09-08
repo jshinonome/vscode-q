@@ -35,23 +35,8 @@
           "end": "\\z"
         },
         {
-          "begin": "(^(/)(?:\\s*)(?:(@[pr])\\s+([a-zA-Z][a-zA-Z\\d_]*))?(?:\\s*\\w*))",
-          "beginCaptures": {
-            "1": {
-              "name": "comment.line.slash.q"
-            },
-            "2": {
-              "name": "punctuation.definition.comment.q"
-            },
-            "3": {
-              "name": "storage.type.class.q"
-            },
-            "4": {
-              "name": "variable.parameter.q"
-            }
-          },
-          "end": "(?=^)",
-          "contentName": "comment.line.q"
+          "name": "comment.line.q",
+          "match": "^/.*$"
         },
         {
           "name": "comment.line.inline.q",

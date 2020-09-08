@@ -1,6 +1,10 @@
 # change log
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.7.6
+### changed
+- enhance semantic to support highlight any `@[tag] [word]`
+
 ## 1.7.5
 ### changed
 - Query View uses same theme kind as vscode theme kind(light/dark)

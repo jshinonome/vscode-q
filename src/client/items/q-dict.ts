@@ -137,8 +137,8 @@ export default class QDictTreeItem extends TreeItem
                         const type = res.t[i];
                         switch (true) {
                             case (type == 112):
-                                new QFunctionTreeItem(name, parent, '{dynamic load}');
-                                code.push(`${res.n[i]}:{};`);
+                                new QFunctionTreeItem(name, parent, '{"dynamic load"}');
+                                code.push(`${res.n[i]}:{"dynamic load"};`);
                                 break;
                             case (type >= 100):
                                 new QFunctionTreeItem(name, parent, res.b[i]);
@@ -150,16 +150,16 @@ export default class QDictTreeItem extends TreeItem
                                 break;
                             case (type == 98):
                                 new QTableTreeItem(name, parent, res.c[i]);
-                                code.push(`${res.n[i]}:([]);`);
+                                code.push(`${res.n[i]}:([]${res.c[i].join(';')});`);
                                 res.c[i].forEach((col: string) => code.push(`${col}:\`${col};`));
                                 break;
                             case (type >= 20 && type <= 76):
                                 new QVarTreeItem(name, parent, 'enums');
-                                code.push(`${res.n[i]}:0;`);
+                                code.push(`${res.n[i]}:enums;`);
                                 break;
                             default:
                                 new QVarTreeItem(name, parent, qTypeMap.get(res.t[i]) ?? `unknown:${res.t[i]}`);
-                                code.push(`${res.n[i]}:0;`);
+                                code.push(`${res.n[i]}:${qTypeMap.get(res.t[i])};`);
                         }
                     });
                     this._onDidChangeTreeData.fire(undefined);

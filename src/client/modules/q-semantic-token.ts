@@ -11,7 +11,7 @@ const tokenTypes = new Map<string, number>();
 const tokenModifiers = new Map<string, number>();
 
 const legend = (function () {
-    const tokenTypesLegend = ['variable', 'parameter'];
+    const tokenTypesLegend = ['variable', 'parameter', 'type', 'class'];
     tokenTypesLegend.forEach((tokenType, index) => tokenTypes.set(tokenType, index));
 
     const tokenModifiersLegend: string[] = [];
@@ -67,7 +67,10 @@ class DocumentSemanticTokensProvider implements DocumentSemanticTokensProvider {
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
             const openOffset = line.indexOf('{', offset);
-            if (openOffset === -1) {
+            if (line[0] === '/') {
+                offset = 0;
+                this._matchDoc(i, line, ipt);
+            } else if (openOffset === -1) {
                 offset = 0;
             } else {
                 const pos = this._parseParameter(new Position(i, openOffset + 1), lines, ipt);
@@ -102,7 +105,11 @@ class DocumentSemanticTokensProvider implements DocumentSemanticTokensProvider {
             const openOffset = line.indexOf('{', offset);
             const closeOffset = line.indexOf('}', offset);
 
-            if (openOffset > offset) {
+            // skip comment
+            if (line[0] === '/') {
+                this._matchDoc(i, line, ipt);
+                continue;
+            } else if (openOffset > offset) {
                 // case: *** } *** {
                 if (closeOffset > offset && closeOffset < openOffset) {
                     this._matchParamters(i, offset, closeOffset - 1, line, ipt, params);
@@ -153,6 +160,29 @@ class DocumentSemanticTokensProvider implements DocumentSemanticTokensProvider {
                 }
             }
         });
+    }
+
+    private _matchDoc(i: number, line: string, ipt: IParsedToken[]) {
+        const regex = new RegExp(/(@\w+)[^.\w]+([.\w]+)/g);
+        let match;
+        while ((match = regex.exec(line)) != null) {
+            const docClass = match[1];
+            const docDetail = match[2];
+            ipt.push({
+                line: i,
+                startCharacter: line.indexOf(docClass),
+                length: docClass.length,
+                tokenType: 'type',
+                tokenModifiers: []
+            });
+            ipt.push({
+                line: i,
+                startCharacter: line.indexOf(docDetail),
+                length: docDetail.length,
+                tokenType: 'parameter',
+                tokenModifiers: []
+            });
+        }
     }
 
 }

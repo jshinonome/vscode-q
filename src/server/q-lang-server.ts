@@ -9,7 +9,7 @@ import * as fs from 'fs';
 import {
     CompletionItem, Connection, Diagnostic, DiagnosticSeverity,
     DidChangeWatchedFilesParams, DocumentHighlight, DocumentSymbolParams, FileChangeType, Hover,
-    IConnection, InitializeParams, Location, MarkupContent, MarkupKind, PrepareRenameParams, Range,
+    IConnection, InitializeParams, Location, PrepareRenameParams, Range,
     ReferenceParams, RenameParams, ServerCapabilities, SignatureHelp,
     SignatureHelpParams, SymbolInformation, TextDocumentPositionParams, TextDocuments,
     TextDocumentSyncKind, TextEdit, WorkspaceEdit, WorkspaceSymbolParams
@@ -276,11 +276,11 @@ export default class QLangServer {
         const ref = this.buildInFsRef.filter(item => item.label === word.text)[0];
 
         if (ref) {
-            const markupContent: MarkupContent = {
-                kind: MarkupKind.PlainText,
-                value: [ref.detail, ref.documentation].join('\n')
+            const content = {
+                language: 'q',
+                value: '/ ' + ref.label + '\n' + ref.documentation as string
             };
-            return { contents: markupContent };
+            return { contents: content };
         }
 
         // let symbols: SymbolInformation[] = [];
