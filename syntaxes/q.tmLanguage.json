@@ -35,8 +35,26 @@
           "end": "\\z"
         },
         {
-          "name": "comment.line.q",
-          "match": "^/.*$"
+          "begin": "(^(//?)(?:\\s*)(?:(@\\w+)(?:[^.\\w]+([.\\w]+)(?:[^.\\w]+(\\w*))?)?)?)",
+          "beginCaptures": {
+            "1": {
+              "name": "comment.line.slash.q"
+            },
+            "2": {
+              "name": "punctuation.definition.comment.q"
+            },
+            "3": {
+              "name": "storage.type.class.q"
+            },
+            "4": {
+              "name": "variable.parameter.q"
+            },
+            "5": {
+              "name": "entity.name.type"
+            }
+          },
+          "end": "(?=^)",
+          "contentName": "comment.line.q"
         },
         {
           "name": "comment.line.inline.q",

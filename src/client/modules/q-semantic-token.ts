@@ -65,12 +65,13 @@ class DocumentSemanticTokensProvider implements DocumentSemanticTokensProvider {
         const lines = text.split(/\r\n|\r|\n/);
         let offset = 0;
         for (let i = 0; i < lines.length; i++) {
+            i = this.skipComment(i, lines);
+            if (i >= lines.length) {
+                break;
+            }
             const line = lines[i];
             const openOffset = line.indexOf('{', offset);
-            if (line[0] === '/') {
-                offset = 0;
-                this._matchDoc(i, line, ipt);
-            } else if (openOffset === -1) {
+            if (openOffset === -1) {
                 offset = 0;
             } else {
                 const pos = this._parseParameter(new Position(i, openOffset + 1), lines, ipt);
@@ -105,11 +106,7 @@ class DocumentSemanticTokensProvider implements DocumentSemanticTokensProvider {
             const openOffset = line.indexOf('{', offset);
             const closeOffset = line.indexOf('}', offset);
 
-            // skip comment
-            if (line[0] === '/') {
-                this._matchDoc(i, line, ipt);
-                continue;
-            } else if (openOffset > offset) {
+            if (openOffset > offset) {
                 // case: *** } *** {
                 if (closeOffset > offset && closeOffset < openOffset) {
                     this._matchParamters(i, offset, closeOffset - 1, line, ipt, params);
@@ -162,26 +159,21 @@ class DocumentSemanticTokensProvider implements DocumentSemanticTokensProvider {
         });
     }
 
-    private _matchDoc(i: number, line: string, ipt: IParsedToken[]) {
-        const regex = new RegExp(/(@\w+)[^.\w]+([.\w]+)/g);
-        let match;
-        while ((match = regex.exec(line)) != null) {
-            const docClass = match[1];
-            const docDetail = match[2];
-            ipt.push({
-                line: i,
-                startCharacter: line.indexOf(docClass),
-                length: docClass.length,
-                tokenType: 'type',
-                tokenModifiers: []
-            });
-            ipt.push({
-                line: i,
-                startCharacter: line.indexOf(docDetail),
-                length: docDetail.length,
-                tokenType: 'parameter',
-                tokenModifiers: []
-            });
+    private skipComment(i: number, lines: string[]): number {
+        if (/\/\s*$/g.test(lines[i])) {
+            // match '/'
+            i = i + 1;
+            while (!/\/\s*$/g.test(lines[i]) && i < lines.length) {
+                i = i + 1;
+            }
+            return i = i + 1;
+        } else if (/\\\s*/g.test(lines[i])) {
+            // match '\'
+            return lines.length;
+        } else if (lines[i][0] === '/' && !/\/\s*$/g.test(lines[i])) {
+            return i = i + 1;
+        } else {
+            return i;
         }
     }
 
