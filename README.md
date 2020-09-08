@@ -37,7 +37,7 @@ Create a server and click to connect
 ![query-a-table](assets/demo/2-query-a-table.gif)
 
 ### Define a Function
-- Highlight `@[tag] [word]]` in comments
+- Highlight `@[tag] [parameter name] [type]` in comments
 - Highlight parameters for functions. There shouldn't be any space between `{` and `[`.
 
 ![define-a-function](assets/demo/3-define-a-function.gif)

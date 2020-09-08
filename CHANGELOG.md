@@ -3,7 +3,7 @@ all notable changes to the "vscode-q" extension will be documented in this file.
 
 ## 1.7.6
 ### changed
-- enhance semantic to support highlight any `@[tag] [word]`
+- enhance semantic to support highlight any `@[tag] [parameter name] [type]`
 
 ## 1.7.5
 ### changed
