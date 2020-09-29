@@ -243,7 +243,7 @@ export class QConnManager {
     }
 
     abortQuery(): void {
-        this.busyConn?.conn?.destroy();
+        this.busyConn?.conn?.close();
         this.isBusy = false;
         this.busyConn = undefined;
         QStatusBarManager.updateQueryStatus(this.isBusy);

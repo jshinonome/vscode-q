@@ -58,6 +58,8 @@ Create a server and click to connect
 | q-ser.src.ignorePattern | array   | `["**/build","**/node_modules"]` | folder to be excluded                 |
 | q-ext.queryMode         | string  | `Console`                        | query mode, Console or Virtualization |
 | q-ext.qview.dense       | boolean | `false`                          | q view in dense mode                  |
+| q-ext.term.qBinary      | string  | `q`                              | q binary name or full path            |
+
 
 ## q Language Server(local server, no connection to the internet)
 The server will analyze q source files in all 'src' folder. Insert ';' to indicated end of statement if necessary.
@@ -91,6 +93,8 @@ Append space to `},],)` by formatting the file. Turn on `Editor: Format On Save`
 ## Shortcuts
 - <kbd>ctrl</kbd>+<kbd>q</kbd>: query current line
 - <kbd>ctrl</kbd>+<kbd>r</kbd>: query selected line(s)
+- <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>q</kbd>: send current line to active terminal
+- <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>r</kbd>: send selected line(s) to active terminal
 
 ## Version Compatibility
 To use this extension in an earlier version of vscode.

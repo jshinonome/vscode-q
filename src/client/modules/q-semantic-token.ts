@@ -167,7 +167,7 @@ class DocumentSemanticTokensProvider implements DocumentSemanticTokensProvider {
                 i = i + 1;
             }
             return i = i + 1;
-        } else if (/\\\s*/g.test(lines[i])) {
+        } else if (/$\\\s*/g.test(lines[i])) {
             // match '\'
             return lines.length;
         } else if (lines[i][0] === '/' && !/\/\s*$/g.test(lines[i])) {

@@ -19,6 +19,7 @@ import { QConnManager } from './modules/q-conn-manager';
 import { semanticTokensProvider } from './modules/q-semantic-token';
 import { QServerTree } from './modules/q-server-tree';
 import { QStatusBarManager } from './modules/q-status-bar-manager';
+import { runQFile, sendToCurrentTerm } from './modules/q-term';
 import { QueryConsole } from './modules/query-console';
 import { QueryView } from './modules/query-view';
 import path = require('path');
@@ -222,6 +223,38 @@ export function activate(context: ExtensionContext): void {
         })
     );
 
+    context.subscriptions.push(
+        commands.registerCommand('q-term.sendCurrentLine', () => {
+            if (window.activeTextEditor) {
+                const n = window.activeTextEditor.selection.active.line;
+                const query = window.activeTextEditor.document.lineAt(n).text;
+                if (query) {
+                    sendToCurrentTerm(query);
+                }
+            }
+        })
+    );
+
+    context.subscriptions.push(
+        commands.registerCommand('q-term.sendSelection', () => {
+            const query = window.activeTextEditor?.document.getText(
+                new Range(window.activeTextEditor.selection.start, window.activeTextEditor.selection.end)
+            );
+            if (query) {
+                sendToCurrentTerm(query.replace(/(\r\n|\n|\r)/gm, ''));
+            }
+        })
+    );
+
+    context.subscriptions.push(
+        commands.registerCommand('q-term.runQFile', () => {
+            const filepath = window.activeTextEditor?.document.fileName;
+            if (filepath)
+                runQFile(filepath);
+        })
+    );
+
+
     if (window.registerWebviewPanelSerializer) {
         // Make sure we register a serializer in activation event
         window.registerWebviewPanelSerializer(QueryView.viewType, {
@@ -236,7 +269,7 @@ export function activate(context: ExtensionContext): void {
 
 
     workspace.onDidChangeConfiguration(e => {
-        if (e.affectsConfiguration('q-ext')) {
+        if (e.affectsConfiguration('q-ext') && !e.affectsConfiguration('q-ext.term')) {
             window.showInformationMessage('Reload/Restart vscode to Making the Configuration Take Effect.');
         } else if (e.affectsConfiguration('q-ser')) {
             const cfg = workspace.getConfiguration('q-ser.src');

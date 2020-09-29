@@ -212,6 +212,25 @@
 					"light": "assets/svg/light/diff-added.svg",
 					"dark": "assets/svg/dark/diff-added.svg"
 				}
+			},
+			{
+				"command": "q-term.sendCurrentLine",
+				"title": "Send Current Line to Terminal",
+				"category": "kdb+/q ext"
+			},
+			{
+				"command": "q-term.sendSelection",
+				"title": "Send Current Selection to Terminal",
+				"category": "kdb+/q ext"
+			},
+			{
+				"command": "q-term.runQFile",
+				"title": "Run q File in Terminal",
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/debug-start.svg",
+					"dark": "assets/svg/dark/debug-start.svg"
+				}
 			}
 		],
 		"menus": {
@@ -288,6 +307,20 @@
 					"when": "view == q-explorer && viewItem == qfunction",
 					"group": "inline"
 				}
+			],
+			"editor/title": [
+				{
+					"command": "q-term.runQFile",
+					"when": "resourceLangId ==  q",
+					"group": "navigation"
+				}
+			],
+			"editor/context": [
+				{
+					"command": "q-term.runQFile",
+					"when": "resourceLangId == q",
+					"group": "q"
+				}
 			]
 		},
 		"keybindings": [
@@ -298,6 +331,14 @@
 			{
 				"command": "q-servers.querySelection",
 				"key": "ctrl+r"
+			},
+			{
+				"command": "q-term.sendCurrentLine",
+				"key": "ctrl+shift+q"
+			},
+			{
+				"command": "q-term.sendSelection",
+				"key": "ctrl+shift+r"
 			}
 		],
 		"configuration": {
@@ -353,38 +394,44 @@
 					"type": "boolean",
 					"default": false,
 					"description": "q View in Dense Mode"
+				},
+				"q-ext.term.qBinary": {
+					"scope": "resource",
+					"type": "string",
+					"default": "q",
+					"description": "q Binary Path"
 				}
 			}
 		}
 	},
 	"devDependencies": {
 		"@types/long": "^4.0.1",
-		"@types/node": "^14.6.0",
+		"@types/node": "^14.11.2",
 		"@types/request": "^2.48.5",
 		"@types/vscode": "^1.48.0",
 		"@typescript-eslint/parser": "^3.10.1",
-		"ts-loader": "^8.0.3",
+		"ts-loader": "^8.0.4",
 		"typescript": "^3.9.7",
 		"vscode-test": "^1.4.0",
-		"webpack": "^4.44.1",
+		"webpack": "^4.44.2",
 		"webpack-cli": "^3.3.12"
 	},
 	"dependencies": {
-		"@finos/perspective": "^0.5.2",
-		"@finos/perspective-viewer": "^0.5.2",
-		"@finos/perspective-viewer-d3fc": "^0.5.2",
-		"@finos/perspective-viewer-datagrid": "^0.5.2",
+		"@finos/perspective": "^0.5.5",
+		"@finos/perspective-viewer": "^0.5.5",
+		"@finos/perspective-viewer-d3fc": "^0.5.5",
+		"@finos/perspective-viewer-datagrid": "^0.5.5",
 		"@finos/perspective-viewer-hypergrid": "^0.5.2",
 		"@types/graceful-fs": "^4.1.3",
 		"@types/klaw": "^3.0.1",
 		"@types/picomatch": "^2.2.1",
 		"@typescript-eslint/eslint-plugin": "^3.10.1",
 		"csv-parser": "^2.3.3",
-		"eslint": "^7.7.0",
+		"eslint": "^7.10.0",
 		"fuse.js": "^6.4.1",
 		"graceful-fs": "^4.2.4",
 		"klaw": "^3.0.0",
-		"moment": "^2.27.0",
+		"moment": "^2.29.0",
 		"node-q": "^2.5.0",
 		"picomatch": "^2.2.2",
 		"vscode-languageclient": "^6.1.3",
