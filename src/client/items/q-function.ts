@@ -21,21 +21,16 @@ export default class QFunctionTreeItem extends TreeItem {
         this._body = body;
         parent.appendChild(this);
         setCommand(this);
-    }
-
-    get iconPath(): { light: string, dark: string } {
-        return {
+        this.tooltip = this._body;
+        this.iconPath = {
             light: path.join(__filename, '../../assets/svg/item/function.svg'),
             dark: path.join(__filename, '../../assets/svg/item/function.svg')
         };
     }
 
+
     getParent(): TreeItem {
         return this._parent;
-    }
-
-    get tooltip(): string {
-        return this._body;
     }
 
     getTreeItem(e: QFunctionTreeItem): TreeItem {

@@ -47,6 +47,7 @@ export class QConn extends TreeItem {
             this.getKdbVersion();
             this.setTimeout();
         }
+        this.tooltip = `${this.host}:${this.port}:${this.user} - t/o:${this.socketTimeout}(ms) - v${this.version}`;
     }
 
     setConn(conn: q.Connection | undefined): void {
@@ -73,10 +74,6 @@ export class QConn extends TreeItem {
         });
     }
 
-    get tooltip(): string {
-        return `${this.host}:${this.port}:${this.user} - t/o:${this.socketTimeout}(ms) - v${this.version}`;
-    }
-
     // get description(): string {
     //     if(this.conn){
     //         return 'connected';
@@ -85,6 +82,7 @@ export class QConn extends TreeItem {
     //     }
     // }
 
+    // @ts-ignore
     get iconPath(): { light: string, dark: string } {
         if (QConnManager.current?.activeConn?.label === this.label) {
             return {

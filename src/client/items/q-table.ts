@@ -21,21 +21,15 @@ export default class QTableTreeItem extends TreeItem {
         this._cols = cols;
         parent.appendChild(this);
         setCommand(this);
-    }
-
-    get iconPath(): { light: string, dark: string } {
-        return {
+        this.iconPath = {
             light: path.join(__filename, '../../assets/svg/item/table.svg'),
             dark: path.join(__filename, '../../assets/svg/item/table.svg')
         };
+        this.tooltip = `col:${this._cols.length}`;
     }
 
     getParent(): TreeItem {
         return this._parent;
-    }
-
-    get tooltip(): string {
-        return `col:${this._cols.length}`;
     }
 
     getTreeItem(e: QTableTreeItem): TreeItem {

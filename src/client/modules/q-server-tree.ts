@@ -5,13 +5,6 @@
  * https://opensource.org/licenses/MIT
  */
 
-/**
- * Copyright (c) 2020 Jo Shinonome
- *
- * This software is released under the MIT License.
- * https://opensource.org/licenses/MIT
- */
-
 import { Event, EventEmitter, TreeDataProvider, TreeItem, TreeItemCollapsibleState } from 'vscode';
 import { QConn } from './q-conn';
 import { QConnManager } from './q-conn-manager';
@@ -85,6 +78,7 @@ export class QServerTree extends TreeItem implements TreeDataProvider<TreeItem> 
         this._children.push(item);
     }
 
+    // @ts-ignore
     get iconPath(): { light: string, dark: string } {
         if (!this.label) {
             return {

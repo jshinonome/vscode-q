@@ -91,10 +91,7 @@ export default class QDictTreeItem extends TreeItem
         }
         this.isExpanded = false;
         setCommand(this);
-    }
-
-    get iconPath(): { light: string, dark: string } {
-        return {
+        this.iconPath = {
             light: path.join(__filename, '../../assets/svg/item/dict.svg'),
             dark: path.join(__filename, '../../assets/svg/item/dict.svg')
         };

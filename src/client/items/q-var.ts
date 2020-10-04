@@ -21,21 +21,15 @@ export default class QVarTreeItem extends TreeItem {
         this._type = type;
         parent.appendChild(this);
         setCommand(this);
-    }
-
-    get iconPath(): { light: string, dark: string } {
-        return {
+        this.iconPath = {
             light: path.join(__filename, '../../assets/svg/item/var.svg'),
             dark: path.join(__filename, '../../assets/svg/item/var.svg')
         };
+        this.tooltip = this._type;
     }
 
     getParent(): TreeItem {
         return this._parent;
-    }
-
-    get tooltip(): string {
-        return this._type;
     }
 
     getTreeItem(e: QVarTreeItem): TreeItem {
