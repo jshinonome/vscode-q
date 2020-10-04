@@ -72,6 +72,7 @@ export class QueryView implements Disposable {
             {
                 // Enable javascript in the webview
                 enableScripts: true,
+                retainContextWhenHidden: true,
                 // And restrict the webview to only loading content from assets directory.
                 localResourceRoots: [Uri.file(path.join(extensionPath, 'assets'))]
             }

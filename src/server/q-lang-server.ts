@@ -278,7 +278,7 @@ export default class QLangServer {
         if (ref) {
             const content = {
                 language: 'q',
-                value: '/ ' + ref.label + '\n' + ref.documentation as string
+                value: '/ ' + ref.detail + '\n' + ref.documentation as string
             };
             return { contents: content };
         }
