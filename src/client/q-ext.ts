@@ -196,6 +196,13 @@ export function activate(context: ExtensionContext): void {
             window.activeTextEditor?.edit(e => e.insert(p, item.label ?? ''));
     });
 
+    const previewQueryLimit = workspace.getConfiguration().get('q-ext.expl.prevQueryLimit');
+    commands.registerCommand('q-explorer.previewTable', (item: TreeItem) => {
+        if (item.label) {
+            QConnManager.current?.sync(`{[t;l]$[t in .Q.pt;select from t where date=last date, i<l;select from t where i<l]}[\`${item.label};${previewQueryLimit}]`);
+        }
+    });
+
     commands.registerCommand('q-explorer.click', label => {
         console.log(label);
     });

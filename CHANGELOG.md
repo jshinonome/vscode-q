@@ -1,6 +1,9 @@
 # change log
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.8.2
+- add 'Preview' for tables
+
 ## 1.8.0
 - add 'Run q File in Terminal'
 - add send source to current terminal

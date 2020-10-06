@@ -115,7 +115,7 @@ export default class QDictTreeItem extends TreeItem
             r: update b: {string value x} each n from r where t within 100 111h;
             r: update t: {$[.Q.qt value x;98h;99h]} each n from r where t in 98 99h;
             r: update c: cols each n from r where t=98h;
-            r
+            (\`n xasc select from r where p=\`root) uj \`p\`n xasc select from r where p<>\`root
          }[]`;
         if (conn) {
             conn.k(query, (err, res) => {

@@ -214,6 +214,15 @@
 				}
 			},
 			{
+				"command": "q-explorer.previewTable",
+				"title": "Preview Table",
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/zoom-in.svg",
+					"dark": "assets/svg/dark/zoom-in.svg"
+				}
+			},
+			{
 				"command": "q-term.sendCurrentLine",
 				"title": "Send Current Line to Terminal",
 				"category": "kdb+/q ext"
@@ -299,6 +308,11 @@
 				},
 				{
 					"command": "q-explorer.insert",
+					"when": "view == q-explorer && viewItem == qtable",
+					"group": "inline"
+				},
+				{
+					"command": "q-explorer.previewTable",
 					"when": "view == q-explorer && viewItem == qtable",
 					"group": "inline"
 				},
@@ -400,6 +414,12 @@
 					"type": "string",
 					"default": "q",
 					"description": "q Binary Path"
+				},
+				"q-ext.expl.prevQueryLimit": {
+					"scope": "resource",
+					"type": "number",
+					"default": 5,
+					"description": "Preview Query Limit"
 				}
 			}
 		}

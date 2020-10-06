@@ -1,4 +1,4 @@
-# q for Visual Studio Code
+# q for vscode
 [![](https://img.shields.io/visual-studio-marketplace/v/jshinonome.vscode-q?color=blueviolet&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 [![](https://vsmarketplacebadge.apphb.com/downloads/jshinonome.vscode-q.svg?color=blue&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 [![](https://vsmarketplacebadge.apphb.com/installs/jshinonome.vscode-q.svg?color=success&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
@@ -52,13 +52,14 @@ Create a server and click to connect
 - To configure globally, type <kbd>ctrl</kbd>+<kbd>,</kbd> to open Settings and change the following values.
 - To configure for workspace, type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd>, call `Preferences: Open Workspace Settings` and change the following values.
 
-| configuration           | type    | default value                    | description                           |
-| ----------------------- | ------- | -------------------------------- | ------------------------------------- |
-| q-ser.src.globsPattern  | array   | `["**/src/**/*.q"]`              | source folder to be included          |
-| q-ser.src.ignorePattern | array   | `["**/build","**/node_modules"]` | folder to be excluded                 |
-| q-ext.queryMode         | string  | `Console`                        | query mode, Console or Virtualization |
-| q-ext.qview.dense       | boolean | `false`                          | q view in dense mode                  |
-| q-ext.term.qBinary      | string  | `q`                              | q binary name or full path            |
+| configuration                     | type    | default value                    | description                           |
+| --------------------------------- | ------- | -------------------------------- | ------------------------------------- |
+| q-ser.src.globsPattern            | array   | `["**/src/**/*.q"]`              | source folder to be included          |
+| q-ser.src.ignorePattern           | array   | `["**/build","**/node_modules"]` | folder to be excluded                 |
+| q-ext.queryMode                   | string  | `Console`                        | query mode, Console or Virtualization |
+| q-ext.qview.dense                 | boolean | `false`                          | q view in dense mode                  |
+| q-ext.term.qBinary                | string  | `q`                              | q binary name or full path            |
+| q-ext.expl.prevQueryLimit         | string  | `5`                              | q explorer preview query limit        |
 
 
 ## q Language Server(local server, no connection to the internet)
