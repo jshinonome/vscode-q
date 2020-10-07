@@ -3,6 +3,7 @@ all notable changes to the "vscode-q" extension will be documented in this file.
 
 ## 1.8.2
 - add 'Preview' for tables
+- add parameters to autocomplete
 
 ## 1.8.0
 - add 'Run q File in Terminal'

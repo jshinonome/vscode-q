@@ -297,7 +297,6 @@ export default class QAnalyzer {
                 definitions.push(
                     SymbolInformation.create(
                         name,
-                        // only variable, may change to function/variable later
                         symbolKind,
                         TreeSitterUtil.range(n),
                         uri,
@@ -305,10 +304,9 @@ export default class QAnalyzer {
                     ),
                 );
 
-                this.uriToDefinition.get(uri)?.set(name, definitions);
-
                 if (symbolKind === SymbolKind.Function && functionNode?.firstNamedChild?.type === 'formal_parameters') {
-                    const params = functionNode.firstNamedChild.namedChildren.map(n => ParameterInformation.create(n.text));
+                    const paramNodes = functionNode.firstNamedChild.namedChildren;
+                    const params = paramNodes.map(n => ParameterInformation.create(n.text));
                     if (params.length > 0) {
                         const sigInfo = SignatureInformation.create(`${name}[${params.map(p => p.label).join(';')}]`, undefined, ...params);
                         this.nameToSigHelp.set(name, {
@@ -316,8 +314,22 @@ export default class QAnalyzer {
                             activeParameter: 0,
                             activeSignature: 0
                         });
+                        const containerName = this.getContainerName(paramNodes[0]) ?? '';
+                        paramNodes.forEach(n => {
+                            definitions.push(
+                                SymbolInformation.create(
+                                    n.text,
+                                    SymbolKind.Variable,
+                                    TreeSitterUtil.range(n),
+                                    uri,
+                                    containerName
+                                )
+                            );
+                        });
                     }
                 }
+
+                this.uriToDefinition.get(uri)?.set(name, definitions);
 
             } else if (TreeSitterUtil.isSeparator(n)) {
                 if (n.text[0] !== ';') {
