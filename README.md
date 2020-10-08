@@ -58,7 +58,7 @@ Create a server and click to connect
 | q-ser.src.ignorePattern           | array   | `["**/build","**/node_modules"]` | folder to be excluded                 |
 | q-ext.queryMode                   | string  | `Console`                        | query mode, Console or Virtualization |
 | q-ext.qview.dense                 | boolean | `false`                          | q view in dense mode                  |
-| q-ext.term.qBinary                | string  | `q`                              | q binary name or full path            |
+| q-ext.term.qBinary                | string  | `q`                              | q executable file or full path        |
 | q-ext.expl.prevQueryLimit         | string  | `5`                              | q explorer preview query limit        |
 
 
