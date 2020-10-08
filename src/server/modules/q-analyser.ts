@@ -304,6 +304,8 @@ export default class QAnalyzer {
                     ),
                 );
 
+                this.uriToDefinition.get(uri)?.set(name, definitions);
+
                 if (symbolKind === SymbolKind.Function && functionNode?.firstNamedChild?.type === 'formal_parameters') {
                     const paramNodes = functionNode.firstNamedChild.namedChildren;
                     const params = paramNodes.map(n => ParameterInformation.create(n.text));
@@ -316,7 +318,8 @@ export default class QAnalyzer {
                         });
                         const containerName = this.getContainerName(paramNodes[0]) ?? '';
                         paramNodes.forEach(n => {
-                            definitions.push(
+                            const def = this.uriToDefinition.get(uri)?.get(n.text) || [];
+                            def.push(
                                 SymbolInformation.create(
                                     n.text,
                                     SymbolKind.Variable,
@@ -325,11 +328,10 @@ export default class QAnalyzer {
                                     containerName
                                 )
                             );
+                            this.uriToDefinition.get(uri)?.set(n.text, def);
                         });
                     }
                 }
-
-                this.uriToDefinition.get(uri)?.set(name, definitions);
 
             } else if (TreeSitterUtil.isSeparator(n)) {
                 if (n.text[0] !== ';') {
