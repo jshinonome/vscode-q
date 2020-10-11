@@ -45,25 +45,55 @@ function updateStats() {
 // load data to table(required for offline) and to viewer
 function loadData(msg) {
     try {
+        var table;
+        var worker = perspective.worker(
+            {
+                types: {
+                    float: {
+                        format: {
+                            style: "decimal",
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 7
+                        }
+                    },
+                    datetime: {
+                        format: {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                            fractionalSecondDigits: 3,
+                            timeZone: "Etc/UTC",
+                            hourCycle: "h23",
+                        },
+                    },
+                    date: {
+                        format: {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                        },
+                    }
+                }
+            }
+        );
         switch (msg.type) {
             case 'rba':
-                var table = perspective.worker().table(Uint8Array.from(msg.data).buffer);
-                viewer.load(table)
-                    .then(_ => {
-                        viewer.reset();
-                        updateStats();
-                    });
+                table = worker.table(Uint8Array.from(msg.data).buffer);
                 break;
             case 'json':
-                var table = perspective.worker().table(msg.meta);
+                table = worker.table(msg.meta);
                 table.update(msg.data);
-                viewer.load(table)
-                    .then(_ => {
-                        viewer.reset();
-                        updateStats();
-                    });
                 break;
         }
+
+        viewer.load(table)
+            .then(_ => {
+                viewer.reset();
+                updateStats();
+            });
     } catch (error) {
         console.error(`loadData - error: ${error.message}`);
     }

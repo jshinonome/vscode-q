@@ -1,6 +1,10 @@
 # change log
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.8.3
+- Query View: set timezone to UTC
+- Query View: set 7 decimal digits
+
 ## 1.8.2
 - add 'Preview' for tables
 - add parameters to autocomplete
