@@ -1,17 +1,26 @@
 # change log
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.8.4
+### added
+- Query View: support time, minute, second
+- offset timezone at node-q (treat temporal type in kdb+ as local time)
+### removed
+- Query View: set timezone to UTC (cannot set timezone for graph label)
+
 ## 1.8.3
+### added
 - Query View: set timezone to UTC
 - Query View: set 7 decimal digits
 
 ## 1.8.2
-- add 'Preview' for tables
-- add parameters to autocomplete
+### added
+- 'Preview' for tables
+- parameters to autocomplete
 
 ## 1.8.0
-- add 'Run q File in Terminal'
-- add send source to current terminal
+- 'Run q File in Terminal'
+- send source to current terminal
 
 ## 1.7.6
 ### changed

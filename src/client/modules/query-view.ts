@@ -25,13 +25,13 @@ const kdbTypeMap = new Map<string, string>([
     ['c', 'string'],
     ['s', 'string'],
     ['p', 'datetime'],
-    ['m', 'date'],
+    ['m', 'month'],
     ['d', 'date'],
     ['z', 'datetime'],
-    ['n', 'datetime'],
-    ['u', 'datetime'],
-    ['v', 'datetime'],
-    ['t', 'datetime'],
+    ['n', 'time'],
+    ['u', 'minute'],
+    ['v', 'second'],
+    ['t', 'time'],
 ]);
 
 export class QueryView implements Disposable {

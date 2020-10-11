@@ -65,9 +65,44 @@ function loadData(msg) {
                             minute: "2-digit",
                             second: "2-digit",
                             fractionalSecondDigits: 3,
-                            timeZone: "Etc/UTC",
                             hourCycle: "h23",
                         },
+                    },
+                    time: {
+                        filter_operator: "==",
+                        aggregate: "count",
+                        type: "datetime",
+                        format: {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                            fractionalSecondDigits: 3,
+                            hourCycle: "h23",
+                        },
+                        null_value: -1
+                    },
+                    minute: {
+                        filter_operator: "==",
+                        aggregate: "count",
+                        type: "datetime",
+                        format: {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hourCycle: "h23",
+                        },
+                        null_value: -1
+                    },
+                    second: {
+                        filter_operator: "==",
+                        aggregate: "count",
+                        type: "datetime",
+                        format: {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                            hourCycle: "h23",
+                        },
+                        null_value: -1
                     },
                     date: {
                         format: {
@@ -75,7 +110,17 @@ function loadData(msg) {
                             month: "2-digit",
                             day: "2-digit",
                         },
-                    }
+                    },
+                    month: {
+                        filter_operator: "==",
+                        aggregate: "count",
+                        type: "date",
+                        format: {
+                            year: "numeric",
+                            month: "2-digit",
+                        },
+                        null_value: -1
+                    },
                 }
             }
         );
