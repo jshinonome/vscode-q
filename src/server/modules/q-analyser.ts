@@ -10,8 +10,9 @@ import Fuse from 'fuse.js';
 import {
     Connection, Diagnostic, DiagnosticSeverity,
     DocumentUri, Location, ParameterInformation,
-    Range, SignatureHelp, SignatureInformation, SymbolInformation, SymbolKind, TextDocument
+    Range, SignatureHelp, SignatureInformation, SymbolInformation, SymbolKind
 } from 'vscode-languageserver';
+import { TextDocument } from 'vscode-languageserver-textdocument';
 import * as Parser from 'web-tree-sitter';
 import * as TreeSitterUtil from '../util/tree-sitter';
 
@@ -238,6 +239,7 @@ export default class QAnalyzer {
                         const uri = `file://${filepath}`;
                         try {
                             const fileContent = fs.readFileSync(filepath, 'utf8');
+                            this.connection.console.info(`Analyzing ${uri}`);
                             this.analyzeDoc(uri, TextDocument.create(uri, 'q', 1, fileContent));
                         } catch (error) {
                             this.connection.console.warn(`Failed analyzing ${uri}.`);
@@ -257,7 +259,6 @@ export default class QAnalyzer {
      * Returns all, if any, syntax errors that occurred while parsing the file.
      */
     public analyzeDoc(uri: DocumentUri, document: TextDocument): Diagnostic[] {
-        this.connection.console.info(`Analyzing ${uri}`);
         const content = document.getText();
         const tree = this.parser.parse(content);
 
