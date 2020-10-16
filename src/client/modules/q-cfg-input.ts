@@ -20,7 +20,9 @@ export async function qCfgInput(qcfg: QCfg | undefined, requireUnique = true): P
                 user: '',
                 password: '',
                 socketNoDelay: false, socketTimeout: 0,
-                label: ''
+                label: '',
+                tags: '',
+                uniqLabel: '',
             } as QCfg;
         await QCfgInput.run(input => inputHost(input, state));
         return state as QCfg;
@@ -120,7 +122,7 @@ export async function qCfgInput(qcfg: QCfg | undefined, requireUnique = true): P
             totalSteps: 8,
             value: state.label,
             prompt: `Input label for ${state.host}:${state.port}`,
-            validate: validateUnique,
+            validate: validateNothing,
             shouldResume: shouldResume
         });
         if (state.label === '') {
@@ -139,6 +141,14 @@ export async function qCfgInput(qcfg: QCfg | undefined, requireUnique = true): P
             validate: validateNothing,
             shouldResume: shouldResume
         });
+        state.uniqLabel = state.tags + ',' + state.label;
+        if (QConnManager.current?.getConn(state.uniqLabel) && requireUnique) {
+            const overwrite = await window.showInputBox(
+                { prompt: `Confirm to overwrite '${state.tags},${state.label}' (Y/n)` }
+            );
+            if (overwrite !== 'Y')
+                return (input: QCfgInput) => inputLabel(input, state);
+        }
     }
 
     function shouldResume() {
@@ -160,16 +170,8 @@ export async function qCfgInput(qcfg: QCfg | undefined, requireUnique = true): P
         return undefined;
     }
 
-    async function validateUnique(label: string) {
-        if (requireUnique) {
-            return QConnManager.current?.qConnPool.has(label) ? 'Label exists' : undefined;
-        } else {
-            return undefined;
-        }
-    }
-
     const state = await collectInputs();
-    // window.showInformationMessage(`Creating q Server '${state.label}'`);
+
     return state;
 }
 

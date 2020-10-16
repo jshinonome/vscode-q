@@ -134,8 +134,8 @@ export function activate(context: ExtensionContext): void {
 
     commands.registerCommand(
         'q-servers.connect',
-        label => {
-            QConnManager.current?.connect(label);
+        uniqLabel => {
+            QConnManager.current?.connect(uniqLabel);
         });
 
     commands.registerCommand(

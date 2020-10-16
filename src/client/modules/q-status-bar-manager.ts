@@ -46,12 +46,13 @@ export class QStatusBarManager {
     }
 
 
-    public static updateConnStatus(name: string | undefined): void {
+    public static updateConnStatus(label: string | undefined): void {
+        const text = (label ?? 'No Connection').replace(',', '-');
         if (QConnManager.consoleMode) {
-            this.current!.connStatusBar.text = name ?? 'No Connection';
+            this.current!.connStatusBar.text = text;
             this.current!.connStatusBar.color = '#FF79C6';
         } else {
-            this.current!.connStatusBar.text = name ?? 'No Connection';
+            this.current!.connStatusBar.text = text;
             this.current!.connStatusBar.color = '#8BE9FD';
         }
     }

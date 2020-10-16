@@ -24,6 +24,7 @@ export class QConn extends TreeItem {
     // kdb+ version
     version = 3.0;
     tags: string;
+    uniqLabel: string;
     constructor(cfg: QCfg, conn: q.Connection | undefined = undefined) {
         super(cfg['label'], TreeItemCollapsibleState.None);
         this.host = ('host' in cfg) ? cfg['host'] : 'localhost';
@@ -36,13 +37,14 @@ export class QConn extends TreeItem {
         this.password = ('password' in cfg) ? cfg['password'] : '';
         this.socketNoDelay = ('socketNoDelay' in cfg) ? cfg['socketNoDelay'] : false;
         this.socketTimeout = ('socketTimeout' in cfg) ? cfg['socketTimeout'] : 0;
+        this.conn = conn;
+        this.tags = cfg.tags ?? '';
+        this.uniqLabel = `${cfg.tags},${cfg.label}`;
         this.command = {
             command: 'q-servers.connect',
             title: 'connect to q server',
-            arguments: [this.label]
+            arguments: [this.uniqLabel]
         };
-        this.conn = conn;
-        this.tags = cfg.tags ?? '';
         if (conn) {
             this.getKdbVersion();
             this.setTimeout();

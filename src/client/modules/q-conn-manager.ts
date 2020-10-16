@@ -71,18 +71,18 @@ export class QConnManager {
         this.updateQueryWrapper();
     }
 
-    getConn(label: string): QConn | undefined {
-        return this.qConnPool.get(label);
+    getConn(uniqLabel: string): QConn | undefined {
+        return this.qConnPool.get(uniqLabel);
     }
 
-    connect(label: string): void {
+    connect(uniqLabel: string): void {
         try {
-            const qConn = this.getConn(label);
+            const qConn = this.getConn(uniqLabel);
             if (qConn) {
                 const conn = qConn.conn;
                 if (conn) {
                     this.activeConn = qConn;
-                    QStatusBarManager.updateConnStatus(label);
+                    QStatusBarManager.updateConnStatus(uniqLabel);
                     commands.executeCommand('q-servers.refreshEntry');
                     commands.executeCommand('q-explorer.refreshEntry');
                     this.updateQueryWrapper();
@@ -95,20 +95,20 @@ export class QConnManager {
                                     if (_hadError) {
                                         console.log('Error happened during closing connection');
                                     }
-                                    this.removeConn(label);
+                                    this.removeConn(uniqLabel);
                                 });
                                 qConn?.setConn(conn);
                                 this.activeConn = qConn;
                                 commands.executeCommand('q-servers.refreshEntry');
                                 commands.executeCommand('q-explorer.refreshEntry');
-                                QStatusBarManager.updateConnStatus(label);
+                                QStatusBarManager.updateConnStatus(uniqLabel);
                             }
                         }
                     );
                 }
             }
         } catch (error) {
-            window.showErrorMessage(`Failed to connect to '${label}', please check q-server-cfg.json`);
+            window.showErrorMessage(`Failed to connect to '${uniqLabel}', please check q-server-cfg.json`);
         }
     }
 
@@ -161,15 +161,16 @@ export class QConnManager {
         // read the q server configuration file from home dir
         if (fs.existsSync(cfgPath)) {
             this.qCfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
+            this.qCfg = this.qCfg.map(qcfg => {
+                qcfg.uniqLabel = `${qcfg.tags},${qcfg.label}`;
+                return qcfg;
+            });
             // reserver current conn
             const currentQconnPool = new Map(this.qConnPool);
             this.qConnPool.clear();
             this.qCfg.forEach((qcfg: QCfg) => {
-                if (currentQconnPool.get(qcfg.label)) {
-                    const qConn = new QConn(qcfg, currentQconnPool.get(qcfg.label)?.conn);
-                    this.qConnPool.set(qcfg.label, qConn);
-                } else {
-                    this.qConnPool.set(qcfg['label'], new QConn(qcfg));
+                if (!this.qConnPool.get(qcfg.uniqLabel)) {
+                    this.qConnPool.set(qcfg.uniqLabel, new QConn(qcfg, currentQconnPool.get(qcfg.uniqLabel)?.conn));
                 }
             });
         } else {
@@ -210,7 +211,8 @@ export class QConnManager {
                             socketNoDelay: qcfg.socketNoDelay ?? false,
                             socketTimeout: qcfg.socketTimeout ?? 0,
                             label: qcfg.label as string,
-                            tags: qcfg.tags ?? ''
+                            tags: qcfg.tags ?? '',
+                            uniqLabel: `${qcfg.tags},${qcfg.label}`
                         };
                     } else {
                         throw new Error('Please make sure to include port and label');
@@ -250,16 +252,16 @@ export class QConnManager {
     }
 
     addCfg(qcfg: QCfg): void {
-        const label = qcfg.label;
-        this.qCfg = this.qCfg.filter(qcfg => qcfg.label !== label);
+        const uniqLabel = qcfg.uniqLabel;
+        this.qCfg = this.qCfg.filter(qcfg => qcfg.uniqLabel !== uniqLabel);
         this.qCfg.push(qcfg);
-        this.qCfg.sort((q1, q2) => q1.label.localeCompare(q2.label));
+        this.qCfg.sort((q1, q2) => q1.uniqLabel.localeCompare(q2.uniqLabel));
         this.dumpCfg();
         commands.executeCommand('q-servers.refreshEntry');
     }
 
-    removeCfg(label: string): void {
-        this.qCfg = this.qCfg.filter(qcfg => qcfg.label !== label);
+    removeCfg(uniqLabel: string): void {
+        this.qCfg = this.qCfg.filter(qcfg => qcfg.uniqLabel !== uniqLabel);
         this.dumpCfg();
         commands.executeCommand('q-servers.refreshEntry');
     }
@@ -275,19 +277,20 @@ export class QConnManager {
                 socketTimeout: qcfg.socketTimeout,
                 label: qcfg.label,
                 tags: qcfg.tags,
+                uniqLabel: `${qcfg.tags},${qcfg.label}`
             };
         }), null, 4), 'utf8');
     }
 
-    removeConn(label: string): void {
-        const qConn = this.getConn(label);
+    removeConn(uniqLabel: string): void {
+        const qConn = this.getConn(uniqLabel);
         qConn?.setConn(undefined);
-        if (this.activeConn?.label === label) {
+        if (this.activeConn?.label === uniqLabel) {
             this.activeConn = undefined;
             QStatusBarManager.updateConnStatus(undefined);
         }
         commands.executeCommand('q-servers.refreshEntry');
-        window.showWarningMessage(`Lost connection to ${label.toUpperCase()}`);
+        window.showWarningMessage(`Lost connection to ${uniqLabel} `);
     }
 }
 
@@ -300,4 +303,5 @@ export type QCfg = {
     socketTimeout: number;
     label: string;
     tags: string;
+    uniqLabel: string;
 }
