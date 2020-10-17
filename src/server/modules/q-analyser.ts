@@ -13,9 +13,9 @@ import {
     Range, SignatureHelp, SignatureInformation, SymbolInformation, SymbolKind
 } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+import { URI } from 'vscode-uri';
 import * as Parser from 'web-tree-sitter';
 import * as TreeSitterUtil from '../util/tree-sitter';
-
 
 import klaw = require('klaw');
 import fs = require('graceful-fs');
@@ -39,10 +39,10 @@ export default class QAnalyzer {
 
     public static async fromRoot(
         connection: Connection,
-        rootPath: string | undefined | null,
+        workspaceFolder: string,
         parser: Parser
     ): Promise<QAnalyzer> {
-        return new QAnalyzer(parser, connection, rootPath);
+        return new QAnalyzer(parser, connection, workspaceFolder);
     }
 
     private parser: Parser
@@ -54,11 +54,13 @@ export default class QAnalyzer {
     private nameToSigHelp = new Map<string, SignatureHelp>();
     private serverIds: string[] = [];
     private serverSyms: string[] = [];
+    private workspaceFolder: URI;
 
-    public constructor(parser: Parser, connection: Connection, rootPath: string | undefined | null) {
+    public constructor(parser: Parser, connection: Connection, workspaceFolder: string) {
         this.parser = parser;
         this.connection = connection;
-        this.rootPath = rootPath;
+        this.workspaceFolder = URI.parse(workspaceFolder);
+        this.rootPath = this.workspaceFolder.path;
     }
 
     /**

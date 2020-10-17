@@ -15,6 +15,7 @@ import {
     TextDocumentSyncKind, TextEdit, WorkspaceEdit, WorkspaceSymbolParams
 } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+import { URI } from 'vscode-uri';
 import QAnalyzer, { word } from './modules/q-analyser';
 import getBuildInFsRef from './util/q-build-in-fs';
 import { initializeParser } from './util/q-parser';
@@ -56,11 +57,12 @@ export default class QLangServer {
 
     public static async initialize(
         connection: Connection,
-        { rootPath }: InitializeParams,
+        { workspaceFolders }: InitializeParams,
     ): Promise<QLangServer> {
-        connection.console.info(`Initializing q Lang Server at ${rootPath}`);
+        const workspaceFolder = workspaceFolders ? workspaceFolders[0].uri : '';
+        connection.console.info(`Initializing q Lang Server at ${workspaceFolder}`);
         const parser = await initializeParser();
-        return QAnalyzer.fromRoot(connection, rootPath, parser).then(
+        return QAnalyzer.fromRoot(connection, workspaceFolder, parser).then(
             analyzer => { return new QLangServer(connection, analyzer); }
         );
     }
@@ -111,7 +113,7 @@ export default class QLangServer {
             }
         });
         changedFiles.forEach(file => {
-            const filepath = file.replace('file://', '');
+            const filepath = URI.parse(file).path;
             if (!QAnalyzer.matchFile(filepath))
                 return;
             try {
