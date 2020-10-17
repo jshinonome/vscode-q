@@ -69,19 +69,11 @@ perspective-viewer,
   --active-column-selector--height: 45px;
   --column_selector--width: 31px;
   --column_selector--font-size: 16px;
-  --hypergrid-gridline--color: #ddd;
-  --hypergrid--padding: 24px;
   --side_panel--padding: 24px 24px 24px 17px;
   --button--padding: 24px 17px 0px 17px;
   --button--font-size: 16px;
   --top_panel--padding: 0px 0px 24px 0px;
   --top-panel-row--display: inline-flex;
-  --hypergrid-scrollbar--width: 8px;
-  --hypergrid-scrollbar--border-radius: 5px;
-  --hypergrid--font-size: 12px;
-  --hypergrid-header--font-size: 12px;
-  --hypergrid--font-family: "Open Sans";
-  --hypergrid-header--font-family: "Open Sans";
   --d3fc-treedata-axis--lines: none;
   background-color: #2a2c2f;
   color: #cfd8dc;
@@ -111,10 +103,6 @@ perspective-viewer,
   --hypergrid-row-hover--color: #eee;
   --hypergrid-cell-hover--background: #444;
   --hypergrid-cell-hover--color: #eee;
-  --highcharts-label--fill: #cfd8dc;
-  --highcharts-rect--opacity: 0.85;
-  --highcharts-grid-line--stroke: #3b3f46;
-  --highcharts-tooltip--background: #2a2c2f;
   --d3fc-legend--text: #bbbbbb;
   --d3fc-treedata--labels: #bbbbbb;
   --d3fc-treedata--hover-highlight: #ffffff;
@@ -136,9 +124,6 @@ perspective-viewer,
   --d3fc-full--gradient: linear-gradient(#feeb65 0%, #e4521b 22.5%, #4d342f 42.5%, #222222 50%, #1a237e 57.5%, #42b3d5 67.5%, #dcedc8 100%);
   --d3fc-positive--gradient: linear-gradient(#222222 0%, #1a237e 35%, #42b3d5 70%, #dcedc8 100%);
   --d3fc-negative--gradient: linear-gradient(#feeb65 0%, #e4521b 35%, #4d342f 70%, #222222 100%);
-  --highcharts-full--gradient: linear-gradient(#feeb65 0%, #e4521b 22.5%, #4d342f 42.5%, #222222 50%, #1a237e 57.5%, #42b3d5 67.5%, #dcedc8 100%);
-  --highcharts-positive--gradient: linear-gradient(#222222 0%, #1a237e 35%, #42b3d5 70%, #dcedc8 100%);
-  --highcharts-negative--gradient: linear-gradient(#feeb65 0%, #e4521b 35%, #4d342f 70%, #222222 100%);
   --warning--color: #333;
   --autocomplete-select-background: #555;
   --autocomplete-hover-background: #444;
@@ -154,51 +139,82 @@ perspective-viewer tr td span.pd-tree-group,
 perspective-viewer tr td.pd-group-header,
 .perspective-viewer-material-dark tr td.pd-group-header,
 perspective-viewer tr th.pd-group-header,
-.perspective-viewer-material-dark tr th.pd-group-header {
+.perspective-viewer-material-dark tr th.pd-group-header,
+perspective-viewer .psp-header-border,
+.perspective-viewer-material-dark .psp-header-border {
   border-right: 1px solid #999;
 }
-perspective-viewer tr:last-child th,
-.perspective-viewer-material-dark tr:last-child th {
+perspective-viewer .psp-header-border:last-child,
+.perspective-viewer-material-dark .psp-header-border:last-child {
+  border-right-width: 0px;
+}
+perspective-viewer .psp-tree-label:before,
+.perspective-viewer-material-dark .psp-tree-label:before {
+  color: #999;
+}
+perspective-viewer tbody th:last-of-type,
+.perspective-viewer-material-dark tbody th:last-of-type {
+  border-right: 1px solid #999;
+}
+perspective-viewer tbody th.psp-row-selected:last-of-type,
+.perspective-viewer-material-dark tbody th.psp-row-selected:last-of-type {
+  border-right: 1px solid #000;
+}
+perspective-viewer thead tr:last-child th,
+.perspective-viewer-material-dark thead tr:last-child th {
   border-bottom: 1px solid #999;
 }
-perspective-viewer .pd-selected td,
-.perspective-viewer-material-dark .pd-selected td {
-  background-color: rgba(0, 0, 0, 0);
+perspective-viewer .psp-tree-label:hover:before,
+.perspective-viewer-material-dark .psp-tree-label:hover:before {
+  color: #22a0ce;
+  text-shadow: 0px 0px 3px #22a0ce;
 }
-perspective-viewer tr.pd-selected:hover td div,
-.perspective-viewer-material-dark tr.pd-selected:hover td div {
-  background-color: #444;
-}
-perspective-viewer td.pd-negative,
-.perspective-viewer-material-dark td.pd-negative {
+perspective-viewer td.psp-negative,
+.perspective-viewer-material-dark td.psp-negative {
   color: #ff8888;
 }
-perspective-viewer td.pd-positive,
-.perspective-viewer-material-dark td.pd-positive {
+perspective-viewer td.psp-row-selected,
+.perspective-viewer-material-dark td.psp-row-selected {
+  color: black !important;
+}
+perspective-viewer tbody th:empty,
+.perspective-viewer-material-dark tbody th:empty {
+  background: linear-gradient(to right, transparent 9px, #444 10px, transparent 11px);
+}
+perspective-viewer td.psp-positive,
+.perspective-viewer-material-dark td.psp-positive {
   color: #22a0ce;
-}
-perspective-viewer .pd-selected td:not(.pd-group-header),
-.perspective-viewer-material-dark .pd-selected td:not(.pd-group-header),
-perspective-viewer .pd-selected td span.pd-group-name,
-.perspective-viewer-material-dark .pd-selected td span.pd-group-name {
-  background: #EA7319 !important;
-}
-perspective-viewer .pd-selected td,
-.perspective-viewer-material-dark .pd-selected td {
-  color: #000;
-  background-color: rgba(0, 0, 0, 0);
-}
-perspective-viewer .pd-sub-selected td:not(.pd-group-header),
-.perspective-viewer-material-dark .pd-sub-selected td:not(.pd-group-header),
-perspective-viewer .pd-sub-selected td span.pd-group-name,
-.perspective-viewer-material-dark .pd-sub-selected td span.pd-group-name {
-  background: rgba(234, 115, 25, 0.2) !important;
 }
 perspective-viewer tbody:hover tr:hover td,
 .perspective-viewer-material-dark tbody:hover tr:hover td,
 perspective-viewer tbody:hover tr:hover td span,
-.perspective-viewer-material-dark tbody:hover tr:hover td span {
+.perspective-viewer-material-dark tbody:hover tr:hover td span,
+perspective-viewer tbody:hover tr:hover th.psp-tree-leaf,
+.perspective-viewer-material-dark tbody:hover tr:hover th.psp-tree-leaf,
+perspective-viewer tbody:hover tr:hover th.psp-tree-label,
+.perspective-viewer-material-dark tbody:hover tr:hover th.psp-tree-label {
   background: #444;
+}
+perspective-viewer tbody:hover tr:hover td.psp-row-selected,
+.perspective-viewer-material-dark tbody:hover tr:hover td.psp-row-selected,
+perspective-viewer tbody:hover tr:hover td.psp-row-selected span,
+.perspective-viewer-material-dark tbody:hover tr:hover td.psp-row-selected span,
+perspective-viewer tbody:hover tr:hover th.psp-row-selected.psp-tree-leaf,
+.perspective-viewer-material-dark tbody:hover tr:hover th.psp-row-selected.psp-tree-leaf,
+perspective-viewer tbody:hover tr:hover th.psp-row-selected.psp-tree-label,
+.perspective-viewer-material-dark tbody:hover tr:hover th.psp-row-selected.psp-tree-label {
+  color: black;
+  background: #EA7319;
+}
+perspective-viewer tbody:hover tr:hover td.psp-row-subselected,
+.perspective-viewer-material-dark tbody:hover tr:hover td.psp-row-subselected,
+perspective-viewer tbody:hover tr:hover td.psp-row-subselected span,
+.perspective-viewer-material-dark tbody:hover tr:hover td.psp-row-subselected span,
+perspective-viewer tbody:hover tr:hover th.psp-row-subselected.psp-tree-leaf,
+.perspective-viewer-material-dark tbody:hover tr:hover th.psp-row-subselected.psp-tree-leaf,
+perspective-viewer tbody:hover tr:hover th.psp-row-subselected.psp-tree-label,
+.perspective-viewer-material-dark tbody:hover tr:hover th.psp-row-subselected.psp-tree-label {
+  background: rgba(234, 115, 25, 0.2);
 }
 perspective-viewer table tr:hover,
 .perspective-viewer-material-dark table tr:hover {
