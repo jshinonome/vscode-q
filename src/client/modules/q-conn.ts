@@ -86,7 +86,7 @@ export class QConn extends TreeItem {
 
     // @ts-ignore
     get iconPath(): { light: string, dark: string } {
-        if (QConnManager.current?.activeConn?.label === this.label) {
+        if (QConnManager.current?.activeConn?.uniqLabel === this.uniqLabel) {
             return {
                 light: path.join(__filename, '../../assets/svg/light/cpu-active.svg'),
                 dark: path.join(__filename, '../../assets/svg/dark/cpu-active.svg')
