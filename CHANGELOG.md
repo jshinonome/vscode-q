@@ -1,6 +1,10 @@
 # change log
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.8.5
+### changed
+- use tags+label as unique server id
+
 ## 1.8.4
 ### added
 - Query View: support time, minute, second
