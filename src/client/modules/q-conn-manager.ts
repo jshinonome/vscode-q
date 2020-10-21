@@ -285,7 +285,7 @@ export class QConnManager {
     removeConn(uniqLabel: string): void {
         const qConn = this.getConn(uniqLabel);
         qConn?.setConn(undefined);
-        if (this.activeConn?.label === uniqLabel) {
+        if (this.activeConn?.uniqLabel === uniqLabel) {
             this.activeConn = undefined;
             QStatusBarManager.updateConnStatus(undefined);
         }
