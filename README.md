@@ -3,9 +3,9 @@
 [![](https://vsmarketplacebadge.apphb.com/downloads/jshinonome.vscode-q.svg?color=blue&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 [![](https://vsmarketplacebadge.apphb.com/installs/jshinonome.vscode-q.svg?color=success&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 
-This extension provides kdb+\q language support.
-- syntaxes
-- server list with tags
+This extension provides kdb+\q language support:
+- q syntaxes
+- server list group by tags
 - server explorer
 - virtualization powered by [perspective](https://perspective.finos.org/)
 - language server powered by [tree-sitter](https://tree-sitter.github.io/tree-sitter/)
@@ -118,6 +118,15 @@ To use this extension in an earlier version of vscode.
 npm i
 sudo npm i -g vsce
 vsce package
+```
+
+## Tips
+### Disable Word Wrap in q Console of Output
+Type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd>, call `Open Setting(Json)`, and add following configuration.
+```
+    "[Log]": {
+        "editor.wordWrap": "off"
+    }
 ```
 
 

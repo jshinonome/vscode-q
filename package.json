@@ -59,7 +59,10 @@
 				"extensions": [
 					".q"
 				],
-				"configuration": "./language-configuration.json"
+				"configuration": "./language-configuration.json",
+				"mimetypes": [
+					"text/x-code-output"
+				]
 			}
 		],
 		"grammars": [

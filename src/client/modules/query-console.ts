@@ -38,14 +38,14 @@ export class QueryConsole {
         }
     }
 
-    public append(output: string | string[], time = 0): void {
+    public append(output: string | string[], time = 0, uniqLabel: string): void {
         const date = new Date();
-        this._console.appendLine(`<=== ${date.toLocaleTimeString()}`);
+        this._console.appendLine(`/=> ${uniqLabel} @ ${date.toLocaleTimeString()}`);
         if (Array.isArray(output)) {
             output.forEach(o => this._console.appendLine(o));
         } else {
             this._console.appendLine(output);
         }
-        this._console.appendLine(`===> ${time}(ms) used\n`);
+        this._console.appendLine(`/=< ${time}(ms) elapsed\n`);
     }
 }

@@ -55,9 +55,10 @@ export class QConnManager {
     // when switch a server or toggle query mode, update wrapper
     public updateQueryWrapper(): void {
         const limit = this.isLimited ? '1000 sublist ' : '';
+        const consoleSize = '36 180|system"c"';
         const wrapper = QConnManager.consoleMode
-            ? '{`t`r!(0b;.Q.S[system"c";0j;value x])}'
-            : `{res:value x;$[(count res) & .Q.qt res;:\`t\`r\`m!(1b;${limit}0!res;0!meta res);:\`t\`r!(0b;.Q.S[system"c";0j;res])]}`;
+            ? `{\`t\`r!(0b;.Q.S[${consoleSize};0j;value x])}`
+            : `{res:value x;$[(count res) & .Q.qt res;:\`t\`r\`m!(1b;${limit}0!res;0!meta res);:\`t\`r!(0b;.Q.S[${consoleSize};0j;res])]}`;
         if (this.activeConn && this.activeConn.version < 3.5)
             this.queryWrapper = wrapper;
         else
@@ -122,16 +123,17 @@ export class QConnManager {
             this.isBusy = true;
             this.busyConn = this.activeConn;
             QStatusBarManager.updateQueryStatus(this.isBusy);
+            const uniqLabel = this.activeConn?.uniqLabel.replace(',', '-');
             const time = Date.now();
             this.activeConn?.conn?.k(this.queryWrapper, query,
                 (err, res) => {
                     QueryConsole.createOrShow();
                     if (err) {
-                        QueryConsole.current?.append(err.message, Date.now() - time);
+                        QueryConsole.current?.append(err.message, Date.now() - time, uniqLabel);
                     }
                     if (res) {
                         if (QConnManager.consoleMode) {
-                            QueryConsole.current?.append(res.r, Date.now() - time);
+                            QueryConsole.current?.append(res.r, Date.now() - time, uniqLabel);
                         } else {
                             if (res.t) {
                                 QueryView.createOrShow();
@@ -140,10 +142,10 @@ export class QConnManager {
                                     data: res.r,
                                     meta: res.m
                                 });
-                                QueryConsole.current?.append(`${res.r[Object.keys(res.r)[0]].length} row(s) returned`, Date.now() - time);
+                                QueryConsole.current?.append(`${res.r[Object.keys(res.r)[0]].length} row(s) returned`, Date.now() - time, uniqLabel);
                             }
                             else {
-                                QueryConsole.current?.append(res.r, Date.now() - time);
+                                QueryConsole.current?.append(res.r, Date.now() - time, uniqLabel);
                             }
                         }
                     }

@@ -1,6 +1,10 @@
 # change log
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.8.7
+### added
+- enable q syntax for q Console of Output
+
 ## 1.8.5
 ### changed
 - use tags+label as unique server id
