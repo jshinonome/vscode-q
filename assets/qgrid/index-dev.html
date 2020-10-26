@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- include styles -->
+    <link href="css/ag-grid.min.css" rel="stylesheet">
+    <link href="css/ag-theme-balham-dark.min.css" rel="stylesheet">
+    <link href="css/q-grid.css" rel="stylesheet">
+    <!-- include the lib -->
+    <script src="js/ag-grid-community.min.js"></script>
+    <style media="only screen">
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            box-sizing: border-box;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        html {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 0;
+            overflow: auto;
+        }
+
+        body {
+            padding: 1rem;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid-wrapper">
+        <div id="qGrid" class="ag-theme-balham-dark"></div>
+        <script type="text/javascript" charset="utf-8">
+            // specify the columns
+            var columnDefs = [
+                { field: 'time' },
+                { field: 'ric' },
+                { field: 'qty' },
+                { field: 'price' },
+            ];
+
+            columnDefs.forEach((field, index) => {
+
+            })
+            // specify the data
+            var rowData = [{ "time": "2020.10.26D00:55:08.573685586", "ric": "IBM", "qty": 41, "price": 12.42488 }, { "time": "2020.10.26T18:11:44.686843603", "ric": "GOOG", "qty": 75, "price": 41.20608 }, { "time": "2020.10.26T00:03:06.600697785", "ric": "IBM", "qty": 19, "price": 8.51614 }, { "time": "2020.10.26T23:11:10.169582962", "ric": "GOOG", "qty": 23, "price": 48.6676 }, { "time": "2020.10.26T00:03:00.423261970", "ric": "GOOG", "qty": 19, "price": 52.2749 }, { "time": "2020.10.26T06:18:31.535954475", "ric": "IBM", "qty": 72, "price": 28.67677 }, { "time": "2020.10.26T18:56:36.269226819", "ric": "IBM", "qty": 32, "price": 46.70129 }, { "time": "2020.10.26T00:36:41.497513800", "ric": "IBM", "qty": 56, "price": 7.287502 }, { "time": "2020.10.26T22:21:46.175500899", "ric": "GOOG", "qty": 72, "price": 85.13184 }, { "time": "2020.10.26T21:55:31.159783154", "ric": "GOOG", "qty": 22, "price": 42.95277 }];
+
+            // let the grid know which columns and what data to use
+            var gridOptions = {
+                defaultColDef: {
+                    sortable: true,
+                    resizable: true,
+                    filter: true,
+                },
+                columnDefs: columnDefs,
+                rowData: rowData,
+            };
+
+            // lookup the container we want the Grid to use
+            var eGridDiv = document.querySelector('#qGrid');
+
+            // create the grid passing in the div to use together with the columns & data we want to use
+            new agGrid.Grid(eGridDiv, gridOptions);
+
+        </script>
+    </div>
+</body>
+
+</html>

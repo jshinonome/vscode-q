@@ -10,7 +10,6 @@ import { QConnManager } from './q-conn-manager';
 
 export class QStatusBarManager {
     private connStatusBar: StatusBarItem;
-    private modeStatusBar: StatusBarItem;
     private queryStatusBar: StatusBarItem;
     private unlimitedQueryStatusBar: StatusBarItem;
 
@@ -28,10 +27,6 @@ export class QStatusBarManager {
         context.subscriptions.push(this.connStatusBar);
         this.connStatusBar.show();
 
-        this.modeStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 100);
-        context.subscriptions.push(this.modeStatusBar);
-        this.modeStatusBar.show();
-
         this.queryStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 98);
         this.queryStatusBar.text = '$(loading)';
         this.queryStatusBar.color = '#F44336';
@@ -47,7 +42,7 @@ export class QStatusBarManager {
 
 
     public static updateConnStatus(label: string | undefined): void {
-        const text = (label ?? 'No Connection').replace(',', '-');
+        const text = QConnManager.queryMode[0] + ':' + (label ?? 'No Connection').replace(',', '-');
         if (QConnManager.consoleMode) {
             this.current!.connStatusBar.text = text;
             this.current!.connStatusBar.color = '#FF79C6';
@@ -62,16 +57,6 @@ export class QStatusBarManager {
             this.current!.connStatusBar.color = '#FF79C6';
         } else {
             this.current!.connStatusBar.color = '#8BE9FD';
-        }
-    }
-
-    public static updateModeStatus(): void {
-        if (QConnManager.consoleMode) {
-            this.current!.modeStatusBar.text = '$(debug-console)';
-            this.current!.modeStatusBar.color = '#FF79C6';
-        } else {
-            this.current!.modeStatusBar.text = '$(graph)';
-            this.current!.modeStatusBar.color = '#8BE9FD';
         }
     }
 

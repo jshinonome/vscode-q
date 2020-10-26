@@ -163,12 +163,12 @@
 				"category": "kdb+/q ext"
 			},
 			{
-				"command": "q-servers.toggleMode",
-				"title": "Toggle Console Mode",
+				"command": "q-servers.switchMode",
+				"title": "Switch Query Mode",
 				"category": "kdb+/q ext",
 				"icon": {
-					"light": "assets/svg/light/console.svg",
-					"dark": "assets/svg/dark/console.svg"
+					"light": "assets/svg/light/gear.svg",
+					"dark": "assets/svg/dark/gear.svg"
 				}
 			},
 			{
@@ -191,7 +191,7 @@
 			},
 			{
 				"command": "q-servers.tagEntry",
-				"title": "Tag Server",
+				"title": "Tag a Server",
 				"category": "kdb+/q ext",
 				"icon": {
 					"light": "assets/svg/light/tag.svg",
@@ -208,21 +208,12 @@
 				}
 			},
 			{
-				"command": "q-explorer.insert",
-				"title": "Insert",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/diff-added.svg",
-					"dark": "assets/svg/dark/diff-added.svg"
-				}
-			},
-			{
-				"command": "q-explorer.previewTable",
+				"command": "q-explorer.preview",
 				"title": "Preview Table",
 				"category": "kdb+/q ext",
 				"icon": {
-					"light": "assets/svg/light/zoom-in.svg",
-					"dark": "assets/svg/dark/zoom-in.svg"
+					"light": "assets/svg/light/preview.svg",
+					"dark": "assets/svg/dark/preview.svg"
 				}
 			},
 			{
@@ -258,7 +249,7 @@
 					"group": "navigation"
 				},
 				{
-					"command": "q-servers.toggleMode",
+					"command": "q-servers.switchMode",
 					"when": "view == q-servers",
 					"group": "navigation"
 				},
@@ -300,27 +291,22 @@
 					"group": "inline"
 				},
 				{
-					"command": "q-explorer.insert",
+					"command": "q-explorer.preview",
 					"when": "view == q-explorer && viewItem == qdict",
 					"group": "inline"
 				},
 				{
-					"command": "q-explorer.insert",
+					"command": "q-explorer.preview",
 					"when": "view == q-explorer && viewItem == qvar",
 					"group": "inline"
 				},
 				{
-					"command": "q-explorer.insert",
+					"command": "q-explorer.preview",
 					"when": "view == q-explorer && viewItem == qtable",
 					"group": "inline"
 				},
 				{
-					"command": "q-explorer.previewTable",
-					"when": "view == q-explorer && viewItem == qtable",
-					"group": "inline"
-				},
-				{
-					"command": "q-explorer.insert",
+					"command": "q-explorer.preview",
 					"when": "view == q-explorer && viewItem == qfunction",
 					"group": "inline"
 				}
@@ -401,6 +387,7 @@
 					"type": "string",
 					"enum": [
 						"Console",
+						"Grid",
 						"Virtualization"
 					],
 					"default": "Virtualization",
@@ -411,6 +398,12 @@
 					"type": "boolean",
 					"default": false,
 					"description": "q View in Dense Mode"
+				},
+				"q-ext.qgrid.decimals": {
+					"scope": "resource",
+					"type": "number",
+					"default": 3,
+					"description": "Decimals of q Grid"
 				},
 				"q-ext.term.qBinary": {
 					"scope": "resource",
@@ -449,6 +442,7 @@
 		"@types/klaw": "^3.0.1",
 		"@types/picomatch": "^2.2.1",
 		"@typescript-eslint/eslint-plugin": "^4.4.1",
+		"ag-grid-community": "^24.1.0",
 		"csv-parser": "^2.3.3",
 		"eslint": "^7.11.0",
 		"fuse.js": "^6.4.1",

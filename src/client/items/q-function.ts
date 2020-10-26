@@ -28,6 +28,9 @@ export default class QFunctionTreeItem extends TreeItem {
         };
     }
 
+    getBody(): string {
+        return this._body;
+    }
 
     getParent(): TreeItem {
         return this._parent;

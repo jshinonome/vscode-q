@@ -8,10 +8,12 @@
 import * as fs from 'fs';
 import * as q from 'node-q';
 import { homedir } from 'os';
-import { commands, window, workspace, Uri } from 'vscode';
+import { commands, Uri, window, workspace } from 'vscode';
+import { QueryResult } from '../models/query-result';
 import { QConn } from './q-conn';
 import { QStatusBarManager } from './q-status-bar-manager';
 import { QueryConsole } from './query-console';
+import { QueryGrid } from './query-grid';
 import { QueryView } from './query-view';
 import path = require('path');
 
@@ -28,12 +30,9 @@ export class QConnManager {
     busyConn: QConn | undefined = undefined;
     queryWrapper = '';
     isLimited = true;
-    // exception: true|false
-    // type: number
-    // data: return
-    // cols: columns of table
+    public static queryMode = 'Console';
     public static queryWrapper = '';
-    public static consoleMode = false;
+    public static consoleMode = true;
 
     public static create(): QConnManager {
         if (!this.current) {
@@ -45,11 +44,6 @@ export class QConnManager {
     private constructor() {
         this.loadCfg();
         this.updateQueryWrapper();
-    }
-
-    public static toggleMode(): void {
-        QConnManager.consoleMode = !QConnManager.consoleMode;
-        QConnManager.current?.updateQueryWrapper();
     }
 
     // when switch a server or toggle query mode, update wrapper
@@ -70,6 +64,23 @@ export class QConnManager {
         this.isLimited = !this.isLimited;
         QStatusBarManager.updateUnlimitedQueryStatus(this.isLimited);
         this.updateQueryWrapper();
+    }
+
+    public static setQueryMode(mode: string): void {
+        QConnManager.queryMode = mode;
+        if (mode === 'Console') {
+            QConnManager.consoleMode = true;
+            QueryGrid.currentPanel?.dispose();
+            QueryView.currentPanel?.dispose();
+        } else if (mode === 'Grid') {
+            QueryView.currentPanel?.dispose();
+            QConnManager.consoleMode = false;
+        } else if (mode === 'Virtualization') {
+            QueryGrid.currentPanel?.dispose();
+            QConnManager.consoleMode = false;
+        }
+        QConnManager.current?.updateQueryWrapper();
+        QStatusBarManager.updateConnStatusColor();
     }
 
     getConn(uniqLabel: string): QConn | undefined {
@@ -127,6 +138,8 @@ export class QConnManager {
             const time = Date.now();
             this.activeConn?.conn?.k(this.queryWrapper, query,
                 (err, res) => {
+                    this.isBusy = false;
+                    this.busyConn = undefined;
                     QueryConsole.createOrShow();
                     if (err) {
                         QueryConsole.current?.append(err.message, Date.now() - time, uniqLabel);
@@ -136,8 +149,7 @@ export class QConnManager {
                             QueryConsole.current?.append(res.r, Date.now() - time, uniqLabel);
                         } else {
                             if (res.t) {
-                                QueryView.createOrShow();
-                                QueryView.currentPanel?.update({
+                                this.update({
                                     type: 'json',
                                     data: res.r,
                                     meta: res.m
@@ -149,13 +161,21 @@ export class QConnManager {
                             }
                         }
                     }
-                    this.isBusy = false;
-                    this.busyConn = undefined;
                     QStatusBarManager.updateQueryStatus(this.isBusy);
                 }
             );
         } else {
             window.showErrorMessage('No Active q Connection');
+        }
+    }
+
+    update(result: QueryResult): void {
+        if (QConnManager.queryMode === 'Grid') {
+            QueryGrid.createOrShow();
+            QueryGrid.currentPanel?.update(result);
+        } else {
+            QueryView.createOrShow();
+            QueryView.currentPanel?.update(result);
         }
     }
 

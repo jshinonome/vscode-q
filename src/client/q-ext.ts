@@ -13,6 +13,7 @@ import {
 } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
 import QDictTreeItem from './items/q-dict';
+import QFunctionTreeItem from './items/q-function';
 import { qCfgInput } from './modules/q-cfg-input';
 import { QConn } from './modules/q-conn';
 import { QConnManager } from './modules/q-conn-manager';
@@ -21,6 +22,7 @@ import { QServerTree } from './modules/q-server-tree';
 import { QStatusBarManager } from './modules/q-status-bar-manager';
 import { runQFile, sendToCurrentTerm } from './modules/q-term';
 import { QueryConsole } from './modules/query-console';
+import { QueryGrid } from './modules/query-grid';
 import { QueryView } from './modules/query-view';
 import path = require('path');
 
@@ -79,7 +81,6 @@ export function activate(context: ExtensionContext): void {
     // <-- init
     QStatusBarManager.create(context);
     QStatusBarManager.updateConnStatus(undefined);
-    QStatusBarManager.updateModeStatus();
     // q-server-explorer
     const qServers = new QServerTree('root', null);
     const qRoot = new QDictTreeItem('root', null);
@@ -88,17 +89,13 @@ export function activate(context: ExtensionContext): void {
     qServers.refresh();
     QueryConsole.createOrShow();
     QueryView.setExtensionPath(context.extensionPath);
+    QueryGrid.setExtensionPath(context.extensionPath);
     // --> init
 
 
     // <-- configuration
     const queryMode = workspace.getConfiguration().get('q-ext.queryMode');
-    if (queryMode === 'Console') {
-        QConnManager.toggleMode();
-        // QueryView.createOrShow();
-        QStatusBarManager.updateModeStatus();
-        QStatusBarManager.updateConnStatusColor();
-    }
+    QConnManager.setQueryMode(queryMode as string);
     // -->
 
     commands.registerCommand(
@@ -148,18 +145,12 @@ export function activate(context: ExtensionContext): void {
         });
 
     commands.registerCommand(
-        'q-servers.toggleMode',
-        () => {
-            QConnManager.toggleMode();
-            if (QConnManager.consoleMode) {
-                window.showInformationMessage('Switch to Query Console Mode');
-                QueryView.currentPanel?.dispose();
-            } else {
-                QueryView.createOrShow();
-                window.showInformationMessage('Switch to Query View Mode');
-            }
-            QStatusBarManager.updateModeStatus();
-            QStatusBarManager.updateConnStatusColor();
+        'q-servers.switchMode',
+        async () => {
+            const mode = await window.showQuickPick(['Console', 'Grid', 'Virtualization'],
+                { placeHolder: 'Please choose a query mode from the list below' });
+            window.showInformationMessage(`Switch to Query ${mode} Mode`);
+            if (mode) QConnManager.setQueryMode(mode);
         });
 
     commands.registerCommand(
@@ -190,16 +181,19 @@ export function activate(context: ExtensionContext): void {
     commands.registerCommand(
         'q-explorer.refreshEntry', () => qRoot.refresh());
 
-    commands.registerCommand('q-explorer.insert', (item: TreeItem) => {
-        const p = window.activeTextEditor?.selection.start;
-        if (p)
-            window.activeTextEditor?.edit(e => e.insert(p, item.label ?? ''));
-    });
-
     const previewQueryLimit = workspace.getConfiguration().get('q-ext.expl.prevQueryLimit');
-    commands.registerCommand('q-explorer.previewTable', (item: TreeItem) => {
-        if (item.label) {
-            QConnManager.current?.sync(`{[t;l]$[t in .Q.pt;select from t where date=last date, i<l;select from t where i<l]}[\`${item.label};${previewQueryLimit}]`);
+
+    commands.registerCommand('q-explorer.preview', (item: TreeItem) => {
+        switch (item.contextValue) {
+            case 'qtable':
+                QConnManager.current?.sync(`{[t;l]$[t in .Q.pt;select from t where date=last date, i<l;select from t where i<l]}[\`${item.label};${previewQueryLimit}]`);
+                break;
+            case 'qfunction':
+                QueryConsole.current?.append((item as QFunctionTreeItem).getBody(), 0, 'cached');
+                break;
+            default:
+                if (item.label)
+                    QConnManager.current?.sync(item.label);
         }
     });
 

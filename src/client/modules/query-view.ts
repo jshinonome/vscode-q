@@ -64,7 +64,7 @@ export class QueryView implements Disposable {
 
         const panel = window.createWebviewPanel(
             QueryView.viewType,
-            'Query Result',
+            'Query View',
             {
                 viewColumn: ViewColumn.Two,
                 preserveFocus: true,
