@@ -42,7 +42,7 @@ export class QStatusBarManager {
 
 
     public static updateConnStatus(label: string | undefined): void {
-        const text = QConnManager.queryMode[0] + ':' + (label ?? 'No Connection').replace(',', '-');
+        const text = QConnManager.queryMode + ': ' + (label ?? 'No Connection').replace(',', '-');
         if (QConnManager.consoleMode) {
             this.current!.connStatusBar.text = text;
             this.current!.connStatusBar.color = '#FF79C6';
