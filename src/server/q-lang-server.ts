@@ -172,7 +172,7 @@ export default class QLangServer {
         if (!word) {
             return [];
         }
-        return this.analyzer.findDefinition(word, params.textDocument.uri);
+        return this.analyzer.findDefinition(word);
     }
 
     private onWorkspaceSymbol(params: WorkspaceSymbolParams): SymbolInformation[] {

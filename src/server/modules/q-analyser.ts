@@ -66,19 +66,16 @@ export default class QAnalyzer {
     /**
      * Find all the definition locations
      */
-    public findDefinition(word: word, uri: string): Location[] {
+    public findDefinition(word: word): Location[] {
         let symbols: SymbolInformation[] = [];
 
-        if (word.type === 'global_identifier' || word.containerName === '') {
-            this.uriToDefinition.forEach(nameToSymInfo => {
-                symbols = symbols.concat(nameToSymInfo.get(word.text) || []);
-            });
-        } else {
-            // limited to current file, current function
-            symbols = this.uriToDefinition.get(uri)?.get(word.text)?.filter(
-                sym => sym.containerName === word.containerName
-            ) ?? [];
-        }
+        this.uriToDefinition.forEach(nameToSymInfo => {
+            symbols = symbols.concat(nameToSymInfo.get(word.text) || []);
+        });
+        // limited to current file, current function
+        // symbols = this.uriToDefinition.get(uri)?.get(word.text)?.filter(
+        //     sym => sym.containerName === word.containerName
+        // ) ?? [];
         return symbols.map(s => s.location);
     }
 
@@ -290,7 +287,7 @@ export default class QAnalyzer {
                 }
                 const containerName = this.getContainerName(n) ?? '';
                 // WON'T include local identifier in functions
-                if (containerName !== '' && namespace !== '' && named.type === 'local_identifier')
+                if (containerName !== '' && namespace === '' && named.type === 'local_identifier')
                     return;
                 const name = (namespace === '' || named.type === 'global_identifier') ? named.text.trim() : `${namespace}.${named.text.trim()}`;
                 const definitions = this.uriToDefinition.get(uri)?.get(name) || [];
@@ -509,7 +506,7 @@ export default class QAnalyzer {
     }
 
     public getLocalIds(uri: DocumentUri, containerName: string): string[] {
-        const ids = this.getAllSymbols().filter(s => s.containerName === '' && !s.name.startsWith('.')).map(s => s.name);
+        const ids = this.getAllSymbols().filter(s => !s.containerName && !s.name.startsWith('.')).map(s => s.name);
         if (containerName !== '') {
             this.uriToDefinition.get(uri)?.forEach(symInfos => symInfos.forEach(s => {
                 if (s.containerName === containerName)
