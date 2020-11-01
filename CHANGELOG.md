@@ -2,6 +2,12 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.9.1
+
+### added
+
+-   parse projection
+
 ## 1.9.0
 
 ### added
