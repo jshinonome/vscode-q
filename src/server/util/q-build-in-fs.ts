@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import { CompletionItem } from 'vscode-languageserver';
+import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';
 import fs = require('fs');
 import csvParser = require('csv-parser');
 import path = require('path');
@@ -16,6 +16,7 @@ export default function getBuildInFsRef(): CompletionItem[] {
     fs.createReadStream(csvPath)
         .pipe(csvParser())
         .on('data', (data: CompletionItem) => {
+            data.kind = Number(data.kind) as CompletionItemKind;
             buildInFs.push(data);
         })
         .on('end', () => {

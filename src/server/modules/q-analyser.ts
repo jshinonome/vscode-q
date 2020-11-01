@@ -8,7 +8,8 @@
 // import * as fs from 'fs';
 import Fuse from 'fuse.js';
 import {
-    Connection, Diagnostic, DiagnosticSeverity,
+    CompletionItem,
+    CompletionItemKind, Connection, Diagnostic, DiagnosticSeverity,
     DocumentUri, Location, ParameterInformation,
     Range, SignatureHelp, SignatureInformation, SymbolInformation, SymbolKind
 } from 'vscode-languageserver';
@@ -52,7 +53,7 @@ export default class QAnalyzer {
     private uriToDefinition = new Map<DocumentUri, nameToSymbolInfo>();
     private uriToSymbol = new Map<DocumentUri, string[]>();
     private nameToSigHelp = new Map<string, SignatureHelp>();
-    private serverIds: string[] = [];
+    private serverIds: CompletionItem[] = [];
     private serverSyms: string[] = [];
     private workspaceFolder: URI;
 
@@ -66,16 +67,22 @@ export default class QAnalyzer {
     /**
      * Find all the definition locations
      */
-    public findDefinition(word: word): Location[] {
+    public findDefinition(word: word, uri: string): Location[] {
         let symbols: SymbolInformation[] = [];
 
-        this.uriToDefinition.forEach(nameToSymInfo => {
-            symbols = symbols.concat(nameToSymInfo.get(word.text) || []);
-        });
-        // limited to current file, current function
-        // symbols = this.uriToDefinition.get(uri)?.get(word.text)?.filter(
-        //     sym => sym.containerName === word.containerName
-        // ) ?? [];
+        // search local id for current file, current function
+        if (word.type === 'local_identifier') {
+            symbols = this.uriToDefinition.get(uri)?.get(word.text)?.filter(
+                sym => sym.containerName === word.containerName
+            ) ?? [];
+        }
+
+        // if nothing found, search globally
+        if (symbols.length == 0)
+            this.uriToDefinition.forEach(nameToSymInfo => {
+                symbols = symbols.concat(nameToSymInfo.get(word.text) || []);
+            });
+
         return symbols.map(s => s.location);
     }
 
@@ -290,25 +297,14 @@ export default class QAnalyzer {
                 if (containerName !== '' && namespace === '' && named.type === 'local_identifier')
                     return;
                 const name = (namespace === '' || named.type === 'global_identifier') ? named.text.trim() : `${namespace}.${named.text.trim()}`;
-                const definitions = this.uriToDefinition.get(uri)?.get(name) || [];
-                const functionNode = n.children[2]?.firstChild;
-                const symbolKind = functionNode?.type === 'function_body' ? SymbolKind.Function : SymbolKind.Variable;
 
-                definitions.push(
-                    SymbolInformation.create(
-                        name,
-                        symbolKind,
-                        TreeSitterUtil.range(n),
-                        uri,
-                        containerName,
-                    ),
-                );
+                const defNode = n.children[2]?.firstChild;
+                let symbolKind = SymbolKind.Variable as SymbolKind;
 
-                this.uriToDefinition.get(uri)?.set(name, definitions);
-
-                if (symbolKind === SymbolKind.Function && functionNode?.firstNamedChild?.type === 'formal_parameters') {
-                    const paramNodes = functionNode.firstNamedChild.namedChildren;
-                    const params = paramNodes.map(n => ParameterInformation.create(n.text));
+                if (defNode?.type === 'function_body' && defNode?.firstNamedChild?.type === 'formal_parameters') {
+                    symbolKind = SymbolKind.Function;
+                    const paramNodes = defNode.firstNamedChild.namedChildren;
+                    const params = TreeSitterUtil.extractParams(defNode).map(param => ParameterInformation.create(param));
                     if (params.length > 0) {
                         const sigInfo = SignatureInformation.create(`${name}[${params.map(p => p.label).join(';')}]`, undefined, ...params);
                         this.nameToSigHelp.set(name, {
@@ -316,22 +312,41 @@ export default class QAnalyzer {
                             activeParameter: 0,
                             activeSignature: 0
                         });
-                        const containerName = this.getContainerName(paramNodes[0]) ?? '';
                         paramNodes.forEach(n => {
-                            const def = this.uriToDefinition.get(uri)?.get(n.text) || [];
-                            def.push(
-                                SymbolInformation.create(
-                                    n.text,
-                                    SymbolKind.Variable,
-                                    TreeSitterUtil.range(n),
-                                    uri,
-                                    containerName
-                                )
-                            );
-                            this.uriToDefinition.get(uri)?.set(n.text, def);
+                            this.pushSymInfo(n.text, uri, n, name, SymbolKind.Variable);
+                        });
+                    }
+                } else if (defNode?.type === 'call' && defNode.firstNamedChild) {
+                    // parse projection if it is a function_body node
+                    let params: ParameterInformation[] = [];
+                    if (defNode.firstNamedChild.type === 'function_body') {
+                        const paramNodes = defNode.firstNamedChild.firstNamedChild?.namedChildren;
+                        params = TreeSitterUtil.extractParams(defNode.firstNamedChild).map(param => ParameterInformation.create(param));
+                        if (params.length > 0 && paramNodes) {
+                            paramNodes.forEach(n => {
+                                this.pushSymInfo(n.text, uri, n, this.getContainerName(n), SymbolKind.Variable);
+                            });
+                        }
+                    } else if (TreeSitterUtil.isReference(defNode.firstNamedChild)) {
+                        params = this.getSigHelp(defNode.firstNamedChild.text)?.signatures[0].parameters ?? [];
+                    }
+
+                    const projections = defNode.namedChildren.map(n => n.type !== 'null_statement');
+                    // remove first child (function_body)
+                    projections.shift();
+                    // filter null_statement or undefined
+                    params = params.filter((_, i) => !projections[i]);
+                    if (params.length > 0) {
+                        symbolKind = SymbolKind.Function;
+                        const sigInfo = SignatureInformation.create(`${name}[${params.map(p => p.label).join(';')}]`, undefined, ...params);
+                        this.nameToSigHelp.set(name, {
+                            signatures: [sigInfo],
+                            activeParameter: 0,
+                            activeSignature: 0
                         });
                     }
                 }
+                this.pushSymInfo(name, uri, n, containerName, symbolKind);
 
             } else if (TreeSitterUtil.isSeparator(n)) {
                 if (n.text[0] !== ';') {
@@ -382,13 +397,13 @@ export default class QAnalyzer {
                     return;
                 }
                 const name = named.text.trim();
-                const functionNode = n.children[2]?.firstChild;
-                const symbolKind = functionNode?.type === 'function_body' ? SymbolKind.Function : SymbolKind.Variable;
+                const defNode = n.children[2]?.firstChild;
 
-                this.serverIds.push(name);
+                let completionItemKind = CompletionItemKind.Variable as CompletionItemKind;
 
-                if (symbolKind === SymbolKind.Function && functionNode?.firstNamedChild?.type === 'formal_parameters') {
-                    const params = functionNode.firstNamedChild.namedChildren.map(n => ParameterInformation.create(n.text));
+                if (defNode?.type === 'function_body' && defNode?.firstNamedChild?.type === 'formal_parameters') {
+                    completionItemKind = CompletionItemKind.Function;
+                    const params = TreeSitterUtil.extractParams(defNode).map(param => ParameterInformation.create(param));
                     if (params.length > 0) {
                         const sigInfo = SignatureInformation.create(`${name}[${params.map(p => p.label).join(';')}]`, undefined, ...params);
                         this.nameToSigHelp.set(name, {
@@ -397,7 +412,33 @@ export default class QAnalyzer {
                             activeSignature: 0
                         });
                     }
+                } else if (defNode?.type === 'call' && defNode.firstNamedChild) {
+                    // parse projection if it is a function_body node
+                    let params: ParameterInformation[] = [];
+                    if (defNode.firstNamedChild.type === 'function_body') {
+                        params = TreeSitterUtil.extractParams(defNode.firstNamedChild).map(param => ParameterInformation.create(param));
+                    } else if (TreeSitterUtil.isReference(defNode.firstNamedChild)) {
+                        params = this.getSigHelp(defNode.firstNamedChild.text)?.signatures[0].parameters ?? [];
+                    }
+
+                    const projections = defNode.namedChildren.map(n => n.type !== 'null_statement');
+                    // remove first child (function_body)
+                    projections.shift();
+                    // filter null_statement or undefined
+                    params = params.filter((_, i) => !projections[i]);
+                    if (params.length > 0) {
+                        completionItemKind = CompletionItemKind.Function;
+                        const sigInfo = SignatureInformation.create(`${name}[${params.map(p => p.label).join(';')}]`, undefined, ...params);
+                        this.nameToSigHelp.set(name, {
+                            signatures: [sigInfo],
+                            activeParameter: 0,
+                            activeSignature: 0
+                        });
+                    }
                 }
+
+                this.serverIds.push({ label: name, kind: completionItemKind });
+
             } else if (TreeSitterUtil.isSymbol(n)) {
                 if (this.getContainerName(n) === '')
                     this.serverSyms.push(n.text.trim());
@@ -430,6 +471,8 @@ export default class QAnalyzer {
             } else {
                 return `LAMBDA-${body.parent.startPosition.row}-${body.parent.startPosition.column}`;
             }
+        } else if (body?.parent?.type === 'call') {
+            return `LAMBDA-${body.parent.startPosition.row}-${body.parent.startPosition.column}`;
         }
         return '';
     }
@@ -497,23 +540,39 @@ export default class QAnalyzer {
         return this.nameToSigHelp.get(query);
     }
 
-    public getServerIds(): string[] {
+    public getServerIds(): CompletionItem[] {
         return this.serverIds;
     }
 
     public getSyms(uri: DocumentUri): string[] {
-        return this.serverSyms.concat(this.uriToSymbol.get(uri) ?? []);
+        const srcSyms = this.uriToSymbol.get(uri) ?? [];
+        return this.serverSyms.concat(srcSyms);
     }
 
-    public getLocalIds(uri: DocumentUri, containerName: string): string[] {
-        const ids = this.getAllSymbols().filter(s => !s.containerName && !s.name.startsWith('.')).map(s => s.name);
+    public getLocalIds(uri: DocumentUri, containerName: string): SymbolInformation[] {
+        const ids = this.getAllSymbols().filter(s => !s.containerName && !s.name.startsWith('.'));
         if (containerName !== '') {
             this.uriToDefinition.get(uri)?.forEach(symInfos => symInfos.forEach(s => {
                 if (s.containerName === containerName)
-                    ids.push(s.name);
+                    ids.push(s);
             }));
         }
         return ids;
     }
 
+    public pushSymInfo(name: string, uri: string, node: Parser.SyntaxNode, containerName: string, kind: SymbolKind): void {
+        const def = this.uriToDefinition.get(uri)?.get(name);
+        const symInfo = SymbolInformation.create(
+            name,
+            kind,
+            TreeSitterUtil.range(node),
+            uri,
+            containerName
+        );
+        if (def) {
+            def.push(symInfo);
+        } else {
+            this.uriToDefinition.get(uri)?.set(name, [symInfo]);
+        }
+    }
 }

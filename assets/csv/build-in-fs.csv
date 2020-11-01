@@ -1,87 +1,87 @@
 label,detail,documentation,kind
 .Q.a,lowercase alphabet,.Q.a,6
 .Q.A,uppercase alphabet,.Q.A,6
-.Q.addmonths,add months to date,.Q.addmonths[dates;ints],3
-.Q.addr,IP address,.Q.addr[sym],3
+.Q.addmonths,add months to date,.Q.addmonths[dates;ints],2
+.Q.addr,IP address,.Q.addr[sym],2
 .Q.b6,bicameral-alphanums,.Q.b6,6
-.Q.bt,backtrace,.Q.bt[],3
-.Q.btoa,b64 encode,.Q.btoa[string],3
-.Q.bv,build vp,.Q.bv[<`>],3
-.Q.Cf,create empty nested char file,.Q.Cf[file],3
-.Q.chk,fill HDB,.Q.chk[dir],3
-.Q.cn,count partitioned table,.Q.cn[partitioned table],3
-.Q.D,partitions,.Q.D,3
-.Q.dd,join symbols,.Q.dd[sym|dir;sym],3
-.Q.def,provide defaults for .Q.opt,.Q.def[default dict;params dict],3
-.Q.dpft,save table,.Q.dpft[dir;partition date;column sym;table sym],3
-.Q.dpfts,save table with sym,.Q.dpfts[dir;part;column sym;table sym;sym],3
-.Q.dsftg,load process save,.Q.dsftg[(dir;part;sym);(dir;offset;length);column syms;(types;widths);v1],3
-.Q.en,enumerate varchar cols,.Q.en[dir;table],3
-.Q.ens,enumerate against domain,.Q.ens[dir;table;sym],3
-.Q.f,format,.Q.f[int;number],3
-.Q.fc,parallel on cut,.Q.fc[v1;list],3
-.Q.ff,append columns,.Q.ff[table;table],3
-.Q.fk,foreign key,.Q.fk[column sym],3
-.Q.fmt,format,.Q.fmt[length;decimal;number],3
-.Q.fps,streaming algorithm,.Q.fps[v1;file],3
-.Q.fs,streaming algorithm,.Q.fs[v1;file],3
-.Q.fsn,streaming algorithm,.Q.fs[v1;file;chunk size],3
-.Q.ft,apply simple,.Q.ft[v1;keyed table],3
-.Q.fu,apply unique,.Q.fu[v1;list],3
-.Q.gc,garbage collect,.Q.gc[],3
-.Q.hdpf,save tables,.Q.hdpf[hdb handle;dir;part;column sym],3
-.Q.hg,HTTP get,.Q.hp[url|string],3
-.Q.host,hostname,.Q.host[ip int],3
-.Q.hp,HTTP post,.Q.hp[url|string;MIME string;query string],3
-.Q.id,sanitize,.Q.id[sym|table],3
-.Q.ind,partitioned index,.Q.ind[partitioned table;indices],3
-.Q.j10,encode binhex,.Q.j10[string],3
-.Q.j12,encode base64,.Q.j12[string],3
+.Q.bt,backtrace,.Q.bt[],2
+.Q.btoa,b64 encode,.Q.btoa[string],2
+.Q.bv,build vp,.Q.bv[<`>],2
+.Q.Cf,create empty nested char file,.Q.Cf[file],2
+.Q.chk,fill HDB,.Q.chk[dir],2
+.Q.cn,count partitioned table,.Q.cn[partitioned table],2
+.Q.D,partitions,.Q.D,2
+.Q.dd,join symbols,.Q.dd[sym|dir;sym],2
+.Q.def,provide defaults for .Q.opt,.Q.def[default dict;params dict],2
+.Q.dpft,save table,.Q.dpft[dir;partition date;column sym;table sym],2
+.Q.dpfts,save table with sym,.Q.dpfts[dir;part;column sym;table sym;sym],2
+.Q.dsftg,load process save,.Q.dsftg[(dir;part;sym);(dir;offset;length);column syms;(types;widths);v1],2
+.Q.en,enumerate varchar cols,.Q.en[dir;table],2
+.Q.ens,enumerate against domain,.Q.ens[dir;table;sym],2
+.Q.f,format,.Q.f[int;number],2
+.Q.fc,parallel on cut,.Q.fc[v1;list],2
+.Q.ff,append columns,.Q.ff[table;table],2
+.Q.fk,foreign key,.Q.fk[column sym],2
+.Q.fmt,format,.Q.fmt[length;decimal;number],2
+.Q.fps,streaming algorithm,.Q.fps[v1;file],2
+.Q.fs,streaming algorithm,.Q.fs[v1;file],2
+.Q.fsn,streaming algorithm,.Q.fs[v1;file;chunk size],2
+.Q.ft,apply simple,.Q.ft[v1;keyed table],2
+.Q.fu,apply unique,.Q.fu[v1;list],2
+.Q.gc,garbage collect,.Q.gc[],2
+.Q.hdpf,save tables,.Q.hdpf[hdb handle;dir;part;column sym],2
+.Q.hg,HTTP get,.Q.hp[url|string],2
+.Q.host,hostname,.Q.host[ip int],2
+.Q.hp,HTTP post,.Q.hp[url|string;MIME string;query string],2
+.Q.id,sanitize,.Q.id[sym|table],2
+.Q.ind,partitioned index,.Q.ind[partitioned table;indices],2
+.Q.j10,encode binhex,.Q.j10[string],2
+.Q.j12,encode base64,.Q.j12[string],2
 .Q.k,version,.Q.k,6
-.Q.l,load,.Q.l[file|dir],3
+.Q.l,load,.Q.l[file|dir],2
 .Q.M,long infinity,.Q.M,6
-.Q.MAP,maps partitions,.Q.MAP[],3
+.Q.MAP,maps partitions,.Q.MAP[],2
 .Q.nA,alphanums,.Q.nA,6
-.Q.opt,command parameters,.Q.opt[strings|.z.x],3
+.Q.opt,command parameters,.Q.opt[strings|.z.x],2
 .Q.P,segments,.Q.P,6
-.Q.par,locate partition,.Q.par[dir;part;table sym],3
+.Q.par,locate partition,.Q.par[dir;part;table sym],2
 .Q.pd,modified partition locations,.Q.pd,6
 .Q.PD,partition locations,.Q.PD,6
 .Q.pf,partition field,.Q.pf,6
 .Q.pn,partition counts,.Q.pn,6
 .Q.pt,partitioned tables,.Q.pt,6
-.Q.pv,modified partition values,.Q.pv,3
-.Q.PV,partition values,.Q.PV,3
-.Q.qp,is partitioned,.Q.qp[table],3
-.Q.qt,is table,.Q.qt[table],3
+.Q.pv,modified partition values,.Q.pv,2
+.Q.PV,partition values,.Q.PV,2
+.Q.qp,is partitioned,.Q.qp[table],2
+.Q.qt,is table,.Q.qt[table],2
 .Q.res,keywords,.Q.res,6
-.Q.s,plain text,.Q.s[any],3
-.Q.s1,string representation,.Q.s1[any],3
-.Q.sbt,string backtrace,.Q.sbt[backtrace object],3
-.Q.sha1,SHA-1 encode,.Q.sha1[string],3
-.Q.trp,extend trap,.Q.trp[v1;any;v2],3
-.Q.ts,time and space,.Q.ts[v;args],3
-.Q.ty,type,.Q.ty[list],3
+.Q.s,plain text,.Q.s[any],2
+.Q.s1,string representation,.Q.s1[any],2
+.Q.sbt,string backtrace,.Q.sbt[backtrace object],2
+.Q.sha1,SHA-1 encode,.Q.sha1[string],2
+.Q.trp,extend trap,.Q.trp[v1;any;v2],2
+.Q.ts,time and space,.Q.ts[v;args],2
+.Q.ty,type,.Q.ty[list],2
 .Q.u,is date based,.Q.u,6
-.Q.V,table to dict,.Q.v[table],3
-.Q.v,value,.Q.v[file|sym],3
-.Q.view,subview,.Q.view[parts],3
+.Q.V,table to dict,.Q.v[table],2
+.Q.v,value,.Q.v[file|sym],2
+.Q.view,subview,.Q.view[parts],2
 .Q.vp,missing partitions,.Q.vp,6
-.Q.w,memory stats,.Q.w[],3
+.Q.w,memory stats,.Q.w[],2
 .Q.x,non-command parameters,.Q.x,6
-.Q.x10,decode binhex,.Q.x10[long],3
-.Q.x12,decode base64,.Q.x12[long],3
-.Q.Xf,create file,.Q.Xf[upper case char|type sym],3
+.Q.x10,decode binhex,.Q.x10[long],2
+.Q.x12,decode base64,.Q.x12[long],2
+.Q.Xf,create file,.Q.Xf[upper case char|type sym],2
 .z.a,IP address,.z.a,6
-.z.ac,HTTP auth from cookie,.z.ac:{[(requestText;requestHeaderAsDictionary)]},3
+.z.ac,HTTP auth from cookie,.z.ac:{[(requestText;requestHeaderAsDictionary)]},2
 .z.b,dependencies,.z.b,6
-.z.bm,msg validator,.z.bm[(handle;msgBytes)],3
+.z.bm,msg validator,.z.bm[(handle;msgBytes)],2
 .z.c,cores,.z.c,6
 .z.D,local date,.z.D,6
 .z.d,UTC date,.z.d,6
 .z.e,TLS connection status,.z.e,6
 .z.ex,failed primitive,.z.ex,6
-.z.exit,action on exit,.z.exit:{},3
+.z.exit,action on exit,.z.exit:{},2
 .z.ey,arg to failed primitive,.z.ey,6
 .z.f,file,.z.f,6
 .z.h,host,.z.h,6
@@ -94,29 +94,29 @@ label,detail,documentation,kind
 .z.o,OS version,.z.o,6
 .z.P,local timestamp,.z.P,6
 .z.p,UTC timestamp,.z.p,6
-.z.pc,close,.z.pc:{[handle]},3
-.z.pd,peach handles,.z.pd:{:handles},3
-.z.pg,get,.z.pg:{[expression string]},3
-.z.ph,HTTP get,.z.ph:{[(requestText;requestHeaderAsDictionary)]},3
-.z.pi,input,.z.pi:{[expression string]},3
+.z.pc,close,.z.pc:{[handle]},2
+.z.pd,peach handles,.z.pd:{:handles},2
+.z.pg,get,.z.pg:{[expression string]},2
+.z.ph,HTTP get,.z.ph:{[(requestText;requestHeaderAsDictionary)]},2
+.z.pi,input,.z.pi:{[expression string]},2
 .z.pm,HTTP options,.z.pm:{[(`OPTIONS;requestText;requestHeaderDict)]},6
-.z.po,open,.z.po:{[handle]},3
-.z.pp,HTTP post,.z.pp:{(postData;requestHeaderAsDictionary)},3
-.z.pq,qcon,.z.pq:{[handle]},3
-.z.ps,set,.z.ps:{[expression string]},3
-.z.pw,validate user,.z.pw:{[user sym;pw string]},3
+.z.po,open,.z.po:{[handle]},2
+.z.pp,HTTP post,.z.pp:{(postData;requestHeaderAsDictionary)},2
+.z.pq,qcon,.z.pq:{[handle]},2
+.z.ps,set,.z.ps:{[expression string]},2
+.z.pw,validate user,.z.pw:{[user sym;pw string]},2
 .z.q,quiet mode,.z.q,6
 .z.s,self,.z.s,6
 .z.T,local time,.z.T,6
 .z.t,UTC time,.z.t,6
-.z.ts,timer,.z.ts:{[timestamp]},3
+.z.ts,timer,.z.ts:{[timestamp]},2
 .z.u,user ID,.z.u,6
-.z.vs,value set,.z.vs:{[sym;index]},3
+.z.vs,value set,.z.vs:{[sym;index]},2
 .z.w,handle,.z.w,6
 .z.W,handles,.z.W,6
-.z.wc,WebSocket close,.z.wc:{[handle]},3
-.z.wo,WebSocket open,.z.wo:{[handle]},3
-.z.ws,WebSockets,.z.ws:{[handle]},3
+.z.wc,WebSocket close,.z.wc:{[handle]},2
+.z.wo,WebSocket open,.z.wo:{[handle]},2
+.z.ws,WebSockets,.z.ws:{[handle]},2
 .z.x,parsed command line,.z.x,6
 .z.X,raw command line,.z.X,6
 .z.Z,local datetime,.z.Z,6
@@ -125,221 +125,221 @@ label,detail,documentation,kind
 .h.br,linebreak,.h.br,6
 .h.c0,web color,.h.c0,6
 .h.c1,web color,.h.c1,6
-.h.cd,CSV from data,.h.cd[table|list],3
-.h.code,code after Tab,.h.code[string],3
+.h.cd,CSV from data,.h.cd[table|list],2
+.h.code,code after Tab,.h.code[string],2
 .h.d,delimiter,.h.d,6
-.h.ed,Excel from data,.h.ed[table],3
-.h.edsn,Excel from tables,.h.edsn[sheet syms!tables],3
-.h.fram,frame,.h.fram[title string;strings;(left frame strings;right frame strings)],3
-.h.ha,anchor,.h.ha[url;string],3
-.h.hb,anchor target,.h.hb[url;string],3
-.h.hc,escape lt,.h.hc[string],3
-.h.he,HTTP 400,.h.he[string],3
-.h.hn,HTTP response,.h.hn[status code string;content type sym;content string],3
+.h.ed,Excel from data,.h.ed[table],2
+.h.edsn,Excel from tables,.h.edsn[sheet syms!tables],2
+.h.fram,frame,.h.fram[title string;strings;(left frame strings;right frame strings)],2
+.h.ha,anchor,.h.ha[url;string],2
+.h.hb,anchor target,.h.hb[url;string],2
+.h.hc,escape lt,.h.hc[string],2
+.h.he,HTTP 400,.h.he[string],2
+.h.hn,HTTP response,.h.hn[status code string;content type sym;content string],2
 .h.HOME,webserver root,.h.HOME,6
-.h.hp,HTTP response pre,.h.hp[string],3
-.h.hr,horizontal rule,.h.hr[string],3
-.h.ht,Marqdown to HTML,.h.ht[file],3
-.h.hta,start tag,.h.hta[HTML tag sym;attributes!values],3
-.h.htac,element,.h.htac[HTML tag sym;attributes!values;content],3
-.h.htc,element,.h.htc[HTML tag sym;content],3
-.h.html,document,.h.html[html body string],3
-.h.http,hyperlinks,.h.http[string],3
-.h.hu,URI escape,.h.hu[string],3
-.h.hug,URI map,.h.hug[string],3
-.h.hy,HTTP response content,.h.hy[http content type sym;string],3
-.h.iso8601,ISO timestamp,.h.iso8601[nanoseconds],3
-.h.jx,table,.h.jx[offset;table sym]3
+.h.hp,HTTP response pre,.h.hp[string],2
+.h.hr,horizontal rule,.h.hr[string],2
+.h.ht,Marqdown to HTML,.h.ht[file],2
+.h.hta,start tag,.h.hta[HTML tag sym;attributes!values],2
+.h.htac,element,.h.htac[HTML tag sym;attributes!values;content],2
+.h.htc,element,.h.htc[HTML tag sym;content],2
+.h.html,document,.h.html[html body string],2
+.h.http,hyperlinks,.h.http[string],2
+.h.hu,URI escape,.h.hu[string],2
+.h.hug,URI map,.h.hug[string],2
+.h.hy,HTTP response content,.h.hy[http content type sym;string],2
+.h.iso8601,ISO timestamp,.h.iso8601[nanoseconds],2
+.h.jx,table,.h.jx[offset;table sym],2
 .h.logo,Kx logo,.h.logo,6
-.h.nbr,no break,.h.nbr[string],3
-.h.pre,pre,.h.pre[strings],3
+.h.nbr,no break,.h.nbr[string],2
+.h.pre,pre,.h.pre[strings],2
 .h.sa,anchor style,.h.sa,6
 .h.sb,body style,.h.sb,6
 .h.sc,URI-safe,.h.sc,6
-.h.td,TSV from data,.h.td[table],3
-.h.text,paragraphs,.h.text[strings],3
+.h.td,TSV from data,.h.td[table],2
+.h.text,paragraphs,.h.text[strings],2
 .h.tx,filetypes,.h.tx,6
 .h.ty,MIME types,.h.ty,6
-.h.uh,URI unescape,.h.uh[string],3
-.h.val,value,.h.val:{[expression]},3
-.h.xd,XML,.h.xd[table],3
-.h.xmp,XMP,.h.xmp[strings],3
-.h.xs,XML escape,.h.xs[string],3
-.h.xt,JSON,.h.xt[`json;json string],3
-.j.j,serialize,.j.j[any],3
-.j.k,deserialize,.j.k[string],3
-.j.jd,serialize infinity,".j.jd[any;()!()|(!). 1#'`null0w,1b]",3
-abs,absolute value,abs[numbers],3
-acos,arccosine,acos[numbers],3
-aj,as-of join(boundary time from LHS),aj[syms;table;table],3
-aj0,as-of join(actual time from RHS),aj0[syms;table;table],3
-ajf,as-of join(only fill null values from LHS),ajf[syms;table;table],3
-ajf0,as-of join(only fill null values from RHS),ajf0[syms;table;table],3
-all,:true if all true,all[numbers],3
-and,AND(min),and[numbers;numbers]   ,3
-any,:true if any true,any[numbers],3
-asc,ascending sort,asc[list],3
-asof,as-of join,asof[table;<table|dict>],3
-atan,arctangent,atan[numbers],3
-attr,attribute,attr[any],3
-avg,arithmetic mean,avg[numbers],3
-avgs,running average,avgs[numbers],3
-bin,binary search(<=x),bin[numbers!;numbers],3
-binr,binary search right(>=x),binr[numbers!;numbers],3
-ceiling,round up,ceiling[numbers],3
-cols,column names,cols[table],3
-cor,correlation,cor[numbers;numbers],3
-cos,cosine,cos[numbers],3
-count,count items,count[any],3
-cov,covariance,cov[numbers;numbers],3
-cross,cross product,cross[list;list],3
+.h.uh,URI unescape,.h.uh[string],2
+.h.val,value,.h.val:{[expression]},2
+.h.xd,XML,.h.xd[table],2
+.h.xmp,XMP,.h.xmp[strings],2
+.h.xs,XML escape,.h.xs[string],2
+.h.xt,JSON,.h.xt[`json;json string],2
+.j.j,serialize,.j.j[any],2
+.j.k,deserialize,.j.k[string],2
+.j.jd,serialize infinity,".j.jd[any;()!()|(!). 1#'`null0w,1b]",2
+abs,absolute value,abs[numbers],2
+acos,arccosine,acos[numbers],2
+aj,as-of join(boundary time from LHS),aj[syms;table;table],2
+aj0,as-of join(actual time from RHS),aj0[syms;table;table],2
+ajf,as-of join(only fill null values from LHS),ajf[syms;table;table],2
+ajf0,as-of join(only fill null values from RHS),ajf0[syms;table;table],2
+all,:true if all true,all[numbers],2
+and,AND(min),and[numbers;numbers]   ,2
+any,:true if any true,any[numbers],2
+asc,ascending sort,asc[list],2
+asof,as-of join,asof[table;<table|dict>],2
+atan,arctangent,atan[numbers],2
+attr,attribute,attr[any],2
+avg,arithmetic mean,avg[numbers],2
+avgs,running average,avgs[numbers],2
+bin,binary search(<=x),bin[numbers!;numbers],2
+binr,binary search right(>=x),binr[numbers!;numbers],2
+ceiling,round up,ceiling[numbers],2
+cols,column names,cols[table],2
+cor,correlation,cor[numbers;numbers],2
+cos,cosine,cos[numbers],2
+count,count items,count[any],2
+cov,covariance,cov[numbers;numbers],2
+cross,cross product,cross[list;list],2
 csv,csv delimiter comma,csv,6
-cut,cut into lists,cut[ints;list],3
-delete,delete rows or columns from a table,"delete [col1,col2] from t [where cond]",3
-deltas,difference between list items,deltas[<default;>numbers or temporals],3
-desc,descending sort,desc[list],3
-dev,deviation,dev[numbers],3
-differ,find changes by comparing to next,differ[list],3
-distinct,remove duplicates,distinct[list],3
-div,integer division,div[numbers;numbers],3
-do,evaluate expression repeatedly,do[times;e1;e2...],3
-dsave,save global tables to disk,dsave[hsym;syms],3
-each,each iterator, each[v1;list],3
-ej,equal join,ej[syms;table;table],3
-ema,exponential moving average,ema[smoothing factors;numbers],3
-enlist,make a list,enlist[any],3
-eval,evaluate a parse tree,eval[list],3
-except,exclude items,except[list;exclusions],3
-exec,select rows and columns as a list or dict,"exec col1,col2 [by col3] from t [where cond]",3
-exit,terminate with code number,exit[int],3
-exp,power of the base of the natural logarithm,exp[numbers],3
-fby,apply aggregate to groups,(function;list) fby group|([]group1;group2),3
-fills,replace nulls with preceding non-nulls,fills[list],3
-first,first item,first[any],3
-fkeys,foreign-key columns,fkeys[table],3
-flip,transposed,flip[list|dict|table],3
-floor,round down,floor[numbers],3
-get,read or memory-map a variable or kdb+ file,get[sym|file],3
-getenv,get an environment variable,getenv[sym],3
-group,group items into a dict,group[list|dict],3
-gtime,convert to UTC,gtime[timestamps],3
-hclose,close a file or process handle,hclose[handle],3
-hcount,size of a file in bytes,hcount[file],3
-hdel,delete a file or folder,hdel[file|dir],3
-hopen,open a file or process handle,hopen[file|socket|string<;timeout ms>],3
-hsym,convert to process symbols,hsym[syms],3
-iasc,ascending grade,iasc[list],3
-idesc,descending grade,idesc[list],3
-if,evaluate expressions if true,if[test;e1;e2...],3
-ij,inner join,ij[table;table],3
-ijf,inner join(fill null values from RHS),ijf[table;table],3
-in,test if items in the list,in[items;list],3
-insert,insert or append records,insert[table;records]|insert[undefined sym;table],3
-inter,intersection,inter[list;list],3
-inv,matrix inverse,inv[matrix],3
-key,key of a dict,key[sym|dict],3
-keys,key columns of a table,keys[table],3
-last,last item,last[x],3
-like,match text,like[syms|strings|dict<any!syms|strings>;string],3
-lj,left join,lj[table;keyed table],3
-ljf,left join(ignore nulls from RHS),ljf[table;keyed table],3
-load,load binary file|dir,load[file|dir],3
-log,natural logarithm,log[numbers],3
-lower,lower case,lower[<symbols|strings>],3
-lsq,least squares,lsq[matrixes;matrixes],3
-ltime,convert to local timestamp,ltime[ts],3
-ltrim,trim leading spaces,ltrim[string],3
-mavg,moving average,mavg[int;numbers],3
-max,maximum,max[numbers|characters|temporals],3
-maxs,running maximums,maxs[<default;>numbers|characters|temporals],3
-mcount,moving count,mcount[int;list],3
-md5,message digest hash,md5[string],3
-mdev,moving deviations,mdev[int;numbers],3
-med,median,med[numbers],3
-meta,metadata for a table,meta[table],3
-min,minimum,min[numbers|characters|temporals],3
-mins,running minimums,maxs[<default;>numbers|characters|temporals],3
-mmax,moving maximums,mmax[int;numbers|characters|temporals],3
-mmin,moving minimums,mmin[int;numbers|characters|temporals],3
-mmu,matrix multiply,mmu[matrix;matrix],3
-mod,modulus,mod[divisors;dividends],3
-msum,moving sums,msum[int;numbers|characters|temporals],3
-neg,negate,neg[numbers],3
-next,shift each to next(last is null),next[list],3
-not,1b if non-zero else 0b,not[numbers],3
-null,is null,null[x],3
-over,apply progressively and :last evaluation,over[v1|vv;list],3
-parse,parse a string to ast,parse[string],3
-peach,each parallel iterator, x peach list,3
-pj,plus join,pj[table;keyed table],3
-prd,product,prd[numbers],3
-prds,running products,prds[numbers],3
-prev,shift each to prev(first is null),prev[list],3
-prior,apply to each item and its preceding item,prior[v2|vv;list],3
-rand,pick randomly,rand[number]|rand[list],3
-rank,position in the sorted list,rank[list],3
-ratios,running ratios,rations[<default;>numbers],3
-raze,flat a list,raze[list],3
-read0,read text from a file or process handle,read0[hsym|(hsym;offset;length)],3
-read1,read bytes from a file or process handle,read1[hsym|(hsym;offset;length)],3
-reciprocal,reciprocal,reciprocal[numbers],3
-reval,evaluate a parse tree in read only mode,reval[list],3
-reverse,reverse a list,reverse[list],3
-rload,load a splayed table,rload[dir],3
-rotate,rotate a list,rotate[int;list],3
-rsave,save as a splayed table to pwd,rsave[sym],3
-rtrim,trim tailing spaces,rtrim[string],3
-save,save to pwd,save[sym],3
-scan,apply progressively and :all evaluations,scan[v1|vv;list],3
-scov,sample covariance,scov[numbers;numbers],3
-sdev,sample standard deviation,sdev[numbers],3
-select,select rows and columns as a table,"select col1,col2 [by col3] from table [where cond]",3
-set,assign a value to a variable or file,set[sym|file|dir;any],3
-setenv,set an environment variable,setenv[sym;string],3
-show,display at the console,show[any],3
-signum,sign,signum[numbers],3
-sqrt,square root,sqrt[numbers],3
-ss,string search,ss[string;pattern],3
-ssr,string search and replace,ssr[string;pattern;string|function],3
-string,cast to string,string[any],3
-sublist,select a sublist,sublist[int;list],3
-sum,total,sum[numbers],3
-sums,running sums,sums[numbers],3
-sv,concatenate strings|syms,sv[sting;strings]|sv[`;syms]|sv[numbers;numbers],3
-svar,sample variance,svar[numbers],3
-system,execute a system command,system[string],3
-tables,list tables,tables[namespace sym],3
-tan,tangent,tan[numbers],3
-til,generate long sequence,til[long],3
-trim,trim leading and trailing spaces,trim[string],3
-type,datatype,type[x],3
-uj,union join,uj[table;table],3
-ujf,union join(ignore nulls from RHS),ujf[table;table],3
-ungroup,ungroup list type columns in a table into rows,ugroup[table],3
-union,union of two lists,union[list;list],3
-update,amend table|dict,"update col1,col2 [by col3] from table [where cond]",3
-upper,upper case,upper[sym|string],3
-upsert,add new records,upsert[table|sym;records|table],3
-value,value,value[symbol|string|list|dict],3
-var,variance,var[numbers],3
-view,expression defining a view,view[sym],3
-views,list veiws defined,views[namespace sym],3
-vs,split string|symbol,vs[sting;string]|sv[`;sym|dir]|sv[number;number],3
-wavg,weighted average,wavg[weights;numbers],3
-where,to indices,where[numbers]|where[booleans],3
-while,evaluate expression repeatedly,while[test;e1;e2...],3
-within,check bounds,within[list;range],3
-wj,window join(consider prevailing quotes before window),wj[windows;syms;table;(table;(aggr;sym)<;(aggr;sym)>)],3
-wj1,window join(consider quotes after entry to the window),wj[windows;syms;table;(table;(aggr;sym)<;(aggr;sym)>)],3
-wsum,weighted sum,wsum[weights;numbers],3
-xasc,ascending sort table by columns,xasc[syms;table],3
-xcol,rename columns,xcol[syms;table],3
-xcols,reorder columns,xcols[syms;table],3
-xdesc,descending sort table by columns,xdesc[syms;table],3
-xexp,power,xexp[bases;powers],3
-xlog,logarithm,xlog[bases;numbers],3
-xprev,shift each to prev by number,xprev[int;list],3
-xbar,round down to multiples,xbar[base;numbers|termporals],3
-xgroup,group by values in selected columns,xgroup[syms;table],3
-xkey,set key columns,xkey[syms;table],3
-xrank,group by value,xrank[int;list],3
+cut,cut into lists,cut[ints;list],2
+delete,delete rows or columns from a table,"delete [col1,col2] from t [where cond]",2
+deltas,difference between list items,deltas[<default;>numbers or temporals],2
+desc,descending sort,desc[list],2
+dev,deviation,dev[numbers],2
+differ,find changes by comparing to next,differ[list],2
+distinct,remove duplicates,distinct[list],2
+div,integer division,div[numbers;numbers],2
+do,evaluate expression repeatedly,do[times;e1;e2...],2
+dsave,save global tables to disk,dsave[hsym;syms],2
+each,each iterator, each[v1;list],2
+ej,equal join,ej[syms;table;table],2
+ema,exponential moving average,ema[smoothing factors;numbers],2
+enlist,make a list,enlist[any],2
+eval,evaluate a parse tree,eval[list],2
+except,exclude items,except[list;exclusions],2
+exec,select rows and columns as a list or dict,"exec col1,col2 [by col3] from t [where cond]",2
+exit,terminate with code number,exit[int],2
+exp,power of the base of the natural logarithm,exp[numbers],2
+fby,apply aggregate to groups,(function;list) fby group|([]group1;group2),2
+fills,replace nulls with preceding non-nulls,fills[list],2
+first,first item,first[any],2
+fkeys,foreign-key columns,fkeys[table],2
+flip,transposed,flip[list|dict|table],2
+floor,round down,floor[numbers],2
+get,read or memory-map a variable or kdb+ file,get[sym|file],2
+getenv,get an environment variable,getenv[sym],2
+group,group items into a dict,group[list|dict],2
+gtime,convert to UTC,gtime[timestamps],2
+hclose,close a file or process handle,hclose[handle],2
+hcount,size of a file in bytes,hcount[file],2
+hdel,delete a file or folder,hdel[file|dir],2
+hopen,open a file or process handle,hopen[file|socket|string<;timeout ms>],2
+hsym,convert to process symbols,hsym[syms],2
+iasc,ascending grade,iasc[list],2
+idesc,descending grade,idesc[list],2
+if,evaluate expressions if true,if[test;e1;e2...],2
+ij,inner join,ij[table;table],2
+ijf,inner join(fill null values from RHS),ijf[table;table],2
+in,test if items in the list,in[items;list],2
+insert,insert or append records,insert[table;records]|insert[undefined sym;table],2
+inter,intersection,inter[list;list],2
+inv,matrix inverse,inv[matrix],2
+key,key of a dict,key[sym|dict],2
+keys,key columns of a table,keys[table],2
+last,last item,last[x],2
+like,match text,like[syms|strings|dict<any!syms|strings>;string],2
+lj,left join,lj[table;keyed table],2
+ljf,left join(ignore nulls from RHS),ljf[table;keyed table],2
+load,load binary file|dir,load[file|dir],2
+log,natural logarithm,log[numbers],2
+lower,lower case,lower[<symbols|strings>],2
+lsq,least squares,lsq[matrixes;matrixes],2
+ltime,convert to local timestamp,ltime[ts],2
+ltrim,trim leading spaces,ltrim[string],2
+mavg,moving average,mavg[int;numbers],2
+max,maximum,max[numbers|characters|temporals],2
+maxs,running maximums,maxs[<default;>numbers|characters|temporals],2
+mcount,moving count,mcount[int;list],2
+md5,message digest hash,md5[string],2
+mdev,moving deviations,mdev[int;numbers],2
+med,median,med[numbers],2
+meta,metadata for a table,meta[table],2
+min,minimum,min[numbers|characters|temporals],2
+mins,running minimums,maxs[<default;>numbers|characters|temporals],2
+mmax,moving maximums,mmax[int;numbers|characters|temporals],2
+mmin,moving minimums,mmin[int;numbers|characters|temporals],2
+mmu,matrix multiply,mmu[matrix;matrix],2
+mod,modulus,mod[divisors;dividends],2
+msum,moving sums,msum[int;numbers|characters|temporals],2
+neg,negate,neg[numbers],2
+next,shift each to next(last is null),next[list],2
+not,1b if non-zero else 0b,not[numbers],2
+null,is null,null[x],2
+over,apply progressively and :last evaluation,over[v1|vv;list],2
+parse,parse a string to ast,parse[string],2
+peach,each parallel iterator, x peach list,2
+pj,plus join,pj[table;keyed table],2
+prd,product,prd[numbers],2
+prds,running products,prds[numbers],2
+prev,shift each to prev(first is null),prev[list],2
+prior,apply to each item and its preceding item,prior[v2|vv;list],2
+rand,pick randomly,rand[number]|rand[list],2
+rank,position in the sorted list,rank[list],2
+ratios,running ratios,rations[<default;>numbers],2
+raze,flat a list,raze[list],2
+read0,read text from a file or process handle,read0[hsym|(hsym;offset;length)],2
+read1,read bytes from a file or process handle,read1[hsym|(hsym;offset;length)],2
+reciprocal,reciprocal,reciprocal[numbers],2
+reval,evaluate a parse tree in read only mode,reval[list],2
+reverse,reverse a list,reverse[list],2
+rload,load a splayed table,rload[dir],2
+rotate,rotate a list,rotate[int;list],2
+rsave,save as a splayed table to pwd,rsave[sym],2
+rtrim,trim tailing spaces,rtrim[string],2
+save,save to pwd,save[sym],2
+scan,apply progressively and :all evaluations,scan[v1|vv;list],2
+scov,sample covariance,scov[numbers;numbers],2
+sdev,sample standard deviation,sdev[numbers],2
+select,select rows and columns as a table,"select col1,col2 [by col3] from table [where cond]",2
+set,assign a value to a variable or file,set[sym|file|dir;any],2
+setenv,set an environment variable,setenv[sym;string],2
+show,display at the console,show[any],2
+signum,sign,signum[numbers],2
+sqrt,square root,sqrt[numbers],2
+ss,string search,ss[string;pattern],2
+ssr,string search and replace,ssr[string;pattern;string|function],2
+string,cast to string,string[any],2
+sublist,select a sublist,sublist[int;list],2
+sum,total,sum[numbers],2
+sums,running sums,sums[numbers],2
+sv,concatenate strings|syms,sv[sting;strings]|sv[`;syms]|sv[numbers;numbers],2
+svar,sample variance,svar[numbers],2
+system,execute a system command,system[string],2
+tables,list tables,tables[namespace sym],2
+tan,tangent,tan[numbers],2
+til,generate long sequence,til[long],2
+trim,trim leading and trailing spaces,trim[string],2
+type,datatype,type[x],2
+uj,union join,uj[table;table],2
+ujf,union join(ignore nulls from RHS),ujf[table;table],2
+ungroup,ungroup list type columns in a table into rows,ugroup[table],2
+union,union of two lists,union[list;list],2
+update,amend table|dict,"update col1,col2 [by col3] from table [where cond]",2
+upper,upper case,upper[sym|string],2
+upsert,add new records,upsert[table|sym;records|table],2
+value,value,value[symbol|string|list|dict],2
+var,variance,var[numbers],2
+view,expression defining a view,view[sym],2
+views,list veiws defined,views[namespace sym],2
+vs,split string|symbol,vs[sting;string]|sv[`;sym|dir]|sv[number;number],2
+wavg,weighted average,wavg[weights;numbers],2
+where,to indices,where[numbers]|where[booleans],2
+while,evaluate expression repeatedly,while[test;e1;e2...],2
+within,check bounds,within[list;range],2
+wj,window join(consider prevailing quotes before window),wj[windows;syms;table;(table;(aggr;sym)<;(aggr;sym)>)],2
+wj1,window join(consider quotes after entry to the window),wj[windows;syms;table;(table;(aggr;sym)<;(aggr;sym)>)],2
+wsum,weighted sum,wsum[weights;numbers],2
+xasc,ascending sort table by columns,xasc[syms;table],2
+xcol,rename columns,xcol[syms;table],2
+xcols,reorder columns,xcols[syms;table],2
+xdesc,descending sort table by columns,xdesc[syms;table],2
+xexp,power,xexp[bases;powers],2
+xlog,logarithm,xlog[bases;numbers],2
+xprev,shift each to prev by number,xprev[int;list],2
+xbar,round down to multiples,xbar[base;numbers|termporals],2
+xgroup,group by values in selected columns,xgroup[syms;table],2
+xkey,set key columns,xkey[syms;table],2
+xrank,group by value,xrank[int;list],2

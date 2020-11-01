@@ -7,11 +7,11 @@
 
 import * as fs from 'fs';
 import {
-    CompletionItem, Connection, Diagnostic, DiagnosticSeverity,
+    CompletionItem, CompletionItemKind, Connection, Diagnostic, DiagnosticSeverity,
     DidChangeWatchedFilesParams, DocumentHighlight, DocumentSymbolParams, FileChangeType, Hover,
     IConnection, InitializeParams, Location, PrepareRenameParams, Range,
     ReferenceParams, RenameParams, ServerCapabilities, SignatureHelp,
-    SignatureHelpParams, SymbolInformation, TextDocumentPositionParams, TextDocuments,
+    SignatureHelpParams, SymbolInformation, SymbolKind, TextDocumentPositionParams, TextDocuments,
     TextDocumentSyncKind, TextEdit, WorkspaceEdit, WorkspaceSymbolParams
 } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
@@ -135,25 +135,45 @@ export default class QLangServer {
         });
 
         let symbols: string[] = [];
-        let localId: string[] = [];
-        let globalId: string[] = [];
+        let localId: CompletionItem[] = [];
+        let globalId: CompletionItem[] = [];
         let completionItem: CompletionItem[] = [];
         // console.log(word?.text)
 
         if (word?.text.startsWith('.')) {
             completionItem = this.buildInFsRef.filter(item => item.label.startsWith('.'));
             globalId = this.analyzer.getServerIds().concat(
-                this.analyzer.getAllSymbols().map(sym => sym.name)).filter(id => id.startsWith('.'));
-            new Set(globalId).forEach(id => completionItem.push(CompletionItem.create(id)));
+                this.analyzer.getAllSymbols()
+                    .filter(sym => sym.name.startsWith('.'))
+                    .map(sym => {
+                        return { label: sym.name, kind: sym.kind === SymbolKind.Function ? CompletionItemKind.Method : CompletionItemKind.Variable };
+                    }));
+            const flags = new Map<string, boolean>();
+            globalId.forEach(item => {
+                if (!flags.get(item.label)) {
+                    completionItem.push(item);
+                    flags.set(item.label, true);
+                }
+            });
         } else if (word?.text.startsWith('`')) {
             symbols = this.analyzer.getSyms(params.textDocument.uri);
-            new Set(symbols).forEach(id => completionItem.push(CompletionItem.create(id)));
+            new Set(symbols).forEach(symbol => {
+                completionItem.push({ label: symbol, kind: CompletionItemKind.Enum });
+            });
         } else {
             completionItem = this.buildInFsRef.filter(item => !item.label.startsWith('.'));
-            localId = this.analyzer.getServerIds().filter(id => !id.startsWith('.')).concat(
+            localId = this.analyzer.getServerIds().filter(id => !id.label.startsWith('.')).concat(
                 this.analyzer.getLocalIds(params.textDocument.uri, word?.containerName ?? '')
-            );
-            new Set(localId).forEach(id => completionItem.push(CompletionItem.create(id)));
+                    .map(sym => {
+                        return { label: sym.name, kind: sym.kind === SymbolKind.Function ? CompletionItemKind.Method : CompletionItemKind.Variable };
+                    }));
+            const flags = new Map<string, boolean>();
+            localId.forEach(item => {
+                if (!flags.get(item.label)) {
+                    completionItem.push(item);
+                    flags.set(item.label, true);
+                }
+            });
         }
         // console.log(completionItem)s
         return completionItem;
@@ -172,7 +192,7 @@ export default class QLangServer {
         if (!word) {
             return [];
         }
-        return this.analyzer.findDefinition(word);
+        return this.analyzer.findDefinition(word, params.textDocument.uri);
     }
 
     private onWorkspaceSymbol(params: WorkspaceSymbolParams): SymbolInformation[] {

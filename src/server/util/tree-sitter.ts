@@ -59,6 +59,16 @@ export function isNamespaceEnd(n: SyntaxNode): boolean {
     return n.type === 'namespace_end';
 }
 
+// extract params from a function
+export function extractParams(n: SyntaxNode): string[] {
+    if (n.firstNamedChild && n.firstNamedChild.type === 'formal_parameters') {
+        const paramNodes = n.firstNamedChild.namedChildren;
+        const params = paramNodes.map(n => n.text);
+        return params;
+    }
+    return [];
+}
+
 export function findParent(
     start: SyntaxNode,
     predicate: (n: SyntaxNode) => boolean,
