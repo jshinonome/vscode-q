@@ -2,6 +2,12 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.9.2
+
+### added
+
+-   error explanation
+
 ## 1.9.1
 
 ### added

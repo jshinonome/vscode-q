@@ -1,0 +1,99 @@
+error,explanation
+access,"Tried to read files above directory, run system commands or failed usr/pwd"
+accp,Tried to accept an incoming TCP/IP connection but failed to do so
+adict,Blocked assignment ('nyi)
+arch,Tried to load file of wrong endian format
+assign,Tried to redefine a reserved word
+bad lambda,lambda from an older version of kdb+ over IPC that no longer parses
+badtail,"Incomplete transaction at end of file, get good (count;length) with -11!(-2;`:file)"
+binary mismatch,Wrong process for code profiler
+can't,Only commercially licensed kdb+ instances can encrypt code in a script
+cast,Value not in enumeration
+close,content-length header missing from HTTP response
+con,qcon client is not supported when kdb+ is in multithreaded input mode
+cond,Even number of arguments to $ (until V3.6 2018.12.06)
+conn,Too many connections (1022 max)
+Could not initialize ssl,(-26!)[] found SSL/TLS not enabled
+d8,The log had a partial transaction at the end but q couldn’t truncate the file
+decompression error at block b in f,Error signalled by underlying decompression routine
+domain,Out of domain
+dup,Duplicate column in table (since V3.6 2019.02.19)
+dup names for cols/groups,Name collision (since V4.0 2020.03.17)
+elim,Too many enumerations (max: 57)
+enable secondary threads via cmd line -s only,Command line enabled processes for parallel processing
+encryption lib unavailable,Failed to load OpenSSL libraries
+expected response,One-shot request did not receive response
+failed to load TLS certificates,Started kdb+ with -E 1 or -E 2 but without SSL/TLS enabled
+from,Badly formed select statement
+hop,Request to hopen a handle fails; includes message from OS
+hwr,"Handle write error, can't write inside a peach"
+IJS,"Key type is not I, J, or S."
+insert,Tried to insert a record with an existing key into a keyed table
+invalid,Invalid command-line option value
+invalid password,Invalid keyfile password
+\l,Not a data file
+length,Arguments do not conform
+limit,"Tried to generate a list longer than 240-1, or serialized object is > 1TB, or 'type if trying to serialize a nested object which has > 2 billion elements, or Parse errors, too many constants"
+load,Not a data file
+loop,Dependency loop
+main thread only,Not executed from main thread
+mismatch,"Columns that can't be aligned for R,R or K,K"
+mlim,"Too many nested columns in splayed tables. (Prior to V3.0, limited to 999; from V3.0, 251; from V3.3, 65530)"
+mq,Multi-threading not allowed
+name too long,Filepath ≥100 chars (until V3.6 2018.09.26)
+need zlib to compress,zlib not available
+noamend,Cannot change global state from within an amend
+no append to zipped enums,Cannot append to zipped enum (from V3.0)
+no `g#,A thread other than the main q thread has attempted to add a group attribute to a vector. Seen with peach+secondary threads or multithreaded input queue
+noupdate,"Updates blocked by the -b cmd line arg, or reval code or a thread other than the main thread has attempted to update a global variable when in peach+secondary threads or multithreaded input queue. Update not allowed when using negative port number."
+nosocket,
+nyi,"Not yet implemented: it probably makes sense, but it’s not defined nor implemented, and needs more thinking about as the language evolves"
+os,Operating-system error or license error
+par,Unsupported operation on a partitioned table or component thereof
+parse,Invalid syntax; bad IPC header; or bad binary data in file
+part,Something wrong with the partitions in the HDB; or med applied over partitions or segments
+path too long,File path ≥255 chars (100 before V3.6 2018.09.26)
+PKCS5_PBKDF2_HMAC,Library invocation failed
+pwuid,OS is missing libraries for getpwuid. (Most likely 32-bit app on 64-bit OS. Try to install ia32-libs.)
+Q7,nyi op on file nested array
+rank,Invalid rank
+rb,Encountered a problem while doing a blocking read
+restricted,"in a kdb+ process which was started with -b cmd line. Also for a kdb+ process using the username:password authentication file, or the -b cmd line option, \x cannot be used to reset handlers to their default. e.g. \x .z.pg"
+s-fail,Invalid attempt to set sorted attribute. Also encountered with `s#enums when loading a database (\l db) and enum target is not already loaded.
+splay,nyi op on splayed table
+stack,Ran out of stack space. Consider using Converge \ / instead of recursion.
+step,Tried to upsert a step dictionary in place
+stop,User interrupt (Ctrl-c) or time limit (-T)
+stype,Invalid type used for Signal
+sys,Using system call from thread other than main thread
+threadview,Trying to calc a view in a thread other than main thread. A view can be calculated in the main thread only. The cached result can be used from other threads.
+timeout,Request to hopen a handle fails on a timeout; includes message from OS
+TLS not enabled,"Received a TLS connection request, but kdb+ not started with -E 1 or -E 2"
+too many syms,Kdb+ currently allows for ~1.4B interned symbols in the pool and will exit with this error when this threshold is reached
+trunc,The log had a partial transaction at the end but q couldn’t truncate the file
+type,Wrong type. Also see 'limit
+type/attr error amending file,Direct update on disk for this type or attribute is not allowed
+u-fail,Invalid attempt to set unique or parted attribute
+unmappable,"When saving partitioned data each column must be mappable. () and ("""";"""";"""") are OK"
+unrecognized key format,Master keyfile format not recognized
+upd,Function upd is undefined (sometimes encountered during -11!`:logfile) or license error
+utf8,The websocket requires that text is UTF-8 encoded
+value,No value
+vd1,Attempted multithread update
+view,Tried to re-assign a view to something else
+-w abort,malloc hit -w limit or \w limit
+-w init via cmd line,Trying to allocate memory with \w without -w on command line
+wsfull,"malloc failed, or ran out of swap (or addressability on 32-bit). The params also reported are intended to help Kx diagnose when assisting clients, and are subject to change."
+wsm,Alias for nyi for wsum prior to V3.2
+branch,A branch (if;do;while;$[.;.;.]) more than 65025 byte codes away (255 before V3.6 2017.09.26)
+char,Invalid character
+globals,Too many global variables
+locals,Too many local variables
+params,Too many parameters (8 max)
+[,Expect ‘]’
+(,Expect ‘)’
+{,Expect ‘}’
+],Expect ‘[’
+),Expect ‘(’
+},Expect ‘{’
+“,Expect ‘”’

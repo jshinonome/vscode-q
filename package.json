@@ -59,6 +59,13 @@
 				"extensions": [
 					".q"
 				],
+				"configuration": "./language-configuration.json"
+			},
+			{
+				"id": "q-output",
+				"extensions": [
+					".q-output"
+				],
 				"configuration": "./language-configuration.json",
 				"mimetypes": [
 					"text/x-code-output"
@@ -70,6 +77,11 @@
 				"language": "q",
 				"scopeName": "source.q",
 				"path": "./syntaxes/q.tmLanguage.json"
+			},
+			{
+				"language": "q-output",
+				"scopeName": "source.q-output",
+				"path": "./syntaxes/q-output.tmLanguage.json"
 			}
 		],
 		"snippets": [

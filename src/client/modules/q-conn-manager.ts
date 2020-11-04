@@ -56,7 +56,7 @@ export class QConnManager {
         if (this.activeConn && this.activeConn.version < 3.5)
             this.queryWrapper = wrapper;
         else
-            this.queryWrapper = `{{-105!(x;enlist y;{\`t\`r!(0b;x,"\n",.Q.sbt@(-3)_y)})}[${wrapper};x]}`;
+            this.queryWrapper = `{{-105!(x;enlist y;{\`t\`r!(0b;"ERROR\n",x,"\n",.Q.sbt@(-3)_y)})}[${wrapper};x]}`;
     }
 
 
@@ -142,10 +142,13 @@ export class QConnManager {
                     this.busyConn = undefined;
                     QueryConsole.createOrShow();
                     if (err) {
-                        QueryConsole.current?.append(err.message, Date.now() - time, uniqLabel);
+                        QueryConsole.current?.appendError(['ERROR', err.message], Date.now() - time, uniqLabel);
                     }
                     if (res) {
-                        if (QConnManager.consoleMode) {
+                        if (typeof res.r === 'string' && res.r.startsWith('ERROR')) {
+                            const msg: string[] = res.r.split('\n');
+                            QueryConsole.current?.appendError(msg, Date.now() - time, uniqLabel);
+                        } else if (QConnManager.consoleMode) {
                             QueryConsole.current?.append(res.r, Date.now() - time, uniqLabel);
                         } else {
                             if (res.t) {
@@ -154,7 +157,7 @@ export class QConnManager {
                                     data: res.r,
                                     meta: res.m
                                 });
-                                QueryConsole.current?.append(`${res.r[Object.keys(res.r)[0]].length} row(s) returned`, Date.now() - time, uniqLabel);
+                                QueryConsole.current?.append(`> ${res.r[Object.keys(res.r)[0]].length} row(s) returned`, Date.now() - time, uniqLabel);
                             }
                             else {
                                 QueryConsole.current?.append(res.r, Date.now() - time, uniqLabel);
