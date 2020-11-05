@@ -20,5 +20,9 @@ export function runQFile(filepath: string): void {
     const term = window.createTerminal(`q - ${file}`);
     term.show();
     const qBinary = workspace.getConfiguration('q-ext.term').get('qBinary');
-    term.sendText(`${qBinary} ${filepath}`);
+    const envPath = workspace.getConfiguration('q-ext.term').get('envPath');
+    let cmd = `${qBinary} ${filepath}`
+    if (envPath)
+        cmd = `source ${envPath} && ` + cmd;
+    term.sendText(cmd);
 }

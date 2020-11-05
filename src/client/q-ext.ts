@@ -149,8 +149,10 @@ export function activate(context: ExtensionContext): void {
         async () => {
             const mode = await window.showQuickPick(['Console', 'Grid', 'Virtualization'],
                 { placeHolder: 'Please choose a query mode from the list below' });
-            window.showInformationMessage(`Switch to Query ${mode} Mode`);
-            if (mode) QConnManager.setQueryMode(mode);
+            if (mode) {
+                window.showInformationMessage(`Switch to Query ${mode} Mode`);
+                QConnManager.setQueryMode(mode);
+            }
         });
 
     commands.registerCommand(

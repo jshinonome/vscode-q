@@ -68,6 +68,7 @@ Create a server and click to connect
 | q-ext.qview.dense         | boolean | `false`                          | q view in dense mode                        |
 | q-ext.qgrid.decimals      | number  | `3`                              | decimals in q grid                          |
 | q-ext.term.qBinary        | string  | `q`                              | q executable file or full path              |
+| q-ext.term.envPath        | string  | ``                               | environment file relative or absolute path  |
 | q-ext.expl.prevQueryLimit | string  | `5`                              | q explorer preview query limit              |
 
 ## q Language Server(local server, no connection to the internet)

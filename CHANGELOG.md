@@ -2,6 +2,12 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.9.3
+
+### added
+
+-   env file path configuration before running q file
+
 ## 1.9.2
 
 ### added
