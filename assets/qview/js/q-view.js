@@ -1,4 +1,102 @@
 let vscode, saveFileTypeSelector, viewer;
+const overridden_types = {
+    types: {
+        float: {
+            filter_operator: "==",
+            aggregate: "sum",
+            format: {
+                style: "decimal",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 7
+            }
+        },
+        string: {
+            filter_operator: "==",
+            aggregate: "count"
+        },
+        integer: {
+            filter_operator: "==",
+            aggregate: "sum",
+            format: {}
+        },
+        boolean: {
+            filter_operator: "==",
+            aggregate: "count"
+        },
+        datetime: {
+            filter_operator: "==",
+            aggregate: "count",
+            format: {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                fractionalSecondDigits: 3,
+                hourCycle: "h23",
+            },
+        },
+        time: {
+            filter_operator: "==",
+            aggregate: "count",
+            type: "datetime",
+            format: {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                fractionalSecondDigits: 3,
+                hourCycle: "h23",
+            },
+            null_value: -1
+        },
+        minute: {
+            filter_operator: "==",
+            aggregate: "count",
+            type: "datetime",
+            format: {
+                hour: "2-digit",
+                minute: "2-digit",
+                hourCycle: "h23",
+            },
+            null_value: -1
+        },
+        second: {
+            filter_operator: "==",
+            aggregate: "count",
+            type: "datetime",
+            format: {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hourCycle: "h23",
+            },
+            null_value: -1
+        },
+        date: {
+            filter_operator: "==",
+            aggregate: "count",
+            format: {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+            },
+            null_value: -1
+        },
+        month: {
+            filter_operator: "==",
+            aggregate: "count",
+            type: "date",
+            format: {
+                year: "numeric",
+                month: "2-digit",
+            },
+            null_value: -1
+        }
+    }
+};
+
+const worker = perspective.worker();
 
 // get api to interact with vscode
 vscode = acquireVsCodeApi();
@@ -17,7 +115,7 @@ window.addEventListener('message', event => {
 });
 
 // init viewer when ready
-window.addEventListener('WebComponentsReady', event => {
+window.addEventListener('DOMContentLoaded', async function () {
     console.log('web components data viewer is ready');
     saveFileTypeSelector = document.getElementById('save-file-type-selector');
     viewer = document.getElementsByTagName('perspective-viewer')[0];
@@ -46,84 +144,6 @@ function updateStats() {
 function loadData(msg) {
     try {
         var table;
-        var worker = perspective.worker(
-            {
-                types: {
-                    float: {
-                        format: {
-                            style: "decimal",
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 7
-                        }
-                    },
-                    datetime: {
-                        format: {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                            fractionalSecondDigits: 3,
-                            hourCycle: "h23",
-                        },
-                    },
-                    time: {
-                        filter_operator: "==",
-                        aggregate: "count",
-                        type: "datetime",
-                        format: {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                            fractionalSecondDigits: 3,
-                            hourCycle: "h23",
-                        },
-                        null_value: -1
-                    },
-                    minute: {
-                        filter_operator: "==",
-                        aggregate: "count",
-                        type: "datetime",
-                        format: {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            hourCycle: "h23",
-                        },
-                        null_value: -1
-                    },
-                    second: {
-                        filter_operator: "==",
-                        aggregate: "count",
-                        type: "datetime",
-                        format: {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                            hourCycle: "h23",
-                        },
-                        null_value: -1
-                    },
-                    date: {
-                        format: {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                        },
-                    },
-                    month: {
-                        filter_operator: "==",
-                        aggregate: "count",
-                        type: "date",
-                        format: {
-                            year: "numeric",
-                            month: "2-digit",
-                        },
-                        null_value: -1
-                    },
-                }
-            }
-        );
         switch (msg.type) {
             case 'rba':
                 table = worker.table(Uint8Array.from(msg.data).buffer);

@@ -42,8 +42,8 @@ export class QueryView implements Disposable {
     private readonly _extensionPath: string;
     private _disposables: Disposable[] = [];
 
-    private _theme = 'material.dark';
-    private _chart = 'd3fc';
+    private _cssTheme = 'material.dark';
+    private _theme = '';
     private _dataViewBg = '#2f3136;'
     public isReady = false;
 
@@ -109,8 +109,9 @@ export class QueryView implements Disposable {
         const cfg = workspace.getConfiguration('q-ext.qview');
         let isLightTheme = false;
         isLightTheme = window.activeColorTheme.kind === ColorThemeKind.Light;
-        this._theme = cfg.dense ? 'material-dense' : 'material';
-        this._theme = isLightTheme ? this._theme : this._theme + '.dark';
+        this._cssTheme = cfg.dense ? 'material-dense' : 'material';
+        this._cssTheme = isLightTheme ? this._cssTheme : this._cssTheme + '.dark';
+        this._theme = isLightTheme ? '' : '-dark';
         this._dataViewBg = isLightTheme ? '#eeeeee' : this._dataViewBg;
     }
 
@@ -177,8 +178,8 @@ export class QueryView implements Disposable {
             path.join(this._extensionPath, templatePath, 'index.html')).toString();
         template = template.replace(/{assets}/g, dirUri.toString())
             .replace(/{dataViewBg}/g, this._dataViewBg)
-            .replace(/{chart}/g, this._chart)
-            .replace(/{theme}/g, this._theme);
+            .replace(/{theme}/g, this._theme)
+            .replace(/{cssTheme}/g, this._cssTheme);
 
         return template;
     }

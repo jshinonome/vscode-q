@@ -6,15 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="q view">
   <title>q view</title>
-  <link rel="stylesheet" type="text/css" href="{assets}/css/{theme}.css">
+  <link rel="stylesheet" type="text/css" href="{assets}/css/{cssTheme}.css">
   <link rel="stylesheet" type="text/css" href="{assets}/css/q-view.css">
-  <link rel="stylesheet" type="text/css" href="{assets}/js/perspective.js">
-  <!-- <script src="https://unpkg.com/@finos/perspective-viewer@0.5.1/dist/umd/perspective-viewer.js"></script> -->
-  <!-- <script type="text/javascript" src="{assets}/js/perspective.js"></script> -->
   <script type="text/javascript" src="{assets}/js/perspective.inline.js"></script>
   <script type="text/javascript" src="{assets}/js/perspective-viewer.js"></script>
-  <script type="text/javascript" src="{assets}/js/perspective-viewer-hypergrid.js"></script>
-  <script type="text/javascript" src="{assets}/js/perspective-viewer-{chart}.js"></script>
+  <script type="text/javascript" src="{assets}/js/perspective-viewer-datagrid.js"></script>
+  <script type="text/javascript" src="{assets}/js/perspective-viewer-d3fc.js"></script>
 </head>
 
 <body>
@@ -32,7 +29,7 @@
       <input id="data-view-stats" type="text" readonly="readonly" title="data stats" />
     </div>
   </div>
-  <perspective-viewer id="data-viewer" plugin="hypergrid" editable="true" selectable="true"
+  <perspective-viewer id="data-viewer" class="perspective-viewer-material{theme}" editable="true" selectable="true"
     style="--select--background-color: {dataViewBg}"></perspective-viewer>
   <script type="text/javascript" src="{assets}/js/q-view.js"></script>
 </body>

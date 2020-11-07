@@ -455,7 +455,6 @@
 		"@finos/perspective-viewer": "^0.5.6",
 		"@finos/perspective-viewer-d3fc": "^0.5.6",
 		"@finos/perspective-viewer-datagrid": "^0.5.6",
-		"@finos/perspective-viewer-hypergrid": "^0.5.2",
 		"@types/graceful-fs": "^4.1.4",
 		"@types/klaw": "^3.0.1",
 		"@types/picomatch": "^2.2.1",
