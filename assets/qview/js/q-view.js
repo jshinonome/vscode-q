@@ -96,7 +96,7 @@ const overridden_types = {
     }
 };
 
-const worker = perspective.worker();
+const worker = perspective.worker(overridden_types);
 
 // get api to interact with vscode
 vscode = acquireVsCodeApi();
