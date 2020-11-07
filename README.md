@@ -95,11 +95,15 @@ List variables defined on the active server.
 
 Type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd> and call `kdb+/q ext: Toggle Query Mode` to switch Query Console.
 
-### Query View(default)
+### Query View
 
 The query view, powered by [perspective](https://perspective.finos.org/), can pivot and virtualize table data. In Query View mode, only table will be showed in a webview, but other result will still be in output. It will limit to 1000 rows when query a table, click the **flame** in **q Ext** panel , or call `kdb+/q ext: Toggle Unlimited Query`, to remove 1000 rows limit.
 
-### Query Console
+### Query Grid
+
+The query grid, powered by [ag-grid-community](https://www.ag-grid.com/), can filter and sort table data. In Query Grid mode, only table will be showed in a webview, but other result will still be in output. It will limit to 1000 rows when query a table, click the **flame** in **q Ext** panel , or call `kdb+/q ext: Toggle Unlimited Query`, to remove 1000 rows limit.
+
+### Query Console(default)
 
 Output just like q console to an output channel. The console size is set to the same as q console. Use `system "c rows columns"` to change console size.
 

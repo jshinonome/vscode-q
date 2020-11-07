@@ -8,6 +8,14 @@ all notable changes to the "vscode-q" extension will be documented in this file.
 
 -   env file path configuration before running q file
 
+### changed
+
+-   grid in Query View use Datagrid
+
+### fixed
+
+-   Query View an Query Grid can load data properly for 1st query.
+
 ## 1.9.2
 
 ### added

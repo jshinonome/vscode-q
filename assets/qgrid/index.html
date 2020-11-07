@@ -40,10 +40,11 @@
         <script type="text/javascript" charset="utf-8">
             // get api to interact with vscode
             let vscode = acquireVsCodeApi();
-
+            let isReady = false;
+            let message;
             // add vscode message handler
             window.addEventListener('message', event => {
-                const message = event.data;
+                message = event.data;
                 console.log(`got a vscode message, type: ${message.type}`);
                 loadData(message);
             });
@@ -63,14 +64,28 @@
             // create the grid passing in the div to use together with the columns & data we want to use
             new agGrid.Grid(eGridDiv, gridOptions);
 
+            window.addEventListener('DOMContentLoaded', async function () {
+                console.log('DOM Content is loaded');
+                isReady = true;
+                try {
+                    loadData(message);
+                }
+                catch (error) {
+                    console.error(`sending msg failed - error: ${error.message}`);
+                }
+            });
+
+
             function loadData(msg) {
-                gridOptions.api.setColumnDefs(msg.cols);
-                gridOptions.api.setRowData(msg.data);
-                var allColumnIds = [];
-                gridOptions.columnApi.getAllColumns().forEach(function (column) {
-                    allColumnIds.push(column.colId);
-                });
-                gridOptions.columnApi.autoSizeColumns(allColumnIds, false);
+                if (isReady) {
+                    gridOptions.api.setColumnDefs(msg.cols);
+                    gridOptions.api.setRowData(msg.data);
+                    var allColumnIds = [];
+                    gridOptions.columnApi.getAllColumns().forEach(function (column) {
+                        allColumnIds.push(column.colId);
+                    });
+                    gridOptions.columnApi.autoSizeColumns(allColumnIds, false);
+                }
             }
         </script>
     </div>

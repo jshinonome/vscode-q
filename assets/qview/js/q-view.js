@@ -1,4 +1,4 @@
-let vscode, saveFileTypeSelector, viewer;
+let vscode, saveFileTypeSelector, viewer, table, isReady;
 const overridden_types = {
     types: {
         float: {
@@ -116,13 +116,19 @@ window.addEventListener('message', event => {
 
 // init viewer when ready
 window.addEventListener('DOMContentLoaded', async function () {
-    console.log('web components data viewer is ready');
+    console.log('DOM Content is loaded');
     saveFileTypeSelector = document.getElementById('save-file-type-selector');
     viewer = document.getElementsByTagName('perspective-viewer')[0];
     viewer.toggleConfig();
     try {
         // request first data update
         vscode.postMessage({ cmd: 'ready' });
+        isReady = true;
+        viewer.load(table)
+            .then(_ => {
+                viewer.reset();
+                updateStats();
+            });
     }
     catch (error) {
         console.error(`sending msg failed - error: ${error.message}`);
@@ -143,7 +149,6 @@ function updateStats() {
 // load data to table(required for offline) and to viewer
 function loadData(msg) {
     try {
-        var table;
         switch (msg.type) {
             case 'rba':
                 table = worker.table(Uint8Array.from(msg.data).buffer);
@@ -153,12 +158,13 @@ function loadData(msg) {
                 table.update(msg.data);
                 break;
         }
-
-        viewer.load(table)
-            .then(_ => {
-                viewer.reset();
-                updateStats();
-            });
+        if (isReady) {
+            viewer.load(table)
+                .then(_ => {
+                    viewer.reset();
+                    updateStats();
+                });
+        }
     } catch (error) {
         console.error(`loadData - error: ${error.message}`);
     }
