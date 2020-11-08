@@ -11,5 +11,6 @@ export type QueryResult = {
     data: any,
     cols?: string[],
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    meta?: any
+    meta?: any,
+    keys?: string[]
 }

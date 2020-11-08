@@ -45,6 +45,7 @@ export class QueryGrid implements Disposable {
     private _disposables: Disposable[] = [];
 
     private _theme = '-dark';
+    private _keyColor = '#6A1B9A';
     public isReady = false;
 
     public static setExtensionPath(extensionPath: string): void {
@@ -99,6 +100,7 @@ export class QueryGrid implements Disposable {
         let isLightTheme = false;
         isLightTheme = window.activeColorTheme.kind === ColorThemeKind.Light;
         this._theme = isLightTheme ? '' : '-dark';
+        this._keyColor = isLightTheme ? '#E1BEE7' : '#6A1B9A';
     }
 
     public dispose(): void {
@@ -117,10 +119,13 @@ export class QueryGrid implements Disposable {
     public update(result: QueryResult): void {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         result.cols = result.meta.c.map((col: string, i: number) => {
+            const colDef: { headerName: string, field: string, type?: string, cellStyle?: { 'background-color': string } } = { headerName: col, field: col };
             if ('xhijef'.includes(result.meta.t[i]))
-                return { field: col, type: 'numericColumn' };
-            else
-                return { field: col };
+                colDef.type = 'numericColumn';
+            if (result.keys?.includes(col))
+                colDef.cellStyle = { 'background-color': this._keyColor };
+            return colDef;
+
         });
         const formatterMap = result.meta.c.reduce((o: any, k: any, i: number) => (
             {

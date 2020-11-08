@@ -52,7 +52,7 @@ export class QConnManager {
         const consoleSize = '36 180|system"c"';
         const wrapper = QConnManager.consoleMode
             ? `{\`t\`r!(0b;.Q.S[${consoleSize};0j;value x])}`
-            : `{res:value x;$[(count res) & .Q.qt res;:\`t\`r\`m!(1b;${limit}0!res;0!meta res);:\`t\`r!(0b;.Q.S[${consoleSize};0j;res])]}`;
+            : `{res:value x;$[(count res) & .Q.qt res;:\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res;keys res);:\`t\`r!(0b;.Q.S[${consoleSize};0j;res])]}`;
         if (this.activeConn && this.activeConn.version < 3.5)
             this.queryWrapper = wrapper;
         else
@@ -155,7 +155,8 @@ export class QConnManager {
                                 this.update({
                                     type: 'json',
                                     data: res.r,
-                                    meta: res.m
+                                    meta: res.m,
+                                    keys: res.k,
                                 });
                                 QueryConsole.current?.append(`> ${res.r[Object.keys(res.r)[0]].length} row(s) returned`, Date.now() - time, uniqLabel);
                             }

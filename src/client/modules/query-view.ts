@@ -45,6 +45,7 @@ export class QueryView implements Disposable {
     private _cssTheme = 'material.dark';
     private _theme = '';
     private _dataViewBg = '#2f3136;'
+    private _keyColor = '#6A1B9A';
     public isReady = false;
 
     public static setExtensionPath(extensionPath: string): void {
@@ -112,6 +113,7 @@ export class QueryView implements Disposable {
         this._cssTheme = cfg.dense ? 'material-dense' : 'material';
         this._cssTheme = isLightTheme ? this._cssTheme : this._cssTheme + '.dark';
         this._theme = isLightTheme ? '' : '-dark';
+        this._keyColor = isLightTheme ? '#E1BEE7' : '#6A1B9A';
         this._dataViewBg = isLightTheme ? '#eeeeee' : this._dataViewBg;
     }
 
@@ -177,9 +179,9 @@ export class QueryView implements Disposable {
         let template = fs.readFileSync(
             path.join(this._extensionPath, templatePath, 'index.html')).toString();
         template = template.replace(/{assets}/g, dirUri.toString())
-            .replace(/{dataViewBg}/g, this._dataViewBg)
             .replace(/{theme}/g, this._theme)
-            .replace(/{cssTheme}/g, this._cssTheme);
+            .replace(/{cssTheme}/g, this._cssTheme)
+            .replace(/{keyColor}/g, this._keyColor);
 
         return template;
     }
