@@ -7,6 +7,8 @@ all notable changes to the "vscode-q" extension will be documented in this file.
 ### added
 
 -   env file path configuration before running q file
+-   color key columns in Qurey View and Query Grid
+-   update data/time format for Query View to match q format
 
 ### changed
 

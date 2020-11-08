@@ -72,7 +72,35 @@
             hourCycle: 'h23',
           },
         },
+        timestamp: {
+          filter_operator: '==',
+          aggregate: 'count',
+          type: 'datetime',
+          format: {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            fractionalSecondDigits: 3,
+            hourCycle: 'h23',
+          },
+        },
         time: {
+          filter_operator: '==',
+          aggregate: 'count',
+          type: 'datetime',
+          format: {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            fractionalSecondDigits: 3,
+            hourCycle: 'h23',
+          },
+          null_value: -1
+        },
+        timespan: {
           filter_operator: '==',
           aggregate: 'count',
           type: 'datetime',
@@ -202,7 +230,6 @@
                 console.log(metadata);
                 if (msg.keys.includes(metadata.value)) {
                   th.style.background = keyColor;
-                  console.log(th);
                 }
               }
               datagrid.draw();
