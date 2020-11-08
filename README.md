@@ -51,7 +51,7 @@ Create a server and click to connect
 ### Call a Function
 
 -   Autocomplete for defined identifiers and server identifiers.
--   Signature help for defined functions and server functions(type:100).
+-   Signature help for defined functions and server functions(type:100, 104).
 
 ![call-a-function](assets/demo/4-call-a-function.gif)
 
@@ -105,7 +105,7 @@ The query grid, powered by [ag-grid-community](https://www.ag-grid.com/), can fi
 
 ### Query Console(default)
 
-Output just like q console to an output channel. The console size is set to the same as q console. Use `system "c rows columns"` to change console size.
+Output just like q console to an output channel. The console size is set to the same as q http size. Use `system "C rows columns"` to change console size.
 
 ## Formatter
 
