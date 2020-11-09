@@ -2,21 +2,27 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.9.4
+
+### fixed
+
+-   fix 24:mm:ss to 00:mm:ss
+
 ## 1.9.3
 
 ### added
 
--   env file path configuration before running q file
+-   env file path configuration for running q file
 -   color key columns in Qurey View and Query Grid
 -   update data/time format for Query View to match q format
 
 ### changed
 
--   grid in Query View use Datagrid
+-   migrate grid in Query View to use Datagrid
 
 ### fixed
 
--   Query View an Query Grid can load data properly for 1st query.
+-   Query View an Query Grid can load data properly for 1st query
 
 ## 1.9.2
 
