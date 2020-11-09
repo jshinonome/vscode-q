@@ -227,7 +227,6 @@
               const datagrid = viewer.querySelector('regular-table');
               for (const th of datagrid.querySelectorAll('th')) {
                 const metadata = datagrid.getMeta(th);
-                console.log(metadata);
                 if (msg.keys.includes(metadata.value)) {
                   th.style.background = keyColor;
                 }

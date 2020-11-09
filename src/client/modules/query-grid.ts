@@ -25,14 +25,14 @@ const kdbTypeMap = new Map<string, formatter>([
     ['f', (value) => value.toFixed(decimals)],
     // ['c', (value) => value],
     // ['s', (value) => value],
-    ['p', (value) => moment(value).format('YYYY.MM.DD[D]hh:mm:ss.SSSSSSSSS')],
+    ['p', (value) => moment(value).format('YYYY.MM.DD[D]HH:mm:ss.SSSSSSSSS')],
     ['m', (value) => moment(value).format('YYYY.MM[m]')],
     ['d', (value) => moment(value).format('YYYY.MM.DD')],
-    ['z', (value) => moment(value).format('YYYY.MM.DD[T]hh:mm:ss.SSS')],
-    ['n', (value) => moment(value).format('[0D]hh:mm:ss.SSSSSSSSS')],
-    ['u', (value) => moment(value).format('hh:mm')],
-    ['v', (value) => moment(value).format('hh:mm:ss')],
-    ['t', (value) => moment(value).format('hh:mm:ss.SSS')],
+    ['z', (value) => moment(value).format('YYYY.MM.DD[T]HH:mm:ss.SSS')],
+    ['n', (value) => moment(value).format('[0D]HH:mm:ss.SSSSSSSSS')],
+    ['u', (value) => moment(value).format('HH:mm')],
+    ['v', (value) => moment(value).format('HH:mm:ss')],
+    ['t', (value) => moment(value).format('HH:mm:ss.SSS')],
     [' ', (value) => JSON.stringify(value)]
 ]);
 
