@@ -130,6 +130,9 @@ export class QConnManager {
         } else if (this.activeConn) {
             if (query.slice(-1) === ';') {
                 query = query.slice(0, -1);
+            } else if (query[0] === '`') {
+                // append space if query starts with back-tick, otherwise query will be treated as a symbol.
+                query = query + ' ';
             }
             this.isBusy = true;
             this.busyConn = this.activeConn;

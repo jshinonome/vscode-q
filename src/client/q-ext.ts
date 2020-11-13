@@ -6,10 +6,9 @@
  */
 
 import {
-    commands, ExtensionContext, IndentAction, languages,
-    Range, TextDocument, TextEdit,
-    TreeItem, WebviewPanel, window,
-    workspace
+    commands, env, ExtensionContext, IndentAction, languages,
+    Range, TextDocument, TextEdit, TreeItem, Uri, WebviewPanel,
+    window, workspace
 } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
 import QDictTreeItem from './items/q-dict';
@@ -120,13 +119,28 @@ export function activate(context: ExtensionContext): void {
         'q-servers.deleteEntry',
         (qConn: QConn) => {
             window.showInputBox(
-                { prompt: `Confirm to Remove Server '${qConn.label}' (Y/n)` }
+                { prompt: `Confirm to Remove Server '${qConn.uniqLabel.replace(',', '-')}' (Y/n)` }
             ).then(value => {
                 if (value === 'Y') {
-                    QConnManager.current?.removeCfg(qConn.label);
+                    QConnManager.current?.removeCfg(qConn.uniqLabel);
 
                 }
             });
+        });
+
+    commands.registerCommand(
+        'q-servers.raiseAnIssue',
+        async () => {
+            const option = await window.showQuickPick(['1 - Raise an issue', '2 - Rating & Review'],
+                { placeHolder: 'Please choose a query mode from the list below' });
+            switch (option?.[0]) {
+                case '1':
+                    env.openExternal(Uri.parse('https://github.com/jshinonome/vscode-q/issues'));
+                    break;
+                case '2':
+                    env.openExternal(Uri.parse('https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q&ssr=false#review-details'));
+                    break;
+            }
         });
 
     commands.registerCommand(

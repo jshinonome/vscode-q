@@ -2,6 +2,13 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.9.5
+
+### fixed
+
+-   cannot remove server from server list
+-   query start with '`' was treated as a symbol
+
 ## 1.9.4
 
 ### fixed

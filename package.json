@@ -202,6 +202,15 @@
 				}
 			},
 			{
+				"command": "q-servers.raiseAnIssue",
+				"title": "Raise an Issue",
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/bug.svg",
+					"dark": "assets/svg/dark/bug.svg"
+				}
+			},
+			{
 				"command": "q-servers.tagEntry",
 				"title": "Tag a Server",
 				"category": "kdb+/q ext",
@@ -251,34 +260,39 @@
 		"menus": {
 			"view/title": [
 				{
-					"command": "q-servers.toggleLimitQuery",
-					"when": "view == q-servers",
-					"group": "navigation"
-				},
-				{
 					"command": "q-servers.addEntry",
 					"when": "view == q-servers",
-					"group": "navigation"
-				},
-				{
-					"command": "q-servers.switchMode",
-					"when": "view == q-servers",
-					"group": "navigation"
-				},
-				{
-					"command": "q-servers.refreshEntry",
-					"when": "view == q-servers",
-					"group": "navigation"
+					"group": "navigation@0"
 				},
 				{
 					"command": "q-servers.importServers",
 					"when": "view == q-servers",
-					"group": "navigation"
+					"group": "navigation@1"
 				},
 				{
 					"command": "q-servers.exportServers",
 					"when": "view == q-servers",
-					"group": "navigation"
+					"group": "navigation@2"
+				},
+				{
+					"command": "q-servers.refreshEntry",
+					"when": "view == q-servers",
+					"group": "navigation@3"
+				},
+				{
+					"command": "q-servers.toggleLimitQuery",
+					"when": "view == q-servers",
+					"group": "navigation@4"
+				},
+				{
+					"command": "q-servers.switchMode",
+					"when": "view == q-servers",
+					"group": "navigation@5"
+				},
+				{
+					"command": "q-servers.raiseAnIssue",
+					"when": "view == q-servers",
+					"group": "navigation@6"
 				},
 				{
 					"command": "q-explorer.refreshEntry",
