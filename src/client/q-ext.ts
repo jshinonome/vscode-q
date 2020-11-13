@@ -131,8 +131,8 @@ export function activate(context: ExtensionContext): void {
     commands.registerCommand(
         'q-servers.raiseAnIssue',
         async () => {
-            const option = await window.showQuickPick(['1 - Raise an issue', '2 - Rating & Review'],
-                { placeHolder: 'Please choose a query mode from the list below' });
+            const option = await window.showQuickPick(['1 - Raising an issue', '2 - Writing a Review'],
+                { placeHolder: 'Contribute to vscode-q by' });
             switch (option?.[0]) {
                 case '1':
                     env.openExternal(Uri.parse('https://github.com/jshinonome/vscode-q/issues'));
