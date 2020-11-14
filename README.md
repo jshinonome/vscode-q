@@ -182,6 +182,10 @@ Special thanks to the following packages.
 -   [Theme: Dracula](https://marketplace.visualstudio.com/items?itemName=dracula-theme.theme-dracula)
 -   [Font : Fira Code](https://github.com/tonsky/FiraCode)
 
+## Contributing
+
+If you'd like to contribute to this extension, please read the [contributing guidelines](https://github.com/jshinonome/vscode-q/blob/master/CONTRIBUTING.md).
+
 ## License
 
 [MIT](https://github.com/jshinonome/vscode-q/blob/master/LICENSE)

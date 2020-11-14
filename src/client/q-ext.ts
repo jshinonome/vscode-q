@@ -129,9 +129,9 @@ export function activate(context: ExtensionContext): void {
         });
 
     commands.registerCommand(
-        'q-servers.raiseAnIssue',
+        'q-servers.reactions',
         async () => {
-            const option = await window.showQuickPick(['1 - Raising an issue', '2 - Writing a Review'],
+            const option = await window.showQuickPick(['1 - Raising an issue', '2 - Writing a Review', '3 - Creating a Pull Request'],
                 { placeHolder: 'Contribute to vscode-q by' });
             switch (option?.[0]) {
                 case '1':
@@ -139,6 +139,9 @@ export function activate(context: ExtensionContext): void {
                     break;
                 case '2':
                     env.openExternal(Uri.parse('https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q&ssr=false#review-details'));
+                    break;
+                case '3':
+                    env.openExternal(Uri.parse('https://github.com/jshinonome/vscode-q/blob/master/CONTRIBUTING.md'));
                     break;
             }
         });

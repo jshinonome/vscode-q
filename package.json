@@ -202,12 +202,12 @@
 				}
 			},
 			{
-				"command": "q-servers.raiseAnIssue",
+				"command": "q-servers.reactions",
 				"title": "Raise an Issue",
 				"category": "kdb+/q ext",
 				"icon": {
-					"light": "assets/svg/light/bug.svg",
-					"dark": "assets/svg/dark/bug.svg"
+					"light": "assets/svg/light/reactions.svg",
+					"dark": "assets/svg/dark/reactions.svg"
 				}
 			},
 			{
@@ -290,7 +290,7 @@
 					"group": "navigation@5"
 				},
 				{
-					"command": "q-servers.raiseAnIssue",
+					"command": "q-servers.reactions",
 					"when": "view == q-servers",
 					"group": "navigation@6"
 				},
