@@ -27,8 +27,6 @@ This extension provides kdb+\q language support:
 
 See the [change log](https://github.com/jshinonome/vscode-q/blob/master/CHANGELOG.md).
 
-[Submit an issue](https://github.com/jshinonome/vscode-q/issues).
-
 ## Demo
 
 ### Connect to a Server
@@ -93,7 +91,7 @@ List variables defined on the active server.
 
 ## Query Mode
 
-Type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd> and call `kdb+/q ext: Toggle Query Mode` to switch Query Console.
+Type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd> and call `kdb+/q ext: Switch Query Mode` to switch Query Console.
 
 ### Query View
 
@@ -158,6 +156,10 @@ Type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd>, call `Open Setting(Json)`, a
     }
 ```
 
+### No Color in q Output
+
+There may be a conflict with other extensions. Disable or uninstall them and try again.
+
 ## Packages
 
 Special thanks to the following packages.
@@ -178,7 +180,7 @@ Special thanks to the following packages.
 ## Recommended Packages
 
 -   [Theme: Dracula](https://marketplace.visualstudio.com/items?itemName=dracula-theme.theme-dracula)
--   [Fira Code](https://github.com/tonsky/FiraCode)
+-   [Font : Fira Code](https://github.com/tonsky/FiraCode)
 
 ## License
 
