@@ -11,7 +11,7 @@
 	"publisher": "jshinonome",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.50.0"
+		"vscode": "^1.51.0"
 	},
 	"categories": [
 		"Programming Languages",
@@ -454,11 +454,11 @@
 	},
 	"devDependencies": {
 		"@types/long": "^4.0.1",
-		"@types/node": "^14.14.6",
+		"@types/node": "^14.14.7",
 		"@types/request": "^2.48.5",
-		"@types/vscode": "^1.50.0",
-		"@typescript-eslint/parser": "^4.6.1",
-		"ts-loader": "^8.0.9",
+		"@types/vscode": "^1.51.0",
+		"@typescript-eslint/parser": "^4.7.0",
+		"ts-loader": "^8.0.11",
 		"typescript": "^4.0.5",
 		"vscode-test": "^1.4.1",
 		"webpack": "^5.4.0",
@@ -472,10 +472,10 @@
 		"@types/graceful-fs": "^4.1.4",
 		"@types/klaw": "^3.0.1",
 		"@types/picomatch": "^2.2.1",
-		"@typescript-eslint/eslint-plugin": "^4.6.1",
+		"@typescript-eslint/eslint-plugin": "^4.7.0",
 		"ag-grid-community": "^24.1.0",
 		"csv-parser": "^2.3.3",
-		"eslint": "^7.12.1",
+		"eslint": "^7.13.0",
 		"fuse.js": "^6.4.3",
 		"graceful-fs": "^4.2.4",
 		"klaw": "^3.0.0",
