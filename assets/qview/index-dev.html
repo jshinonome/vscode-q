@@ -1,0 +1,72 @@
+<!--
+
+   Copyright (c) 2017, the Perspective Authors.
+
+   This file is part of the Perspective library, distributed under the terms of
+   the Apache License 2.0.  The full license can be found in the LICENSE file.
+
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+
+    <script src="https://cdn.jsdelivr.net/npm/@finos/perspective/dist/umd/perspective.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@finos/perspective-viewer/dist/umd/perspective-viewer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@finos/perspective-viewer-datagrid"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@finos/perspective-viewer-d3fc"></script>
+
+    <link rel='stylesheet' href="https://cdn.jsdelivr.net/npm/@finos/perspective-viewer/dist/umd/material-dense.css"
+        is="custom-style">
+
+    <style>
+        perspective-viewer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <perspective-viewer editable>
+
+    </perspective-viewer>
+
+    <script>
+        const worker = window.perspective.worker();
+
+        document.addEventListener("WebComponentsReady", function () {
+            var data = [
+                { x: 1, y: "a", z: true, t: "2016-01-13T17:11:29.998" },
+                { x: 2, y: "b", z: false, t: "2016-01-13T17:11:29.999" },
+                { x: 3, y: "c", z: true, t: "2016-01-13T17:11:30.000" },
+                { x: 4, y: "d", z: false, t: "2016-01-13T17:11:30.001" }
+            ];
+
+            var viewer = document.getElementsByTagName('perspective-viewer')[0];
+
+            table = worker.table({
+                x: 'integer',
+                y: 'string',
+                z: 'boolean',
+                t: 'datetime'
+            });
+
+            table.update(data);
+
+            viewer.load(table);
+        });
+    </script>
+
+</body>
+
+</html>
