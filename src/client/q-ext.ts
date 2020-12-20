@@ -16,7 +16,6 @@ import QFunctionTreeItem from './items/q-function';
 import { qCfgInput } from './modules/q-cfg-input';
 import { QConn } from './modules/q-conn';
 import { QConnManager } from './modules/q-conn-manager';
-import { semanticTokensProvider } from './modules/q-semantic-token';
 import { QServerTree } from './modules/q-server-tree';
 import { QStatusBarManager } from './modules/q-status-bar-manager';
 import { runQFile, sendToCurrentTerm } from './modules/q-term';
@@ -284,9 +283,6 @@ export function activate(context: ExtensionContext): void {
             }
         });
     }
-
-    context.subscriptions.push(semanticTokensProvider);
-
 
     workspace.onDidChangeConfiguration(e => {
         if (e.affectsConfiguration('q-ext') && !e.affectsConfiguration('q-ext.term')) {

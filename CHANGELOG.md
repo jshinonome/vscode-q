@@ -2,6 +2,12 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.9.7
+
+### changed
+
+-   semantic tokens are provided by language server
+
 ## 1.9.5
 
 ### fixed

@@ -89,6 +89,14 @@ export default class QLangServer {
                 triggerCharacters: ['['],
                 retriggerCharacters: [';']
             },
+            semanticTokensProvider: {
+                documentSelector: null,
+                legend: {
+                    tokenTypes: ['variable', 'parameter', 'type', 'class'],
+                    tokenModifiers: []
+                },
+                full: true,
+            }
         };
     }
 
@@ -258,11 +266,9 @@ export default class QLangServer {
     }
 
     private onSemanticsToken(params: SemanticTokensParams): SemanticTokens {
+        // ['variable', 'parameter', 'type', 'class']
         const document = params.textDocument;
-        this.connection.console.info(JSON.stringify(document));
-        return {
-            data: [0]
-        };
+        return this.analyzer.getSemanticTokens(document.uri);
     }
 
     private validateTextDocument(textDocument: TextDocument): Diagnostic[] {

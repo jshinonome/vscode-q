@@ -10,7 +10,6 @@ import QLangServer from './q-lang-server';
 
 const connection: Connection = createConnection(ProposedFeatures.all);
 
-console.log('start server');
 connection.onInitialize(
     async (params: InitializeParams): Promise<InitializeResult> => {
         const server = await QLangServer.initialize(connection, params);

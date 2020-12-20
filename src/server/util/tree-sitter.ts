@@ -5,13 +5,25 @@
  * https://opensource.org/licenses/MIT
  */
 
-import { Range } from 'vscode-languageserver/node';
+import { Range, uinteger } from 'vscode-languageserver/node';
 import { SyntaxNode } from 'web-tree-sitter';
 
 export function forEach(node: SyntaxNode, cb: (n: SyntaxNode) => void): void {
     cb(node);
     if (node.children.length) {
         node.children.forEach(n => forEach(n, cb));
+    }
+}
+
+export function forEachAndSkip(node: SyntaxNode, skipNodeType: string, cb: (n: SyntaxNode) => void): void {
+    cb(node);
+    if (node.children.length) {
+        node.children.forEach(n => {
+            if (n.type === skipNodeType)
+                return;
+            else
+                forEachAndSkip(n, skipNodeType, cb);
+        });
     }
 }
 
@@ -22,6 +34,14 @@ export function range(n: SyntaxNode): Range {
         n.endPosition.row,
         n.endPosition.column,
     );
+}
+
+export function token(n: SyntaxNode): uinteger[] {
+    return [
+        n.startPosition.row,
+        n.startPosition.column,
+        n.endPosition.column - n.startPosition.column
+    ];
 }
 
 export function isDefinition(n: SyntaxNode): boolean {
@@ -57,6 +77,10 @@ export function isNamespace(n: SyntaxNode): boolean {
 
 export function isNamespaceEnd(n: SyntaxNode): boolean {
     return n.type === 'namespace_end';
+}
+
+export function isFunctionBody(n: SyntaxNode): boolean {
+    return n.type === 'function_body';
 }
 
 // extract params from a function

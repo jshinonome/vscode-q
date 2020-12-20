@@ -259,9 +259,6 @@
           },
           "patterns": [
             {
-              "include": "#function_param"
-            },
-            {
               "include": "#comments"
             },
             {
@@ -282,35 +279,6 @@
             {
               "name": "entity.name.variable.parameter.q",
               "match": "\\b(x|y|z)\\b"
-            }
-          ]
-        }
-      ]
-    },
-    "function_param": {
-      "patterns": [
-        {
-          "name": "meta.parameters.q",
-          "begin": "(?<={)\\[",
-          "beginCaptures": {
-            "0": {
-              "name": "punctuation.definition.parameters.begin.q"
-            }
-          },
-          "end": "]",
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.definition.parameters.end.q"
-            }
-          },
-          "patterns": [
-            {
-              "name": "variable.parameter.q",
-              "match": "\\b[a-zA-Z][a-zA-Z\\d_]*"
-            },
-            {
-              "name": "punctuation.separator.parameter.q",
-              "match": ";"
             }
           ]
         }

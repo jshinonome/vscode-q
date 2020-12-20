@@ -12,6 +12,6 @@ async function initializeParser() {
 initializeParser().then((parser) => {
     const p = parser;
     console.log('test');
-    const t = p.parse('a:42;');
+    const t = p.parse('a:42;f:{[x;y]x+y};');
     console.log(t.rootNode.toString());
 });

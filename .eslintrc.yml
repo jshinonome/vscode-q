@@ -27,9 +27,7 @@ rules:
   camelcase:
     - error
   no-unused-vars:
-    - error
-    - argsIgnorePattern: ^_
-      varsIgnorePattern: ^_
+    - off
   "@typescript-eslint/no-unused-vars":
     - error
     - argsIgnorePattern: ^_

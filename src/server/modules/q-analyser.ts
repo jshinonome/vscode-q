@@ -7,13 +7,14 @@
 
 // import * as fs from 'fs';
 import Fuse from 'fuse.js';
+import { TextDocument } from 'vscode-languageserver-textdocument';
 import {
     CompletionItem,
     CompletionItemKind, Connection, Diagnostic, DiagnosticSeverity,
     DocumentUri, Location, ParameterInformation,
-    Range, SignatureHelp, SignatureInformation, SymbolInformation, SymbolKind
+    Range, SemanticTokens, SemanticTokensBuilder,
+    SignatureHelp, SignatureInformation, SymbolInformation, SymbolKind
 } from 'vscode-languageserver/node';
-import { TextDocument } from 'vscode-languageserver-textdocument';
 import { URI } from 'vscode-uri';
 import * as Parser from 'web-tree-sitter';
 import * as TreeSitterUtil from '../util/tree-sitter';
@@ -52,6 +53,7 @@ export default class QAnalyzer {
     private uriToFileContent = new Map<DocumentUri, string>();
     private uriToDefinition = new Map<DocumentUri, nameToSymbolInfo>();
     private uriToSymbol = new Map<DocumentUri, string[]>();
+    private uriToSemanticTokes = new Map<DocumentUri, SemanticTokensBuilder>();
     private nameToSigHelp = new Map<string, SignatureHelp>();
     private serverIds: CompletionItem[] = [];
     private serverSyms: string[] = [];
@@ -273,6 +275,7 @@ export default class QAnalyzer {
         this.uriToDefinition.set(uri, new Map<string, SymbolInformation[]>());
         this.uriToFileContent.set(uri, content);
         this.uriToSymbol.set(uri, []);
+        this.uriToSemanticTokes.set(uri, new SemanticTokensBuilder());
 
         const problems: Diagnostic[] = [];
 
@@ -364,6 +367,23 @@ export default class QAnalyzer {
                 namespace = '';
             } else if (TreeSitterUtil.isSymbol(n)) {
                 this.uriToSymbol.get(uri)?.push(n.text.trim());
+            } else if (TreeSitterUtil.isFunctionBody(n)) {
+                // tokenTypes: ['variable', 'parameter', 'type', 'class']
+                const params = TreeSitterUtil.extractParams(n);
+                const semanticTokensBuilder = this.uriToSemanticTokes.get(uri) ?? new SemanticTokensBuilder();
+                if (params.length > 0) {
+                    TreeSitterUtil.forEachAndSkip(n, 'function_body', node => {
+                        if (node.type === 'local_identifier') {
+                            const param = node.text.trim();
+                            if (params.indexOf(param) >= 0) {
+                                // 1 means paramter here
+                                const token = TreeSitterUtil.token(node);
+                                token.push(1, 0);
+                                semanticTokensBuilder.push(token[0], token[1], token[2], token[3], token[4]);
+                            }
+                        }
+                    });
+                }
             }
         });
 
@@ -574,5 +594,9 @@ export default class QAnalyzer {
         } else {
             this.uriToDefinition.get(uri)?.set(name, [symInfo]);
         }
+    }
+
+    public getSemanticTokens(uri: DocumentUri): SemanticTokens {
+        return this.uriToSemanticTokes.get(uri)?.build() ?? { data: [] };
     }
 }
