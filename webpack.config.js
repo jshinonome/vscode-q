@@ -37,14 +37,14 @@ const clientConf = {
                         loader: 'ts-loader',
                         options: {
                             compilerOptions: {
-                                "sourceMap": true,
+                                'sourceMap': true,
                             }
                         }
                     }
                 ]
             }
         ]
-    }
+    },
 };
 
 const serverConf = {
@@ -82,7 +82,7 @@ const serverConf = {
                         loader: 'ts-loader',
                         options: {
                             compilerOptions: {
-                                "sourceMap": true,
+                                'sourceMap': true,
                             }
                         }
                     }

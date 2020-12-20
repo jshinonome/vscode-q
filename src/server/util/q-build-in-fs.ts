@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';
+import { CompletionItem, CompletionItemKind } from 'vscode-languageserver/node';
 import fs = require('fs');
 import csvParser = require('csv-parser');
 import path = require('path');

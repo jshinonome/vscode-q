@@ -10,7 +10,7 @@ import {
     Range, TextDocument, TextEdit, TreeItem, Uri, WebviewPanel,
     window, workspace
 } from 'vscode';
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 import QDictTreeItem from './items/q-dict';
 import QFunctionTreeItem from './items/q-function';
 import { qCfgInput } from './modules/q-cfg-input';
@@ -212,7 +212,7 @@ export function activate(context: ExtensionContext): void {
                 break;
             default:
                 if (item.label)
-                    QConnManager.current?.sync(item.label);
+                    QConnManager.current?.sync(item.label as string);
         }
     });
 

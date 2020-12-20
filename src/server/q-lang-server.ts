@@ -9,11 +9,11 @@ import * as fs from 'fs';
 import {
     CompletionItem, CompletionItemKind, Connection, Diagnostic, DiagnosticSeverity,
     DidChangeWatchedFilesParams, DocumentHighlight, DocumentSymbolParams, FileChangeType, Hover,
-    IConnection, InitializeParams, Location, PrepareRenameParams, Range,
+    InitializeParams, Location, PrepareRenameParams, Range,
     ReferenceParams, RenameParams, ServerCapabilities, SignatureHelp,
     SignatureHelpParams, SymbolInformation, SymbolKind, TextDocumentPositionParams, TextDocuments,
-    TextDocumentSyncKind, TextEdit, WorkspaceEdit, WorkspaceSymbolParams
-} from 'vscode-languageserver';
+    TextDocumentSyncKind, TextEdit, WorkspaceEdit, WorkspaceSymbolParams, SemanticTokensParams, SemanticTokens
+} from 'vscode-languageserver/node';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { URI } from 'vscode-uri';
 import QAnalyzer, { word } from './modules/q-analyser';
@@ -21,7 +21,7 @@ import getBuildInFsRef from './util/q-build-in-fs';
 import { initializeParser } from './util/q-parser';
 
 export default class QLangServer {
-    connection: IConnection;
+    connection: Connection;
     // Create a simple text document manager. The text document manager
     // supports full document sync only
     documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
@@ -30,7 +30,7 @@ export default class QLangServer {
 
     private analyzer: QAnalyzer;
 
-    private constructor(connection: IConnection, analyzer: QAnalyzer) {
+    private constructor(connection: Connection, analyzer: QAnalyzer) {
         this.connection = connection;
         this.analyzer = analyzer;
         this.buildInFsRef = getBuildInFsRef();
@@ -53,6 +53,7 @@ export default class QLangServer {
         this.connection.onSignatureHelp(this.onSignatureHelp.bind(this));
         this.connection.onNotification('$/analyze-server-cache', (code => this.analyzer.analyzeServerCache(code)));
         this.connection.onNotification('$/analyze-source-code', (cfg => this.analyzer.analyzeWorkspace(cfg)));
+        this.connection.languages.semanticTokens.on(this.onSemanticsToken.bind(this));
     }
 
     public static async initialize(
@@ -61,6 +62,7 @@ export default class QLangServer {
     ): Promise<QLangServer> {
         const workspaceFolder = workspaceFolders ? workspaceFolders[0].uri : '';
         connection.console.info(`Initializing q Lang Server at ${workspaceFolder}`);
+        console.info(`Initializing q Lang Server at ${workspaceFolder}`);
         const parser = await initializeParser();
         return QAnalyzer.fromRoot(connection, workspaceFolder, parser).then(
             analyzer => { return new QLangServer(connection, analyzer); }
@@ -253,6 +255,14 @@ export default class QLangServer {
     private onSignatureHelp(params: SignatureHelpParams): SignatureHelp | undefined {
         // it is call and get its parent text
         return this.getSigHelpAtPoint(params);
+    }
+
+    private onSemanticsToken(params: SemanticTokensParams): SemanticTokens {
+        const document = params.textDocument;
+        this.connection.console.info(JSON.stringify(document));
+        return {
+            data: [0]
+        };
     }
 
     private validateTextDocument(textDocument: TextDocument): Diagnostic[] {

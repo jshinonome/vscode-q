@@ -12,7 +12,7 @@ import {
     CompletionItemKind, Connection, Diagnostic, DiagnosticSeverity,
     DocumentUri, Location, ParameterInformation,
     Range, SignatureHelp, SignatureInformation, SymbolInformation, SymbolKind
-} from 'vscode-languageserver';
+} from 'vscode-languageserver/node';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { URI } from 'vscode-uri';
 import * as Parser from 'web-tree-sitter';

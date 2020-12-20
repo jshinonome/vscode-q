@@ -85,17 +85,17 @@ export class QServerTree extends TreeItem implements TreeDataProvider<TreeItem> 
                 light: path.join(__filename, '../../assets/svg/item/tag.svg'),
                 dark: path.join(__filename, '../../assets/svg/item/tag.svg')
             };
-        } else if (['dev', 'development'].indexOf(this.label) >= 0) {
+        } else if (['dev', 'development'].indexOf(this.label as string) >= 0) {
             return {
                 light: path.join(__filename, '../../assets/svg/item/tag-dev.svg'),
                 dark: path.join(__filename, '../../assets/svg/item/tag-dev.svg')
             };
-        } else if (['uat', 'compute', 'cgm'].indexOf(this.label) >= 0) {
+        } else if (['uat', 'compute', 'cgm'].indexOf(this.label as string) >= 0) {
             return {
                 light: path.join(__filename, '../../assets/svg/item/tag-uat.svg'),
                 dark: path.join(__filename, '../../assets/svg/item/tag-uat.svg')
             };
-        } else if (['prd', 'prod', 'product'].indexOf(this.label) >= 0) {
+        } else if (['prd', 'prod', 'product'].indexOf(this.label as string) >= 0) {
             return {
                 light: path.join(__filename, '../../assets/svg/item/tag-prod.svg'),
                 dark: path.join(__filename, '../../assets/svg/item/tag-prod.svg')

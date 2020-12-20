@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import { Range } from 'vscode-languageserver';
+import { Range } from 'vscode-languageserver/node';
 import { SyntaxNode } from 'web-tree-sitter';
 
 export function forEach(node: SyntaxNode, cb: (n: SyntaxNode) => void): void {

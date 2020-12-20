@@ -161,7 +161,7 @@ repository:
           - include: "#keywords"
           - include: "#invalids"
           - include: "#function"
-          - name: variable.language.default.q-output
+          - name: entity.name.variable.parameter.q-output
             match: \b(x|y|z)\b
   function_param:
     patterns:
