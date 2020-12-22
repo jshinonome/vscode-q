@@ -130,7 +130,8 @@ export function activate(context: ExtensionContext): void {
     commands.registerCommand(
         'q-servers.reactions',
         async () => {
-            const option = await window.showQuickPick(['1 - Raising an issue', '2 - Writing a Review', '3 - Creating a Pull Request'],
+            const option = await window.showQuickPick(
+                ['1 - Raising an Issue', '2 - Writing a Review', '3 - Creating a Pull Request', '4 - Buying Me a Beer'],
                 { placeHolder: 'Contribute to vscode-q by' });
             switch (option?.[0]) {
                 case '1':
@@ -141,6 +142,9 @@ export function activate(context: ExtensionContext): void {
                     break;
                 case '3':
                     env.openExternal(Uri.parse('https://github.com/jshinonome/vscode-q/blob/master/CONTRIBUTING.md'));
+                    break;
+                case '4':
+                    env.openExternal(Uri.parse('https://www.buymeacoffee.com/jshinonome'));
                     break;
             }
         });

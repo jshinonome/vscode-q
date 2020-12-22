@@ -416,7 +416,7 @@
 						"Grid",
 						"Virtualization"
 					],
-					"default": "Virtualization",
+					"default": "Console",
 					"description": "Query Mode"
 				},
 				"q-ext.qview.dense": {
