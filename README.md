@@ -24,6 +24,7 @@ This extension provides kdb+\q language support:
         -   column names define on kdb+ process
     -   completion resolve
     -   signature help
+    -   semantic highlight
 
 See the [change log](https://github.com/jshinonome/vscode-q/blob/master/CHANGELOG.md).
 
@@ -42,7 +43,7 @@ Create a server and click to connect
 ### Define a Function
 
 -   Highlight `@[tag] [parameter name] [type]` in comments
--   Highlight parameters for functions. There shouldn't be any space between `{` and `[`.
+-   Highlight parameters for functions. Some themes may not support this feature.
 
 ![define-a-function](assets/demo/3-define-a-function.gif)
 
