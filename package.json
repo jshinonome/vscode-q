@@ -104,12 +104,17 @@
 				{
 					"id": "q-servers",
 					"name": "Server List",
-					"contextualTitle": "q Servers"
+					"contextualTitle": "Servers"
 				},
 				{
 					"id": "q-explorer",
 					"name": "Server Explorer",
-					"contextualTitle": "q Server Explorer"
+					"contextualTitle": "Server Explorer"
+				},
+				{
+					"id": "q-history",
+					"name": "Query History",
+					"contextualTitle": "Query History"
 				}
 			]
 		},

@@ -9,6 +9,7 @@ import * as fs from 'fs';
 import * as q from 'node-q';
 import { homedir } from 'os';
 import { commands, Uri, window, workspace } from 'vscode';
+import HistoryTreeItem from '../items/history';
 import { QueryResult } from '../models/query-result';
 import { QConn } from './q-conn';
 import { QStatusBarManager } from './q-status-bar-manager';
@@ -139,6 +140,7 @@ export class QConnManager {
             QStatusBarManager.updateQueryStatus(this.isBusy);
             const uniqLabel = this.activeConn?.uniqLabel.replace(',', '-');
             const time = Date.now();
+            const timestamp = new Date();
             this.activeConn?.conn?.k(this.queryWrapper, query,
                 (err, res) => {
                     this.isBusy = false;
@@ -152,7 +154,9 @@ export class QConnManager {
                             const msg: string[] = res.r.split('\n');
                             QueryConsole.current?.appendError(msg, Date.now() - time, uniqLabel);
                         } else if (QConnManager.consoleMode) {
-                            QueryConsole.current?.append(res.r, Date.now() - time, uniqLabel);
+                            const duration = Date.now() - time;
+                            QueryConsole.current?.append(res.r, duration, uniqLabel);
+                            HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query });
                         } else {
                             if (res.t) {
                                 this.update({

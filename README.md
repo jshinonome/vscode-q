@@ -106,6 +106,10 @@ The query grid, powered by [ag-grid-community](https://www.ag-grid.com/), can fi
 
 Output just like q console to an output channel. The console size is set to the same as q http size. Use `system "C rows columns"` to change console size.
 
+### History View
+
+Record query histories.
+
 ## Formatter
 
 Append space to `},],)` by formatting the file. Turn on `Editor: Format On Save` to automatically append space.

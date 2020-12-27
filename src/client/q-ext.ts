@@ -23,6 +23,7 @@ import { QueryConsole } from './modules/query-console';
 import { QueryGrid } from './modules/query-grid';
 import { QueryView } from './modules/query-view';
 import path = require('path');
+import HistoryTreeItem from './items/history';
 
 
 
@@ -82,9 +83,12 @@ export function activate(context: ExtensionContext): void {
     // q-server-explorer
     const qServers = new QServerTree('root', null);
     const qRoot = new QDictTreeItem('root', null);
+    const qHistory = HistoryTreeItem.createHistoryTree();
     window.registerTreeDataProvider('q-servers', qServers);
-    window.registerTreeDataProvider('q-explorer', qRoot);
     qServers.refresh();
+    window.registerTreeDataProvider('q-explorer', qRoot);
+    window.registerTreeDataProvider('q-history', qHistory);
+    qHistory.refresh();
     QueryConsole.createOrShow();
     QueryView.setExtensionPath(context.extensionPath);
     QueryGrid.setExtensionPath(context.extensionPath);
