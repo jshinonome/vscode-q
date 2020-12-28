@@ -154,6 +154,16 @@ export function activate(context: ExtensionContext): void {
         });
 
     commands.registerCommand(
+        'q-servers.connectEntry',
+        async () => {
+            const option = await window.showQuickPick(
+                QConnManager.current?.qCfg.map(qcfg => qcfg.uniqLabel) ?? [],
+                { placeHolder: 'Contribute to vscode-q by' });
+            if (option)
+                commands.executeCommand('q-servers.connect', option);
+        });
+
+    commands.registerCommand(
         'q-servers.connect',
         uniqLabel => {
             QConnManager.current?.connect(uniqLabel);
@@ -226,6 +236,15 @@ export function activate(context: ExtensionContext): void {
     commands.registerCommand('q-explorer.click', label => {
         console.log(label);
     });
+
+    context.subscriptions.push(
+        commands.registerCommand('q-history.rerun', (history) => {
+            if (QConnManager.current?.activeConn?.uniqLabel === history.uniqLabel)
+                QConnManager.current?.sync(history.query);
+            else
+                QConnManager.current?.connect(history.uniqLabel, history.query);
+        })
+    );
 
     context.subscriptions.push(
         commands.registerCommand('q-servers.queryCurrentLine', () => {

@@ -88,7 +88,8 @@ export class QConnManager {
         return this.qConnPool.get(uniqLabel);
     }
 
-    connect(uniqLabel: string): void {
+    // query to run after connected to q server
+    connect(uniqLabel: string, query = ''): void {
         try {
             const qConn = this.getConn(uniqLabel);
             if (qConn) {
@@ -99,6 +100,9 @@ export class QConnManager {
                     commands.executeCommand('q-servers.refreshEntry');
                     commands.executeCommand('q-explorer.refreshEntry');
                     this.updateQueryWrapper();
+                    if (query) {
+                        this.sync(query);
+                    }
                 } else {
                     q.connect(qConn,
                         (err, conn) => {
@@ -115,6 +119,9 @@ export class QConnManager {
                                 commands.executeCommand('q-servers.refreshEntry');
                                 commands.executeCommand('q-explorer.refreshEntry');
                                 QStatusBarManager.updateConnStatus(uniqLabel);
+                                if (query) {
+                                    this.sync(query);
+                                }
                             }
                         }
                     );
@@ -138,7 +145,7 @@ export class QConnManager {
             this.isBusy = true;
             this.busyConn = this.activeConn;
             QStatusBarManager.updateQueryStatus(this.isBusy);
-            const uniqLabel = this.activeConn?.uniqLabel.replace(',', '-');
+            const uniqLabel = this.activeConn?.uniqLabel;
             const time = Date.now();
             const timestamp = new Date();
             this.activeConn?.conn?.k(this.queryWrapper, query,
@@ -146,17 +153,20 @@ export class QConnManager {
                     this.isBusy = false;
                     this.busyConn = undefined;
                     QueryConsole.createOrShow();
+                    const duration = Date.now() - time;
                     if (err) {
                         QueryConsole.current?.appendError(['ERROR', err.message], Date.now() - time, uniqLabel);
+                        HistoryTreeItem.appendHistory(
+                            { uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: err.message });
                     }
                     if (res) {
                         if (typeof res.r === 'string' && res.r.startsWith('ERROR')) {
                             const msg: string[] = res.r.split('\n');
                             QueryConsole.current?.appendError(msg, Date.now() - time, uniqLabel);
+                            HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: res.r });
                         } else if (QConnManager.consoleMode) {
-                            const duration = Date.now() - time;
                             QueryConsole.current?.append(res.r, duration, uniqLabel);
-                            HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query });
+                            HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: '' });
                         } else {
                             if (res.t) {
                                 this.update({

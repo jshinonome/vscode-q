@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import { TreeItem, TreeItemCollapsibleState } from 'vscode';
+import { MarkdownString, TreeItem, TreeItemCollapsibleState } from 'vscode';
 import QDictTreeItem from './q-dict';
 import { setCommand } from './q-utils';
 import path = require('path');
@@ -25,7 +25,10 @@ export default class QTableTreeItem extends TreeItem {
             light: path.join(__filename, '../../assets/svg/item/table.svg'),
             dark: path.join(__filename, '../../assets/svg/item/table.svg')
         };
-        this.tooltip = `col:${this._cols.length}`;
+        const md = new MarkdownString();
+        md.appendMarkdown('|column|\n|------|\n');
+        cols.forEach(col => md.appendMarkdown(`|${col}|\n`));
+        this.tooltip = md;
     }
 
     getParent(): TreeItem {

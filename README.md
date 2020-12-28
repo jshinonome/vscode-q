@@ -110,6 +110,12 @@ Output just like q console to an output channel. The console size is set to the 
 
 Record query histories.
 
+## Commands
+
+### Connect q Sever
+
+Type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd> and call `kdb+/q ext: Connect to q Server` to connect to a q server.
+
 ## Formatter
 
 Append space to `},],)` by formatting the file. Turn on `Editor: Format On Save` to automatically append space.

@@ -2,11 +2,20 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.9.9
+
+### added
+
+-   history view
+    -   rerun history
+    -   icon to indicate query was success or failed
+-   connect q server
+
 ## 1.9.8
 
 ### added
 
--   History View
+-   history view
 
 ## 1.9.7
 

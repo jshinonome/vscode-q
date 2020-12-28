@@ -57,8 +57,9 @@ export class QueryConsole {
     }
 
     public append(output: string | string[], time = 0, uniqLabel: string): void {
+        const label = uniqLabel.replace(',', '-');
         const date = new Date();
-        this._console.appendLine(`> ${uniqLabel} @ ${date.toLocaleTimeString()}`);
+        this._console.appendLine(`> ${label} @ ${date.toLocaleTimeString()}`);
         this._console.appendLine('>');
         if (Array.isArray(output)) {
             output.forEach(o => this._console.appendLine(o));
@@ -70,8 +71,9 @@ export class QueryConsole {
     }
 
     public appendError(msg: string[], time = 0, uniqLabel: string): void {
+        const label = uniqLabel.replace(',', '-');
         const date = new Date();
-        this._console.appendLine(`> ${uniqLabel} @ ${date.toLocaleTimeString()}`);
+        this._console.appendLine(`> ${label} @ ${date.toLocaleTimeString()}`);
         this._console.appendLine(`> ${msg[0]}: ${msg[1]}`);
         const explanation = this.errorMsgMap.get(msg[1]) ?? `Value error (${msg[1]} undefined)`;
         this._console.appendLine(`> Explanation: ${explanation}`);

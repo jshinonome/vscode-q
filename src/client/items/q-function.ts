@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import { TreeItem, TreeItemCollapsibleState } from 'vscode';
+import { MarkdownString, TreeItem, TreeItemCollapsibleState } from 'vscode';
 import QDictTreeItem from './q-dict';
 import { setCommand } from './q-utils';
 import path = require('path');
@@ -21,7 +21,9 @@ export default class QFunctionTreeItem extends TreeItem {
         this._body = body;
         parent.appendChild(this);
         setCommand(this);
-        this.tooltip = this._body;
+        const md = new MarkdownString();
+        md.appendCodeblock(this._body, 'q');
+        this.tooltip = md;
         this.iconPath = {
             light: path.join(__filename, '../../assets/svg/item/function.svg'),
             dark: path.join(__filename, '../../assets/svg/item/function.svg')

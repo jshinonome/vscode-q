@@ -156,6 +156,20 @@
 				}
 			},
 			{
+				"command": "q-servers.connectEntry",
+				"title": "Connect to q Server",
+				"category": "kdb+/q ext"
+			},
+			{
+				"command": "q-history.rerun",
+				"title": "Rerun History",
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/run.svg",
+					"dark": "assets/svg/dark/run.svg"
+				}
+			},
+			{
 				"command": "q-servers.toggleLimitQuery",
 				"title": "Toggle Unlimited Query",
 				"category": "kdb+/q ext",
@@ -319,6 +333,11 @@
 				{
 					"command": "q-servers.tagEntry",
 					"when": "view == q-servers && viewItem == qconn",
+					"group": "inline"
+				},
+				{
+					"command": "q-history.rerun",
+					"when": "view == q-history && viewItem == history",
 					"group": "inline"
 				},
 				{
