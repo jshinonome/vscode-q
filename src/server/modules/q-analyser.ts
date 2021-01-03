@@ -93,7 +93,7 @@ export default class QAnalyzer {
      */
     public search(query: string): SymbolInformation[] {
         const fuse = new Fuse(this.getAllSymbols(), { keys: ['name'] });
-        return fuse.search(query).map(result => result.item);
+        return fuse.search(query).map(result => result.item) as SymbolInformation[];
     }
 
     /**
