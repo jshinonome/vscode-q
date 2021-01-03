@@ -13,11 +13,11 @@ const clientConf = {
     },
 
     entry: {
-        client: './src/client/q-ext.ts',
+        client: './src/client/client.ts',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'q-ext.js',
+        filename: 'client.js',
         libraryTarget: 'commonjs2',
     },
     devtool: 'source-map',
@@ -61,7 +61,7 @@ const serverConf = {
 
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'q-ser.js',
+        filename: 'server.js',
         libraryTarget: 'commonjs2',
     },
 

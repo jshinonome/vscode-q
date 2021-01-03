@@ -293,7 +293,7 @@ export function activate(context: ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        commands.registerCommand('q-term.runQFile', () => {
+        commands.registerCommand('q-client.terminal.run', () => {
             const filepath = window.activeTextEditor?.document.fileName;
             if (filepath)
                 runQFile(filepath);
@@ -315,13 +315,13 @@ export function activate(context: ExtensionContext): void {
         if (e.affectsConfiguration('q-ext') && !e.affectsConfiguration('q-ext.term')) {
             window.showInformationMessage('Reload/Restart vscode to Making the Configuration Take Effect.');
         } else if (e.affectsConfiguration('q-ser')) {
-            const cfg = workspace.getConfiguration('q-ser.src');
+            const cfg = workspace.getConfiguration('q-server.sourceFiles');
             client.sendNotification('$/analyze-source-code', { globsPattern: cfg.get('globsPattern'), ignorePattern: cfg.get('ignorePattern') });
         }
     });
 
     // q language server
-    const qls = path.join(context.extensionPath, 'dist', 'q-ser.js');
+    const qls = path.join(context.extensionPath, 'dist', 'server.js');
 
     // The debug options for the server
     // runs the server in Node's Inspector mode for debugging
@@ -367,7 +367,7 @@ export function activate(context: ExtensionContext): void {
     );
 
     client.onReady().then(() => {
-        const cfg = workspace.getConfiguration('q-ser.src');
+        const cfg = workspace.getConfiguration('q-server.sourceFiles');
         client.sendNotification('$/analyze-source-code', { globsPattern: cfg.get('globsPattern'), ignorePattern: cfg.get('ignorePattern') });
     });
 }

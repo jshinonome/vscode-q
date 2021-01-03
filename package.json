@@ -31,7 +31,7 @@
 		"q"
 	],
 	"icon": "icon.png",
-	"main": "./dist/q-ext.js",
+	"main": "./dist/client.js",
 	"activationEvents": [
 		"onView:q-servers",
 		"onLanguage:q"
@@ -267,7 +267,7 @@
 				"category": "kdb+/q ext"
 			},
 			{
-				"command": "q-term.runQFile",
+				"command": "q-client.terminal.run",
 				"title": "Run q File in Terminal",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -363,14 +363,14 @@
 			],
 			"editor/title": [
 				{
-					"command": "q-term.runQFile",
+					"command": "q-client.terminal.run",
 					"when": "resourceLangId ==  q",
 					"group": "navigation"
 				}
 			],
 			"editor/context": [
 				{
-					"command": "q-term.runQFile",
+					"command": "q-client.terminal.run",
 					"when": "resourceLangId == q",
 					"group": "q"
 				}
@@ -398,7 +398,7 @@
 			"type": "object",
 			"title": "q Ext Configuration",
 			"properties": {
-				"q-ser.src.globsPattern": {
+				"q-server.sourceFiles.globsPattern": {
 					"scope": "resource",
 					"type": "array",
 					"items": {
@@ -409,7 +409,7 @@
 					],
 					"description": "Pattern to be included"
 				},
-				"q-ser.src.ignorePattern": {
+				"q-server.sourceFiles.ignorePattern": {
 					"scope": "resource",
 					"type": "array",
 					"items": {
@@ -477,30 +477,30 @@
 		}
 	},
 	"devDependencies": {
-		"@types/long": "^4.0.1",
-		"@types/node": "^14.14.14",
-		"@types/request": "^2.48.5",
-		"@types/vscode": "^1.52.0",
-		"@typescript-eslint/parser": "^4.10.0",
-		"ts-loader": "^8.0.12",
-		"typescript": "^4.1.3",
-		"vscode-test": "^1.4.1",
-		"webpack": "^5.11.0",
-		"webpack-cli": "^4.2.0"
-	},
-	"dependencies": {
 		"@finos/perspective": "^0.5.6",
 		"@finos/perspective-viewer": "^0.5.6",
 		"@finos/perspective-viewer-d3fc": "^0.5.6",
 		"@finos/perspective-viewer-datagrid": "^0.5.6",
+		"@types/long": "^4.0.1",
+		"@types/node": "^14.14.19",
+		"@types/request": "^2.48.5",
+		"@types/vscode": "^1.52.0",
+		"@typescript-eslint/parser": "^4.11.1",
+		"ts-loader": "^8.0.13",
+		"typescript": "^4.1.3",
+		"vscode-test": "^1.4.1",
+		"webpack": "^5.11.1",
+		"ag-grid-community": "^24.1.0",
+		"webpack-cli": "^4.3.1"
+	},
+	"dependencies": {
 		"@types/graceful-fs": "^4.1.4",
 		"@types/klaw": "^3.0.1",
 		"@types/picomatch": "^2.2.1",
-		"@typescript-eslint/eslint-plugin": "^4.10.0",
-		"ag-grid-community": "^24.1.0",
+		"@typescript-eslint/eslint-plugin": "^4.11.1",
 		"csv-parser": "^3.0.0",
-		"eslint": "^7.16.0",
-		"fuse.js": "^6.4.3",
+		"eslint": "^7.17.0",
+		"fuse.js": "^6.4.5",
 		"graceful-fs": "^4.2.4",
 		"klaw": "^3.0.0",
 		"moment": "^2.29.1",
