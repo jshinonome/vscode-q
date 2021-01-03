@@ -96,7 +96,7 @@ export function activate(context: ExtensionContext): void {
 
 
     // <-- configuration
-    const queryMode = workspace.getConfiguration().get('q-ext.queryMode');
+    const queryMode = workspace.getConfiguration().get('q-client.queryMode');
     QConnManager.setQueryMode(queryMode as string);
     // -->
 
@@ -217,7 +217,7 @@ export function activate(context: ExtensionContext): void {
     commands.registerCommand(
         'q-explorer.refreshEntry', () => qRoot.refresh());
 
-    const previewQueryLimit = workspace.getConfiguration().get('q-ext.expl.prevQueryLimit');
+    const previewQueryLimit = workspace.getConfiguration().get('q-client.expl.prevQueryLimit');
 
     commands.registerCommand('q-explorer.preview', (item: TreeItem) => {
         switch (item.contextValue) {
@@ -312,7 +312,7 @@ export function activate(context: ExtensionContext): void {
     }
 
     workspace.onDidChangeConfiguration(e => {
-        if (e.affectsConfiguration('q-ext') && !e.affectsConfiguration('q-ext.term')) {
+        if (e.affectsConfiguration('q-ext') && !e.affectsConfiguration('q-client.term')) {
             window.showInformationMessage('Reload/Restart vscode to Making the Configuration Take Effect.');
         } else if (e.affectsConfiguration('q-ser')) {
             const cfg = workspace.getConfiguration('q-server.sourceFiles');

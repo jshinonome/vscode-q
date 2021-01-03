@@ -107,7 +107,7 @@ export class QueryView implements Disposable {
     }
 
     private configure(): void {
-        const cfg = workspace.getConfiguration('q-ext.qview');
+        const cfg = workspace.getConfiguration('q-client.qview');
         let isLightTheme = false;
         isLightTheme = window.activeColorTheme.kind === ColorThemeKind.Light;
         this._cssTheme = cfg.dense ? 'material-dense' : 'material';

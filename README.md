@@ -63,12 +63,12 @@ Create a server and click to connect
 | ---------------------------------- | ------- | -------------------------------- | ------------------------------------------- |
 | q-server.sourceFiles.globsPattern  | array   | `["**/src/**/*.q"]`              | source folder to be included                |
 | q-server.sourceFiles.ignorePattern | array   | `["**/build","**/node_modules"]` | folder to be excluded                       |
-| q-ext.queryMode                    | string  | `Console`                        | query mode, Console, Grid or Virtualization |
-| q-ext.qview.dense                  | boolean | `false`                          | q view in dense mode                        |
-| q-ext.qgrid.decimals               | number  | `3`                              | decimals in q grid                          |
-| q-ext.term.qBinary                 | string  | `q`                              | q executable file or full path              |
-| q-ext.term.envPath                 | string  | ``                               | environment file relative or absolute path  |
-| q-ext.expl.prevQueryLimit          | string  | `5`                              | q explorer preview query limit              |
+| q-client.queryMode                 | string  | `Console`                        | query mode, Console, Grid or Virtualization |
+| q-client.qview.dense               | boolean | `false`                          | q view in dense mode                        |
+| q-client.qgrid.decimals            | number  | `3`                              | decimals in q grid                          |
+| q-client.term.qBinary              | string  | `q`                              | q executable file or full path              |
+| q-client.term.envPath              | string  | ``                               | environment file relative or absolute path  |
+| q-client.expl.prevQueryLimit       | string  | `5`                              | q explorer preview query limit              |
 
 ## q Language Server(local server, no connection to the internet)
 

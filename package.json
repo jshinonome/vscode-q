@@ -432,7 +432,7 @@
 					"default": "off",
 					"description": "Traces the communication between vscode and q language server"
 				},
-				"q-ext.queryMode": {
+				"q-client.queryMode": {
 					"scope": "window",
 					"type": "string",
 					"enum": [
@@ -443,31 +443,31 @@
 					"default": "Console",
 					"description": "Query Mode"
 				},
-				"q-ext.qview.dense": {
+				"q-client.qview.dense": {
 					"scope": "resource",
 					"type": "boolean",
 					"default": false,
 					"description": "q View in Dense Mode"
 				},
-				"q-ext.qgrid.decimals": {
+				"q-client.qgrid.decimals": {
 					"scope": "resource",
 					"type": "number",
 					"default": 3,
 					"description": "Decimals of q Grid"
 				},
-				"q-ext.term.qBinary": {
+				"q-client.term.qBinary": {
 					"scope": "resource",
 					"type": "string",
 					"default": "q",
 					"description": "q Binary Path"
 				},
-				"q-ext.term.envPath": {
+				"q-client.term.envPath": {
 					"scope": "resource",
 					"type": "string",
 					"default": "",
 					"description": "Environment File Path(Shell Script)"
 				},
-				"q-ext.expl.prevQueryLimit": {
+				"q-client.expl.prevQueryLimit": {
 					"scope": "resource",
 					"type": "number",
 					"default": 5,
