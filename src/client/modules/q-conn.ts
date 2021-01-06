@@ -41,7 +41,7 @@ export class QConn extends TreeItem {
         this.tags = cfg.tags ?? '';
         this.uniqLabel = `${cfg.tags},${cfg.label}`;
         this.command = {
-            command: 'q-servers.connect',
+            command: 'q-client.connect',
             title: 'connect to q server',
             arguments: [this.uniqLabel]
         };
@@ -49,7 +49,7 @@ export class QConn extends TreeItem {
             this.getKdbVersion();
             this.setTimeout();
         }
-        this.tooltip = `${this.host}:${this.port}:${this.user} - t/o:${this.socketTimeout}(ms) - v${this.version}`;
+        this.tooltip = `${this.host}:${this.port}:${this.user} - t/o:${this.socketTimeout}(ms)`;
     }
 
     setConn(conn: q.Connection | undefined): void {
@@ -64,6 +64,7 @@ export class QConn extends TreeItem {
                 console.log('Cannot retrieve kdb+ version');
             if (res)
                 this.version = res;
+            this.tooltip = this.tooltip + ` - v${this.version}`;
             QConnManager.current?.updateQueryWrapper();
         });
     }

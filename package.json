@@ -120,7 +120,7 @@
 		},
 		"commands": [
 			{
-				"command": "q-servers.refreshEntry",
+				"command": "q-client.refreshEntry",
 				"title": "Refresh q Server List",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -129,7 +129,7 @@
 				}
 			},
 			{
-				"command": "q-servers.addEntry",
+				"command": "q-client.addEntry",
 				"title": "Add q Server",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -138,7 +138,7 @@
 				}
 			},
 			{
-				"command": "q-servers.editEntry",
+				"command": "q-client.editEntry",
 				"title": "Edit q Server",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -147,7 +147,7 @@
 				}
 			},
 			{
-				"command": "q-servers.deleteEntry",
+				"command": "q-client.deleteEntry",
 				"title": "Delete q Server",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -156,7 +156,7 @@
 				}
 			},
 			{
-				"command": "q-servers.connectEntry",
+				"command": "q-client.connectEntry",
 				"title": "Connect to q Server",
 				"category": "kdb+/q ext"
 			},
@@ -170,7 +170,7 @@
 				}
 			},
 			{
-				"command": "q-servers.toggleLimitQuery",
+				"command": "q-client.toggleLimitQuery",
 				"title": "Toggle Unlimited Query",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -179,22 +179,22 @@
 				}
 			},
 			{
-				"command": "q-servers.queryCurrentLine",
+				"command": "q-client.queryCurrentLine",
 				"title": "Query Current Line",
 				"category": "kdb+/q ext"
 			},
 			{
-				"command": "q-servers.querySelection",
+				"command": "q-client.querySelection",
 				"title": "Query Current Selection",
 				"category": "kdb+/q ext"
 			},
 			{
-				"command": "q-servers.abortQuery",
+				"command": "q-client.abortQuery",
 				"title": "Abort Current Query",
 				"category": "kdb+/q ext"
 			},
 			{
-				"command": "q-servers.switchMode",
+				"command": "q-client.switchMode",
 				"title": "Switch Query Mode",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -203,7 +203,7 @@
 				}
 			},
 			{
-				"command": "q-servers.importServers",
+				"command": "q-client.importServers",
 				"title": "Import Server List",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -212,7 +212,7 @@
 				}
 			},
 			{
-				"command": "q-servers.exportServers",
+				"command": "q-client.exportServers",
 				"title": "Export Server List",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -221,7 +221,7 @@
 				}
 			},
 			{
-				"command": "q-servers.reactions",
+				"command": "q-client.reactions",
 				"title": "Raise an Issue",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -230,7 +230,7 @@
 				}
 			},
 			{
-				"command": "q-servers.tagEntry",
+				"command": "q-client.tagEntry",
 				"title": "Tag a Server",
 				"category": "kdb+/q ext",
 				"icon": {
@@ -279,37 +279,37 @@
 		"menus": {
 			"view/title": [
 				{
-					"command": "q-servers.addEntry",
+					"command": "q-client.addEntry",
 					"when": "view == q-servers",
 					"group": "navigation@0"
 				},
 				{
-					"command": "q-servers.importServers",
+					"command": "q-client.importServers",
 					"when": "view == q-servers",
 					"group": "navigation@1"
 				},
 				{
-					"command": "q-servers.exportServers",
+					"command": "q-client.exportServers",
 					"when": "view == q-servers",
 					"group": "navigation@2"
 				},
 				{
-					"command": "q-servers.refreshEntry",
+					"command": "q-client.refreshEntry",
 					"when": "view == q-servers",
 					"group": "navigation@3"
 				},
 				{
-					"command": "q-servers.toggleLimitQuery",
+					"command": "q-client.toggleLimitQuery",
 					"when": "view == q-servers",
 					"group": "navigation@4"
 				},
 				{
-					"command": "q-servers.switchMode",
+					"command": "q-client.switchMode",
 					"when": "view == q-servers",
 					"group": "navigation@5"
 				},
 				{
-					"command": "q-servers.reactions",
+					"command": "q-client.reactions",
 					"when": "view == q-servers",
 					"group": "navigation@6"
 				},
@@ -321,17 +321,17 @@
 			],
 			"view/item/context": [
 				{
-					"command": "q-servers.editEntry",
+					"command": "q-client.editEntry",
 					"when": "view == q-servers && viewItem == qconn",
 					"group": "inline"
 				},
 				{
-					"command": "q-servers.deleteEntry",
+					"command": "q-client.deleteEntry",
 					"when": "view == q-servers && viewItem == qconn",
 					"group": "inline"
 				},
 				{
-					"command": "q-servers.tagEntry",
+					"command": "q-client.tagEntry",
 					"when": "view == q-servers && viewItem == qconn",
 					"group": "inline"
 				},
@@ -378,11 +378,11 @@
 		},
 		"keybindings": [
 			{
-				"command": "q-servers.queryCurrentLine",
+				"command": "q-client.queryCurrentLine",
 				"key": "ctrl+q"
 			},
 			{
-				"command": "q-servers.querySelection",
+				"command": "q-client.querySelection",
 				"key": "ctrl+r"
 			},
 			{

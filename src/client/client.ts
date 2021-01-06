@@ -101,25 +101,25 @@ export function activate(context: ExtensionContext): void {
     // -->
 
     commands.registerCommand(
-        'q-servers.refreshEntry', () => qServers.refresh());
+        'q-client.refreshEntry', () => qServers.refresh());
 
     // q cfg input
     commands.registerCommand(
-        'q-servers.addEntry',
+        'q-client.addEntry',
         async () => {
             const qcfg = await qCfgInput(undefined);
             QConnManager.current?.addCfg(qcfg);
         });
 
     commands.registerCommand(
-        'q-servers.editEntry',
+        'q-client.editEntry',
         async (qConn: QConn) => {
             const qcfg = await qCfgInput(qConn, false);
             QConnManager.current?.addCfg(qcfg);
         });
 
     commands.registerCommand(
-        'q-servers.deleteEntry',
+        'q-client.deleteEntry',
         (qConn: QConn) => {
             window.showInputBox(
                 { prompt: `Confirm to Remove Server '${qConn.uniqLabel.replace(',', '-')}' (Y/n)` }
@@ -132,7 +132,7 @@ export function activate(context: ExtensionContext): void {
         });
 
     commands.registerCommand(
-        'q-servers.reactions',
+        'q-client.reactions',
         async () => {
             const option = await window.showQuickPick(
                 ['1 - Raising an Issue', '2 - Writing a Review', '3 - Creating a Pull Request', '4 - Buying Me a Beer'],
@@ -154,23 +154,24 @@ export function activate(context: ExtensionContext): void {
         });
 
     commands.registerCommand(
-        'q-servers.connectEntry',
+        'q-client.connectEntry',
         async () => {
             const option = await window.showQuickPick(
                 QConnManager.current?.qCfg.map(qcfg => qcfg.uniqLabel) ?? [],
                 { placeHolder: 'Contribute to vscode-q by' });
             if (option)
-                commands.executeCommand('q-servers.connect', option);
+                commands.executeCommand('q-client.connect', option);
+            return option;
         });
 
     commands.registerCommand(
-        'q-servers.connect',
+        'q-client.connect',
         uniqLabel => {
             QConnManager.current?.connect(uniqLabel);
         });
 
     commands.registerCommand(
-        'q-servers.tagEntry',
+        'q-client.tagEntry',
         async (qConn: QConn) => {
             qConn.tags = await window.showInputBox({
                 prompt: `Tags for '${qConn.label}' separate by ',' (e.g. 'dev,quant,tca')`
@@ -179,7 +180,7 @@ export function activate(context: ExtensionContext): void {
         });
 
     commands.registerCommand(
-        'q-servers.switchMode',
+        'q-client.switchMode',
         async () => {
             const mode = await window.showQuickPick(['Console', 'Grid', 'Virtualization'],
                 { placeHolder: 'Please choose a query mode from the list below' });
@@ -190,25 +191,25 @@ export function activate(context: ExtensionContext): void {
         });
 
     commands.registerCommand(
-        'q-servers.toggleLimitQuery',
+        'q-client.toggleLimitQuery',
         () => {
             QConnManager.current?.toggleLimitQuery();
         });
 
     commands.registerCommand(
-        'q-servers.abortQuery',
+        'q-client.abortQuery',
         () => {
             QConnManager.current?.abortQuery();
         });
 
     commands.registerCommand(
-        'q-servers.exportServers',
+        'q-client.exportServers',
         () => {
             QConnManager.current?.exportCfg();
         });
 
     commands.registerCommand(
-        'q-servers.importServers',
+        'q-client.importServers',
         () => {
             QConnManager.current?.importCfg();
         });
@@ -247,7 +248,7 @@ export function activate(context: ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        commands.registerCommand('q-servers.queryCurrentLine', () => {
+        commands.registerCommand('q-client.queryCurrentLine', async () => {
             if (window.activeTextEditor) {
                 const n = window.activeTextEditor.selection.active.line;
                 const query = window.activeTextEditor.document.lineAt(n).text;
@@ -259,7 +260,7 @@ export function activate(context: ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        commands.registerCommand('q-servers.querySelection', () => {
+        commands.registerCommand('q-client.querySelection', () => {
             const query = window.activeTextEditor?.document.getText(
                 new Range(window.activeTextEditor.selection.start, window.activeTextEditor.selection.end)
             );
@@ -361,7 +362,7 @@ export function activate(context: ExtensionContext): void {
     context.subscriptions.push(client.start());
 
     context.subscriptions.push(
-        commands.registerCommand('q-servers.sendServerCache', code => {
+        commands.registerCommand('q-client.sendServerCache', code => {
             client.sendNotification('$/analyze-server-cache', code);
         })
     );

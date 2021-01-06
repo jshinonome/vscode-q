@@ -161,7 +161,7 @@ export default class QDictTreeItem extends TreeItem
                     });
                     this._onDidChangeTreeData.fire(undefined);
                     // send server cache to language server
-                    commands.executeCommand('q-servers.sendServerCache', code.join('\n'));
+                    commands.executeCommand('q-client.sendServerCache', code.join('\n'));
                 }
             });
         }

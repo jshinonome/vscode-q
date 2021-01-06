@@ -97,7 +97,7 @@ export class QConnManager {
                 if (conn) {
                     this.activeConn = qConn;
                     QStatusBarManager.updateConnStatus(uniqLabel);
-                    commands.executeCommand('q-servers.refreshEntry');
+                    commands.executeCommand('q-client.refreshEntry');
                     commands.executeCommand('q-explorer.refreshEntry');
                     this.updateQueryWrapper();
                     if (query) {
@@ -116,7 +116,7 @@ export class QConnManager {
                                 });
                                 qConn?.setConn(conn);
                                 this.activeConn = qConn;
-                                commands.executeCommand('q-servers.refreshEntry');
+                                commands.executeCommand('q-client.refreshEntry');
                                 commands.executeCommand('q-explorer.refreshEntry');
                                 QStatusBarManager.updateConnStatus(uniqLabel);
                                 if (query) {
@@ -186,7 +186,9 @@ export class QConnManager {
                 }
             );
         } else {
-            window.showErrorMessage('No Active q Connection');
+            commands.executeCommand('q-client.connectEntry').then(
+                uniqLabel => this.connect(uniqLabel as string, query)
+            );
         }
     }
 
@@ -262,7 +264,7 @@ export class QConnManager {
                     }
                 });
                 this.dumpCfg();
-                commands.executeCommand('q-servers.refreshEntry');
+                commands.executeCommand('q-client.refreshEntry');
             } catch (error) {
                 window.showErrorMessage(error.message);
             }
@@ -300,13 +302,13 @@ export class QConnManager {
         this.qCfg.push(qcfg);
         this.qCfg.sort((q1, q2) => q1.uniqLabel.localeCompare(q2.uniqLabel));
         this.dumpCfg();
-        commands.executeCommand('q-servers.refreshEntry');
+        commands.executeCommand('q-client.refreshEntry');
     }
 
     removeCfg(uniqLabel: string): void {
         this.qCfg = this.qCfg.filter(qcfg => qcfg.uniqLabel !== uniqLabel);
         this.dumpCfg();
-        commands.executeCommand('q-servers.refreshEntry');
+        commands.executeCommand('q-client.refreshEntry');
     }
 
     dumpCfg(): void {
@@ -332,7 +334,7 @@ export class QConnManager {
             this.activeConn = undefined;
             QStatusBarManager.updateConnStatus(undefined);
         }
-        commands.executeCommand('q-servers.refreshEntry');
+        commands.executeCommand('q-client.refreshEntry');
         window.showWarningMessage(`Lost connection to ${uniqLabel} `);
     }
 }
