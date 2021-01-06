@@ -2,6 +2,17 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 1.9.10
+
+### added
+
+-   trigger to pick q process if no active q process
+-   auto-completion for local identifier defined in function
+
+### fixed
+
+-   disable parameter semantic token for reserved words
+
 ## 1.9.9
 
 ### added

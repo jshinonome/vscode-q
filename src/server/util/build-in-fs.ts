@@ -10,7 +10,7 @@ import fs = require('fs');
 import csvParser = require('csv-parser');
 import path = require('path');
 
-export default function getBuildInFsRef(): CompletionItem[] {
+export function getBuildInFsRef(): CompletionItem[] {
     const buildInFs: CompletionItem[] = [];
     const csvPath = path.join(__filename, '../../assets/csv/build-in-fs.csv');
     fs.createReadStream(csvPath)
@@ -24,3 +24,5 @@ export default function getBuildInFsRef(): CompletionItem[] {
         });
     return buildInFs;
 }
+
+export const buildInFs = getBuildInFsRef();

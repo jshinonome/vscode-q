@@ -17,6 +17,7 @@ import {
 } from 'vscode-languageserver/node';
 import { URI } from 'vscode-uri';
 import * as Parser from 'web-tree-sitter';
+import { buildInFs } from '../util/build-in-fs';
 import * as TreeSitterUtil from '../util/tree-sitter';
 
 import klaw = require('klaw');
@@ -34,17 +35,17 @@ export type word = {
 /**
  * The Analyzer analyze Abstract Syntax Trees of tree-sitter-q
  */
-export default class QAnalyzer {
+export default class Analyzer {
     static matchFile: (test: string) => boolean;
     private connection: Connection;
     private rootPath: string | undefined | null;
-
+    private reservedWord: string[];
     public static async fromRoot(
         connection: Connection,
         workspaceFolder: string,
         parser: Parser
-    ): Promise<QAnalyzer> {
-        return new QAnalyzer(parser, connection, workspaceFolder);
+    ): Promise<Analyzer> {
+        return new Analyzer(parser, connection, workspaceFolder);
     }
 
     private parser: Parser
@@ -64,6 +65,7 @@ export default class QAnalyzer {
         this.connection = connection;
         this.workspaceFolder = URI.parse(workspaceFolder);
         this.rootPath = this.workspaceFolder.path;
+        this.reservedWord = buildInFs.map(item => item.label);
     }
 
     /**
@@ -225,7 +227,7 @@ export default class QAnalyzer {
 
             const ignoreMatch = picomatch(ignorePattern);
             const includeMatch = picomatch(globsPattern);
-            QAnalyzer.matchFile = (test) => !ignoreMatch(test) && includeMatch(test);
+            Analyzer.matchFile = (test) => !ignoreMatch(test) && includeMatch(test);
             const qSrcFiles: string[] = [];
             klaw(this.rootPath, { filter: item => !ignoreMatch(item) })
                 .on('error', (err: Error, _item: klaw.Item) => {
@@ -235,7 +237,7 @@ export default class QAnalyzer {
                 .on('end', () => {
                     if (qSrcFiles.length == 0) {
                         this.connection.window.showWarningMessage(
-                            `Failed to find any q source files using the glob "${globsPattern}". Some feature will not be available.`,
+                            `Failed to find any source files using the glob "${globsPattern}". Some feature will not be available.`,
                         );
                     }
 
@@ -296,13 +298,17 @@ export default class QAnalyzer {
                     return;
                 }
                 const containerName = this.getContainerName(n) ?? '';
-                // WON'T include local identifier in functions
-                if (containerName !== '' && namespace === '' && named.type === 'local_identifier')
-                    return;
                 const name = (namespace === '' || named.type === 'global_identifier') ? named.text.trim() : `${namespace}.${named.text.trim()}`;
-
-                const defNode = n.children[2]?.firstChild;
                 let symbolKind = SymbolKind.Variable as SymbolKind;
+                const defNode = n.children[2]?.firstChild;
+                if (defNode?.type === 'function_body')
+                    symbolKind = SymbolKind.Function;
+
+                // won't do further analy local identifier in functions
+                if (containerName !== '' && namespace === '' && named.type === 'local_identifier') {
+                    this.pushSymInfo(name, uri, n, containerName, symbolKind);
+                    return;
+                }
 
                 if (defNode?.type === 'function_body' && defNode?.firstNamedChild?.type === 'formal_parameters') {
                     symbolKind = SymbolKind.Function;
@@ -369,14 +375,14 @@ export default class QAnalyzer {
                 this.uriToSymbol.get(uri)?.push(n.text.trim());
             } else if (TreeSitterUtil.isFunctionBody(n)) {
                 // tokenTypes: ['variable', 'parameter', 'type', 'class']
-                const params = TreeSitterUtil.extractParams(n);
+                const params = TreeSitterUtil.extractParams(n).filter(param => this.reservedWord.indexOf(param) < 0);
                 const semanticTokensBuilder = this.uriToSemanticTokes.get(uri) ?? new SemanticTokensBuilder();
                 if (params.length > 0) {
                     TreeSitterUtil.forEachAndSkip(n, 'function_body', node => {
                         if (node.type === 'local_identifier') {
                             const param = node.text.trim();
                             if (params.indexOf(param) >= 0) {
-                                // 1 means paramter here
+                                // 1 means paramter type here
                                 const token = TreeSitterUtil.token(node);
                                 token.push(1, 0);
                                 semanticTokensBuilder.push(token[0], token[1], token[2], token[3], token[4]);

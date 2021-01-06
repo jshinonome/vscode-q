@@ -56,7 +56,7 @@ const serverConf = {
     },
 
     entry: {
-        server: './src/server/start-server.ts',
+        server: './src/server/server.ts',
     },
 
     output: {

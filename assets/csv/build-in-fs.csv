@@ -179,6 +179,7 @@ all,:true if all true,all[numbers],2
 and,AND(min),and[numbers;numbers]   ,2
 any,:true if any true,any[numbers],2
 asc,ascending sort,asc[list],2
+asin,arcsine,asin[numbers],2
 asof,as-of join,asof[table;<table|dict>],2
 atan,arctangent,atan[numbers],2
 attr,attribute,attr[any],2
@@ -298,6 +299,7 @@ set,assign a value to a variable or file,set[sym|file|dir;any],2
 setenv,set an environment variable,setenv[sym;string],2
 show,display at the console,show[any],2
 signum,sign,signum[numbers],2
+sin,sine,sin[numbers],2
 sqrt,square root,sqrt[numbers],2
 ss,string search,ss[string;pattern],2
 ssr,string search and replace,ssr[string;pattern;string|function],2

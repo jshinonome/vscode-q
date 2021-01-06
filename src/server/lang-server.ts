@@ -16,11 +16,11 @@ import {
 } from 'vscode-languageserver/node';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { URI } from 'vscode-uri';
-import QAnalyzer, { word } from './modules/q-analyser';
-import getBuildInFsRef from './util/q-build-in-fs';
-import { initializeParser } from './util/q-parser';
+import Analyzer, { word } from './modules/analyser';
+import { buildInFs } from './util/build-in-fs';
+import { initializeParser } from './util/parser';
 
-export default class QLangServer {
+export default class LangServer {
     connection: Connection;
     // Create a simple text document manager. The text document manager
     // supports full document sync only
@@ -28,12 +28,12 @@ export default class QLangServer {
 
     buildInFsRef: CompletionItem[] = [];
 
-    private analyzer: QAnalyzer;
+    private analyzer: Analyzer;
 
-    private constructor(connection: Connection, analyzer: QAnalyzer) {
+    private constructor(connection: Connection, analyzer: Analyzer) {
         this.connection = connection;
         this.analyzer = analyzer;
-        this.buildInFsRef = getBuildInFsRef();
+        this.buildInFsRef = buildInFs;
         // Make the text document manager listen on the connection
         // for open, change and close text document events
         this.documents.listen(this.connection);
@@ -59,13 +59,13 @@ export default class QLangServer {
     public static async initialize(
         connection: Connection,
         { workspaceFolders }: InitializeParams,
-    ): Promise<QLangServer> {
+    ): Promise<LangServer> {
         const workspaceFolder = workspaceFolders ? workspaceFolders[0].uri : '';
         connection.console.info(`Initializing q Lang Server at ${workspaceFolder}`);
         console.info(`Initializing q Lang Server at ${workspaceFolder}`);
         const parser = await initializeParser();
-        return QAnalyzer.fromRoot(connection, workspaceFolder, parser).then(
-            analyzer => { return new QLangServer(connection, analyzer); }
+        return Analyzer.fromRoot(connection, workspaceFolder, parser).then(
+            analyzer => { return new LangServer(connection, analyzer); }
         );
     }
 
@@ -124,7 +124,7 @@ export default class QLangServer {
         });
         changedFiles.forEach(file => {
             const filepath = URI.parse(file).path;
-            if (!QAnalyzer.matchFile(filepath))
+            if (!Analyzer.matchFile(filepath))
                 return;
             try {
                 this.analyzer.analyzeDoc(file, TextDocument.create(file, 'q', 1, fs.readFileSync(filepath, 'utf8')));
