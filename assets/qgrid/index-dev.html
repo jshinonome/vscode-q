@@ -5,9 +5,10 @@
     <!-- include styles -->
     <link href="css/ag-grid.min.css" rel="stylesheet">
     <link href="css/ag-theme-balham-dark.min.css" rel="stylesheet">
-    <link href="css/q-grid.css" rel="stylesheet">
+    <link href="css/query-grid.css" rel="stylesheet">
     <!-- include the lib -->
     <script src="js/ag-grid-community.min.js"></script>
+    <script src="js/Chart.min.js"></script>
     <style media="only screen">
         html,
         body {
@@ -34,39 +35,215 @@
 </head>
 
 <body>
+    <div id="buttons">
+        <button id="button-grid" onclick="viewGrid()">View Grid</button>
+        <button id="button-chart" onclick="viewChart()">View Chart</button>
+        <button id="button-both" onclick="viewBoth()">View Both</button>
+    </div>
     <div class="grid-wrapper">
-        <div id="qGrid" class="ag-theme-balham-dark"></div>
+        <div id="chartView">
+            <button id="button-update" onclick="updateChart()">Update Chart</button>
+            <select id="chart-type-selector" title="chart type" onChange="selectChartType()">
+                <option value="">Chart Type</option>
+                <option value="line">Line</option>
+                <option value="bar">Bar</option>
+            </select>
+            <br>
+            <label for="title">Chart Title:</label>
+            <input type="text" id="chart-title" name="title">
+            <label for="yaxes">Y Axes Label:</label>
+            <input type="text" id="chart-yaxes" name="yaxes">
+            <canvas id="canvas"></canvas>
+        </div>
+        <div id="gridView" class="ag-theme-balham-dark"></div>
         <script type="text/javascript" charset="utf-8">
             // specify the columns
-            var columnDefs = [
-                { field: 'time' },
-                { field: 'ric' },
-                { field: 'qty' },
-                { field: 'price' },
-            ];
-
-            columnDefs.forEach((field, index) => {
-
-            })
-            // specify the data
-            var rowData = [{ "time": "2020.10.26D00:55:08.573685586", "ric": "IBM", "qty": 41, "price": 12.42488 }, { "time": "2020.10.26T18:11:44.686843603", "ric": "GOOG", "qty": 75, "price": 41.20608 }, { "time": "2020.10.26T00:03:06.600697785", "ric": "IBM", "qty": 19, "price": 8.51614 }, { "time": "2020.10.26T23:11:10.169582962", "ric": "GOOG", "qty": 23, "price": 48.6676 }, { "time": "2020.10.26T00:03:00.423261970", "ric": "GOOG", "qty": 19, "price": 52.2749 }, { "time": "2020.10.26T06:18:31.535954475", "ric": "IBM", "qty": 72, "price": 28.67677 }, { "time": "2020.10.26T18:56:36.269226819", "ric": "IBM", "qty": 32, "price": 46.70129 }, { "time": "2020.10.26T00:36:41.497513800", "ric": "IBM", "qty": 56, "price": 7.287502 }, { "time": "2020.10.26T22:21:46.175500899", "ric": "GOOG", "qty": 72, "price": 85.13184 }, { "time": "2020.10.26T21:55:31.159783154", "ric": "GOOG", "qty": 22, "price": 42.95277 }];
+            let message =
+            {
+                cols: [
+                    { headerName: "date", field: "date" },
+                    { headerName: "qty", field: "qty", type: "numericColumn" },
+                    { headerName: "price", field: "price", type: "numericColumn" },
+                ],
+                data: {
+                    "date": ["2020-12-31", "2021-01-01", "2021-01-02", "2021-01-03", "2021-01-04", "2021-01-05", "2021-01-06", "2021-01-07", "2021-01-08", "2021-01-09"],
+                    "qty": [22, 10, 77, 60, 60, 2, 75, 79, 3, 14],
+                    "price": [6.622945, 6.876924, 3.303231, 0.7176765, 1.588603, 9.082041, 4.509384, 8.597389, 4.630911, 4.218259]
+                },
+                meta: {
+                    "c": ["date", "qty", "price"],
+                    "t": "djf",
+                    "f": ["", "", ""], "a": ["", "", ""]
+                },
+                labelCol: "date",
+                numericCols: ["qty", "price"],
+            };
 
             // let the grid know which columns and what data to use
-            var gridOptions = {
+            let gridOptions = {
                 defaultColDef: {
                     sortable: true,
                     resizable: true,
                     filter: true,
                 },
-                columnDefs: columnDefs,
-                rowData: rowData,
             };
 
             // lookup the container we want the Grid to use
-            var eGridDiv = document.querySelector('#qGrid');
+            let eGridDiv = document.getElementById("gridView");
 
             // create the grid passing in the div to use together with the columns & data we want to use
             new agGrid.Grid(eGridDiv, gridOptions);
+
+
+            let chartColors = [
+                "rgb(255, 99, 132)",
+                "rgb(255, 159, 64)",
+                "rgb(255, 205, 86)",
+                "rgb(75, 192, 192)",
+                "rgb(54, 162, 235)",
+                "rgb(153, 102, 255)",
+                "rgb(201, 203, 207)"
+            ];
+
+            let eChartDiv = document.getElementById("chartView");
+            let canvas = document.getElementById("canvas").getContext("2d");
+
+            let chartConf = {
+                type: "line",
+                options: {
+                    responsive: true,
+                    animation: {
+                        duration: 0 // general animation time
+                    },
+                    title: {
+                        display: true,
+                        text: ""
+                    },
+                    tooltips: {
+                        mode: "index",
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: "nearest",
+                        animationDuration: 0, // duration of animations when hovering an item
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: ""
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: ""
+                            }
+                        }]
+                    },
+                    elements: {
+                        line: {
+                            tension: 0 // disables bezier curves
+                        }
+                    },
+                    responsiveAnimationDuration: 0 // animation duration after a resize
+                }
+            }
+            let chart = new Chart(canvas, chartConf);
+            let chartTypeSelector = document.getElementById('chart-type-selector');
+            window.onload = (event) => {
+                console.log("Page is fully loaded");
+                isReady = true;
+                try {
+                    loadGrid(message);
+                    drawChart(message);
+                    viewBoth();
+                }
+                catch (error) {
+                    console.error(`Fail to load data - error: ${error.message}`);
+                }
+            };
+
+            function loadGrid(msg) {
+                if (isReady) {
+                    const rowData = [];
+                    if (msg.meta.c) {
+                        msg.data[msg.meta.c[0]].forEach(
+                            (_v, i) => {
+                                const row = {};
+                                msg.meta.c.forEach(
+                                    (col) => row[col] = msg.data[col][i]
+                                );
+                                rowData.push(row);
+                            });
+                    }
+                    gridOptions.api.setColumnDefs(msg.cols);
+                    gridOptions.api.setRowData(rowData);
+                    let allColumnIds = [];
+                    gridOptions.columnApi.getAllColumns().forEach(function (column) {
+                        allColumnIds.push(column.colId);
+                    });
+                    gridOptions.columnApi.autoSizeColumns(allColumnIds, false);
+                }
+            }
+
+            function drawChart(msg) {
+                // find label column
+                const labels = msg.data[msg.labelCol];
+                const numericCols = msg.numericCols.slice(0, 7)
+                const datasets = numericCols.map((col, i) => {
+                    return {
+                        label: col,
+                        data: msg.data[col],
+                        backgroundColor: chartColors[i],
+                        borderColor: chartColors[i],
+                        fill: false,
+                        pointRadius: 1,
+                        pointHoverRadius: 2,
+                    }
+                })
+                chartConf.data = { labels: labels, datasets: datasets }
+                chartConf.options.scales.xAxes[0].scaleLabel.labelString = msg.labelCol
+                chart.update();
+            }
+
+            function viewGrid() {
+                eGridDiv.style.visibility = "visible";
+                eGridDiv.style.height = "100%";
+                eChartDiv.style.visibility = "hidden";
+                eChartDiv.style.height = "0%";
+            };
+
+            function viewChart() {
+                eGridDiv.style.visibility = "hidden";
+                eGridDiv.style.height = "0%";
+                eChartDiv.style.visibility = "visible";
+                eChartDiv.style.height = "auto";
+            };
+
+            function viewBoth() {
+                eGridDiv.style.visibility = "visible";
+                eGridDiv.style.height = "50%";
+                eChartDiv.style.visibility = "visible";
+                eChartDiv.style.height = "auto";
+            };
+
+            function updateChart() {
+                chartConf.options.title.text = document.getElementById("chart-title").value;
+                chartConf.options.scales.yAxes[0].scaleLabel.labelString = document.getElementById("chart-yaxes").value;
+                chart.update();
+            }
+
+            function selectChartType() {
+                const chartType = chartTypeSelector.value;
+                if (chartType) {
+                    chartConf.type = chartType;
+                    chart.update();
+                }
+            }
 
         </script>
     </div>

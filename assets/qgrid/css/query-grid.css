@@ -5,8 +5,13 @@ body {
 .grid-wrapper {
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 
-#qGrid {
-    height: 100%;
+#gridView {
+    height: 50%;
+}
+
+button {
+    margin-bottom: 5px;
 }
