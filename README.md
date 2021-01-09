@@ -9,7 +9,7 @@ This extension provides kdb+\q language support:
 -   q syntaxes
 -   server list group by tags
 -   server explorer
--   query grid powered by [ag-grid-community](https://www.ag-grid.com/)
+-   query grid powered by [ag-grid-community](https://www.ag-grid.com/) & [chart.js](https://www.chartjs.org/)
 -   query virtualization powered by [perspective](https://perspective.finos.org/)
 -   language server powered by [tree-sitter](https://tree-sitter.github.io/tree-sitter/)
     -   rename symbol (F2)
@@ -100,7 +100,7 @@ The query view, powered by [perspective](https://perspective.finos.org/), can pi
 
 ### Query Grid
 
-The query grid, powered by [ag-grid-community](https://www.ag-grid.com/), can filter and sort table data. In Query Grid mode, only table will be showed in a webview, but other result will still be in output. It will limit to 1000 rows when query a table, click the **flame** in **q Ext** panel , or call `kdb+/q ext: Toggle Unlimited Query`, to remove 1000 rows limit.
+The query grid, powered by [ag-grid-community](https://www.ag-grid.com/) and [chart.js](https://www.chartjs.org/), can filter and sort table data. In Query Grid mode, only table will be showed in a webview, but other result will still be in output. It will limit to 1000 rows when query a table, click the **flame** in **q Ext** panel , or call `kdb+/q ext: Toggle Unlimited Query`, to remove 1000 rows limit.
 
 ### Query Console(default)
 

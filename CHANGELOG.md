@@ -2,6 +2,12 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 2.0.0
+
+### added
+
+-   chart for query grid
+
 ## 1.9.10
 
 ### added

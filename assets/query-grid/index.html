@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- include styles -->
+    <link href="{assets}/css/ag-grid.min.css" rel="stylesheet">
+    <link href="{assets}/css/ag-theme-balham{theme}.min.css" rel="stylesheet">
+    <link href="{assets}/css/query-grid.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
+    <!-- include the lib -->
+    <script src="{assets}/js/ag-grid-community.min.js"></script>
+    <script src="{assets}/js/Chart.min.js"></script>
+    <style media="only screen">
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            box-sizing: border-box;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        html {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 0;
+            overflow: auto;
+        }
+
+        body {
+            padding: 1rem;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid-wrapper">
+        <div id="buttons">
+            <button id="button-grid" onclick="viewGrid()">View Grid</button>
+            <button id="button-chart" onclick="viewChart()">View Chart</button>
+            <button id="button-both" onclick="viewBoth()">View Both</button>
+        </div>
+        <div id="chartView">
+            <button id="button-update" onclick="updateChart()">Update Chart</button>
+            <select id="chart-type-selector" title="chart type" onChange="selectChartType()">
+                <option value="">Chart Type</option>
+                <option value="line">Line</option>
+                <option value="bar">Bar</option>
+            </select>
+            <br>
+            <label for="title">Chart Title:</label>
+            <input type="text" id="chart-title" name="title">
+            <label for="yaxes">Y Axes Label:</label>
+            <input type="text" id="chart-yaxes" name="yaxes">
+            <canvas id="canvas"></canvas>
+        </div>
+        <div id="gridView" class="ag-theme-balham{theme}"></div>
+        <script type="text/javascript" charset="utf-8">
+            // get api to interact with vscode
+            let vscode = acquireVsCodeApi();
+            let isReady = false;
+            let message;
+            // add vscode message handler
+            window.addEventListener('message', event => {
+                message = event.data;
+                console.log(`got a vscode message, type: ${message.type}`);
+                if (isReady) {
+                    loadGrid(message);
+                    drawChart(message);
+                }
+            });
+
+            // let the grid know which columns and what data to use
+            let gridOptions = {
+                defaultColDef: {
+                    sortable: true,
+                    resizable: true,
+                    filter: true,
+                },
+            };
+
+            // lookup the container we want the Grid to use
+            let eGridDiv = document.getElementById("gridView");
+
+            // create the grid passing in the div to use together with the columns & data we want to use
+            new agGrid.Grid(eGridDiv, gridOptions);
+
+
+            let chartColors = [
+                "rgb(255, 99, 132)",
+                "rgb(255, 159, 64)",
+                "rgb(255, 205, 86)",
+                "rgb(75, 192, 192)",
+                "rgb(54, 162, 235)",
+                "rgb(153, 102, 255)",
+                "rgb(201, 203, 207)"
+            ];
+
+            let eChartDiv = document.getElementById("chartView");
+            let canvas = document.getElementById("canvas").getContext("2d");
+
+            let chartConf = {
+                type: "line",
+                options: {
+                    responsive: true,
+                    animation: {
+                        duration: 0 // general animation time
+                    },
+                    title: {
+                        display: true,
+                        text: ""
+                    },
+                    tooltips: {
+                        mode: "index",
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: "nearest",
+                        animationDuration: 0, // duration of animations when hovering an item
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: ""
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: ""
+                            }
+                        }]
+                    },
+                    elements: {
+                        line: {
+                            tension: 0 // disables bezier curves
+                        }
+                    },
+                    responsiveAnimationDuration: 0 // animation duration after a resize
+                }
+            }
+            let chart = new Chart(canvas, chartConf);
+            let chartTypeSelector = document.getElementById('chart-type-selector');
+            window.onload = (event) => {
+                console.log("Page is fully loaded");
+                isReady = true;
+                try {
+                    loadGrid(message);
+                    drawChart(message);
+                    viewGrid();
+                }
+                catch (error) {
+                    console.error(`Fail to load data - error: ${error.message}`);
+                }
+            };
+
+            function loadGrid(msg) {
+                const rowData = [];
+                console.log(msg);
+                if (msg.meta.c) {
+                    msg.data[msg.meta.c[0]].forEach(
+                        (_v, i) => {
+                            const row = {};
+                            msg.meta.c.forEach(
+                                (col) => row[col] = msg.data[col][i]
+                            );
+                            rowData.push(row);
+                        });
+                }
+                gridOptions.api.setColumnDefs(msg.cols);
+                gridOptions.api.setRowData(rowData);
+                let allColumnIds = [];
+                gridOptions.columnApi.getAllColumns().forEach(function (column) {
+                    allColumnIds.push(column.colId);
+                });
+                gridOptions.columnApi.autoSizeColumns(allColumnIds, false);
+            }
+
+            function drawChart(msg) {
+                // find label column
+                if (msg.numericCols === 0) {
+                    viewGrid();
+                }
+                const labels = msg.labelCol ? msg.data[msg.labelCol] : msg.data[msg.numericCols[0]];
+                const numericCols = msg.numericCols.slice(0, 7)
+                const datasets = numericCols.map((col, i) => {
+                    return {
+                        label: col,
+                        data: msg.data[col],
+                        backgroundColor: chartColors[i],
+                        borderColor: chartColors[i],
+                        fill: false,
+                        pointRadius: 1,
+                        borderWidth: 1,
+                    }
+                })
+                chartConf.data = { labels: labels, datasets: datasets }
+                chartConf.options.scales.xAxes[0].scaleLabel.labelString = msg.labelCol
+                chart.update();
+            }
+
+            function viewGrid() {
+                eGridDiv.style.visibility = "visible";
+                eGridDiv.style.height = "100%";
+                eChartDiv.style.visibility = "hidden";
+                eChartDiv.style.height = "0%";
+            };
+
+            function viewChart() {
+                eGridDiv.style.visibility = "hidden";
+                eGridDiv.style.height = "0%";
+                eChartDiv.style.visibility = "visible";
+                eChartDiv.style.height = "auto";
+            };
+
+            function viewBoth() {
+                eGridDiv.style.visibility = "visible";
+                eGridDiv.style.height = "100%";
+                eChartDiv.style.visibility = "visible";
+                eChartDiv.style.height = "auto";
+            };
+
+            function updateChart() {
+                chartConf.options.title.text = document.getElementById("chart-title").value;
+                chartConf.options.scales.yAxes[0].scaleLabel.labelString = document.getElementById("chart-yaxes").value;
+                chart.update();
+            }
+
+            function selectChartType() {
+                const chartType = chartTypeSelector.value;
+                if (chartType) {
+                    chartConf.type = chartType;
+                    chart.update();
+                }
+            }
+
+        </script>
+    </div>
+</body>
+
+</html>

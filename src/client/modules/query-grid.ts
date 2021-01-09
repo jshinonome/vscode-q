@@ -11,7 +11,7 @@ import { QueryResult } from '../models/query-result';
 import path = require('path');
 import moment = require('moment');
 
-const templatePath = './assets/qgrid';
+const templatePath = './assets/query-grid';
 type formatter = (value: any) => any;
 const decimals = workspace.getConfiguration().get('q-client.qgrid.decimals') as number;
 const kdbTypeMap = new Map<string, formatter>([
@@ -118,32 +118,33 @@ export class QueryGrid implements Disposable {
 
     public update(result: QueryResult): void {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const numericCols: string[] = [];
+        let labelCol = '';
         result.cols = result.meta.c.map((col: string, i: number) => {
             const colDef: { headerName: string, field: string, type?: string, cellStyle?: { 'background-color': string } } = { headerName: col, field: col };
-            if ('xhijef'.includes(result.meta.t[i]))
+            if ('xhijef'.includes(result.meta.t[i])) {
                 colDef.type = 'numericColumn';
+                numericCols.push(result.meta.c[i]);
+            } else if (!labelCol) {
+                labelCol = result.meta.c[i];
+            }
             if (result.keys?.includes(col))
                 colDef.cellStyle = { 'background-color': this._keyColor };
             return colDef;
-
         });
         const formatterMap = result.meta.c.reduce((o: any, k: any, i: number) => (
             {
                 ...o, [k]: kdbTypeMap.get(result.meta.t[i]) ?? ((value) => value)
             }), {}
         );
-        const rowData: { [key: string]: any; }[] = [];
-        if (result.meta.c) {
-            result.data[result.meta.c[0]].forEach(
-                (_v: any, i: number) => {
-                    const row = {} as { [key: string]: any };
-                    result.meta.c.forEach(
-                        (col: string) => row[col] = formatterMap[col](result.data[col][i])
-                    );
-                    rowData.push(row);
-                });
-        }
-        result.data = rowData;
+        const data = result.meta.c.map(
+            (col: string) => {
+                return { [col]: result.data[col].map(formatterMap[col]) };
+            }
+        );
+        result.data = Object.assign({}, ...data);
+        result.labelCol = labelCol;
+        result.numericCols = numericCols;
         this._panel.webview.postMessage(result);
     }
 

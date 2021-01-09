@@ -35,12 +35,12 @@
 </head>
 
 <body>
-    <div id="buttons">
-        <button id="button-grid" onclick="viewGrid()">View Grid</button>
-        <button id="button-chart" onclick="viewChart()">View Chart</button>
-        <button id="button-both" onclick="viewBoth()">View Both</button>
-    </div>
     <div class="grid-wrapper">
+        <div id="buttons">
+            <button id="button-grid" onclick="viewGrid()">View Grid</button>
+            <button id="button-chart" onclick="viewChart()">View Chart</button>
+            <button id="button-both" onclick="viewBoth()">View Both</button>
+        </div>
         <div id="chartView">
             <button id="button-update" onclick="updateChart()">Update Chart</button>
             <select id="chart-type-selector" title="chart type" onChange="selectChartType()">
