@@ -180,6 +180,7 @@ export class QConnManager {
                             else {
                                 QueryConsole.current?.append(res.r, Date.now() - time, uniqLabel);
                             }
+                            HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: '' });
                         }
                     }
                     QStatusBarManager.updateQueryStatus(this.isBusy);

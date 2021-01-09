@@ -187,7 +187,7 @@
                 if (msg.numericCols === 0) {
                     viewGrid();
                 }
-                const labels = msg.labelCol ? msg.data[msg.labelCol] : msg.data[msg.numericCols[0]];
+                const labels = msg.labelCol ? msg.data[msg.labelCol] : Array.from(msg.data[msg.numericCols[0]].keys());
                 const numericCols = msg.numericCols.slice(0, 7)
                 const datasets = numericCols.map((col, i) => {
                     return {
