@@ -44,6 +44,7 @@
         </div>
         <div id="chartView">
             <button id="button-update" onclick="updateChart()">Update Chart</button>
+            <button id="button-saveChartAsPNG" onclick="saveChartAsPNG()">Save Chart as PNG</button>
             <select id="chart-type-selector" title="chart type" onChange="selectChartType()">
                 <option value="">Chart Type</option>
                 <option value="line">Line</option>
@@ -99,7 +100,7 @@
             ];
 
             let eChartDiv = document.getElementById("chartView");
-            let canvas = document.getElementById("canvas").getContext("2d");
+            let canvas = document.getElementById("canvas");
 
             let chartConf = {
                 type: "line",
@@ -145,7 +146,7 @@
                     responsiveAnimationDuration: 0 // animation duration after a resize
                 }
             }
-            let chart = new Chart(canvas, chartConf);
+            let chart = new Chart(canvas.getContext("2d"), chartConf);
             let chartTypeSelector = document.getElementById('chart-type-selector');
             window.onload = (event) => {
                 console.log("Page is fully loaded");
@@ -162,7 +163,6 @@
 
             function loadGrid(msg) {
                 const rowData = [];
-                console.log(msg);
                 if (msg.meta.c) {
                     msg.data[msg.meta.c[0]].forEach(
                         (_v, i) => {
@@ -240,6 +240,15 @@
                 }
             }
 
+            function saveChartAsPNG() {
+                let link = document.createElement('a');
+                const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false }).replace(/:/g, "");
+                console.log(timestamp);
+                link.download = 'chart_' + document.getElementById("chart-title").value + "_" + timestamp + '.png';
+                link.href = canvas.toDataURL()
+                link.click();
+                link.delete;
+            }
         </script>
     </div>
 </body>
