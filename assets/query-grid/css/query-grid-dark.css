@@ -25,19 +25,28 @@ gridView {
     display: flex;
 }
 
+.button-outline {
+    border-color: #ea80fc;
+}
+
+.button.button-outline {
+    color: #ea80fc;
+}
+
 .button-black {
-    background-color: black;
-    border-color: black;
+    background-color: white;
+    border-color: white;
 }
 
 .button-black.button-clear,
 .button-black.button-outline {
     background-color: transparent;
-    color: black;
+    color: white;
 }
 .button-black.button-clear {
     border-color: transparent;
 }
+
 .button-small {
     font-size: 0.8rem;
     height: 2.8rem;
@@ -47,6 +56,8 @@ gridView {
 
 select {
     font-weight: 900;
+    color: white;
+    background-color: var(--vscode-editor-background);
 }
 
 option {
@@ -55,4 +66,9 @@ option {
 
 label {
     font-weight: 900;
+    color: white;
+}
+
+input {
+    color: white;
 }

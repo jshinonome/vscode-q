@@ -3,10 +3,12 @@
 
 <head>
     <!-- include styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:500,500italic,700,700italic">
+    <link href="{assets}/css/milligram.min.css" rel="stylesheet">
     <link href="{assets}/css/ag-grid.min.css" rel="stylesheet">
     <link href="{assets}/css/ag-theme-balham{theme}.min.css" rel="stylesheet">
-    <link href="{assets}/css/query-grid.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
+    <link href="{assets}/css/normalize.css" rel="stylesheet">
+    <link href="{assets}/css/query-grid{theme}.css" rel="stylesheet">
     <!-- include the lib -->
     <script src="{assets}/js/ag-grid-community.min.js"></script>
     <script src="{assets}/js/Chart.min.js"></script>
@@ -38,23 +40,36 @@
 <body>
     <div class="grid-wrapper">
         <div id="buttons">
-            <button id="button-grid" onclick="viewGrid()">View Grid</button>
-            <button id="button-chart" onclick="viewChart()">View Chart</button>
-            <button id="button-both" onclick="viewBoth()">View Both</button>
+            <button class="button button-outline" onclick="viewGrid()">View Grid</button>
+            <button class="button button-outline" onclick="viewChart()">View Chart</button>
+            <button class="button button-outline" onclick="viewBoth()">View Both</button>
         </div>
         <div id="chartView">
-            <button id="button-update" onclick="updateChart()">Update Chart</button>
-            <button id="button-saveChartAsPNG" onclick="saveChartAsPNG()">Save Chart as PNG</button>
-            <select id="chart-type-selector" title="chart type" onChange="selectChartType()">
-                <option value="">Chart Type</option>
-                <option value="line">Line</option>
-                <option value="bar">Bar</option>
-            </select>
-            <br>
-            <label for="title">Chart Title:</label>
-            <input type="text" id="chart-title" name="title">
-            <label for="yaxes">Y Axes Label:</label>
-            <input type="text" id="chart-yaxes" name="yaxes">
+            <div class="row">
+                <div class="column column-50">
+                    <button class="button button-outline button-black" onclick="updateChart()">
+                        Update Chart</button>
+                    <button class="button button-outline button-black" onclick=" saveChartAsPNG()">
+                        Save Chart as PNG</button>
+                </div>
+                <div class="column">
+                    <select id="chart-type-selector" title="chart type" onChange="selectChartType()">
+                        <option value="">Chart Type</option>
+                        <option value="line">Line</option>
+                        <option value="bar">Bar</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column column-50">
+                    <label for="title">Chart Title:</label>
+                    <input type="text" id="chart-title" name="title">
+                </div>
+                <div class="column column-50">
+                    <label for="yaxes">Y Axes Label:</label>
+                    <input type="text" id="chart-yaxes" name="yaxes">
+                </div>
+            </div>
             <canvas id="canvas"></canvas>
         </div>
         <div id="gridView" class="ag-theme-balham{theme}"></div>
