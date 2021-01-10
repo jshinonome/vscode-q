@@ -43,6 +43,7 @@
             <button class="button button-outline" onclick="viewGrid()">View Grid</button>
             <button class="button button-outline" onclick="viewChart()">View Chart</button>
             <button class="button button-outline" onclick="viewBoth()">View Both</button>
+            <button class="button button-outline" onclick="downloadData()">Download Data</button>
         </div>
         <div id="chartView">
             <div class="row">
@@ -264,13 +265,11 @@
             }
 
             function saveChartAsPNG() {
-                let link = document.createElement('a');
                 const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false }).replace(/:/g, "");
-                console.log(timestamp);
+                let link = document.createElement('a');
                 link.download = 'chart_' + document.getElementById("chart-title").value + "_" + timestamp + '.png';
                 link.href = canvas.toDataURL()
                 link.click();
-                link.delete;
             }
 
             function toggleTheme() {
@@ -325,6 +324,18 @@
                 }
                 drawChart(message);
                 chart.update();
+            }
+
+            function downloadData() {
+                const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false }).replace(/:/g, "");
+                const blob = new Blob([gridOptions.api.getDataAsCsv()], { type: 'text/csv;charset=utf-8;' });
+                let link = document.createElement("a");
+                url = URL.createObjectURL(blob);
+                link.href = url;
+                link.download = 'data_' + document.getElementById("chart-title").value + "_" + timestamp + '.csv';
+                // document.body.appendChild(link);
+                link.click();
+                // document.body.removeChild(link);
             }
         </script>
     </div>

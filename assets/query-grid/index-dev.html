@@ -43,6 +43,7 @@
             <button class="button button-outline button-small" onclick="viewGrid()">View Grid</button>
             <button class="button button-outline button-small" onclick="viewChart()">View Chart</button>
             <button class="button button-outline button-small" onclick="viewBoth()">View Both</button>
+            <button class="button button-outline button-small" onclick="downloadData()">Download Data</button>
         </div>
         <div id="chartView">
             <div class="row">
@@ -272,13 +273,14 @@
             }
 
             function saveChartAsPNG() {
-                let link = document.createElement('a');
                 const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false }).replace(/:/g, "");
+                let link = document.createElement('a');
                 console.log(timestamp);
                 link.download = 'chart_' + document.getElementById("chart-title").value + "_" + timestamp + '.png';
                 link.href = canvas.toDataURL()
+                // document.body.appendChild(link);
                 link.click();
-                link.delete;
+                // document.body.removeChild(link);
             }
 
             function toggleTheme() {
@@ -333,6 +335,18 @@
                 }
                 drawChart(message);
                 chart.update();
+            }
+
+            function downloadData() {
+                const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false }).replace(/:/g, "");
+                const blob = new Blob([gridOptions.api.getDataAsCsv()], { type: 'text/csv;charset=utf-8;' });
+                let link = document.createElement("a");
+                url = URL.createObjectURL(blob);
+                link.href = url;
+                link.download = 'chart_' + document.getElementById("chart-title").value + "_" + timestamp + '.csv';
+                // document.body.appendChild(link);
+                link.click();
+                // document.body.removeChild(link);
             }
         </script>
     </div>
