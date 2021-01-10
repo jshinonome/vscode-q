@@ -2,6 +2,13 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 2.0.1
+
+### added
+
+-   save chart as png
+-   save data as csv
+
 ## 2.0.0
 
 ### added
