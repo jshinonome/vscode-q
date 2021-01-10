@@ -49,8 +49,10 @@
                 <div class="column column-50">
                     <button class="button button-outline button-black button-small" onclick="updateChart()">
                         Update Chart</button>
-                    <button class="button button-outline button-black button-small" onclick=" saveChartAsPNG()">
-                        Save Chart as PNG</button>
+                    <button class="button button-outline button-black button-small" onclick="saveChartAsPNG()">
+                        Save Chart</button>
+                    <button class="button button-outline button-black button-small" onclick="toggleTheme()">
+                        Toggle Theme</button>
                 </div>
                 <div class="column">
                     <select id="chart-type-selector" title="chart type" onChange="selectChartType()">
@@ -113,13 +115,16 @@
 
 
             let chartColors = [
-                "rgb(255, 99, 132)",
-                "rgb(255, 159, 64)",
-                "rgb(255, 205, 86)",
-                "rgb(75, 192, 192)",
-                "rgb(54, 162, 235)",
-                "rgb(153, 102, 255)",
-                "rgb(201, 203, 207)"
+                "rgb(31, 119, 180)",
+                "rgb(255, 127, 14)",
+                "rgb(44, 160, 44)",
+                "rgb(214, 39, 40)",
+                "rgb(148, 103, 189)",
+                "rgb(140, 86, 75)",
+                "rgb(227, 119, 194)",
+                "rgb(127, 127, 127)",
+                "rgb(188, 189, 34)",
+                "rgb(23, 190, 207)",
             ];
 
             let eChartDiv = document.getElementById("chartView");
@@ -171,13 +176,16 @@
             }
             let chart = new Chart(canvas.getContext("2d"), chartConf);
             let chartTypeSelector = document.getElementById('chart-type-selector');
+
+            let chartThemeIsLight = true;
+
             window.onload = (event) => {
                 console.log("Page is fully loaded");
                 isReady = true;
                 try {
                     loadGrid(message);
                     drawChart(message);
-                    viewBoth();
+                    viewGrid();
                 }
                 catch (error) {
                     console.error(`Fail to load data - error: ${error.message}`);
@@ -185,31 +193,32 @@
             };
 
             function loadGrid(msg) {
-                if (isReady) {
-                    const rowData = [];
-                    if (msg.meta.c) {
-                        msg.data[msg.meta.c[0]].forEach(
-                            (_v, i) => {
-                                const row = {};
-                                msg.meta.c.forEach(
-                                    (col) => row[col] = msg.data[col][i]
-                                );
-                                rowData.push(row);
-                            });
-                    }
-                    gridOptions.api.setColumnDefs(msg.cols);
-                    gridOptions.api.setRowData(rowData);
-                    let allColumnIds = [];
-                    gridOptions.columnApi.getAllColumns().forEach(function (column) {
-                        allColumnIds.push(column.colId);
-                    });
-                    gridOptions.columnApi.autoSizeColumns(allColumnIds, false);
+                const rowData = [];
+                if (msg.meta.c) {
+                    msg.data[msg.meta.c[0]].forEach(
+                        (_v, i) => {
+                            const row = {};
+                            msg.meta.c.forEach(
+                                (col) => row[col] = msg.data[col][i]
+                            );
+                            rowData.push(row);
+                        });
                 }
+                gridOptions.api.setColumnDefs(msg.cols);
+                gridOptions.api.setRowData(rowData);
+                let allColumnIds = [];
+                gridOptions.columnApi.getAllColumns().forEach(function (column) {
+                    allColumnIds.push(column.colId);
+                });
+                gridOptions.columnApi.autoSizeColumns(allColumnIds, false);
             }
 
             function drawChart(msg) {
                 // find label column
-                const labels = msg.data[msg.labelCol];
+                if (msg.numericCols === 0) {
+                    viewGrid();
+                }
+                const labels = msg.labelCol ? msg.data[msg.labelCol] : Array.from(msg.data[msg.numericCols[0]].keys());
                 const numericCols = msg.numericCols.slice(0, 7)
                 const datasets = numericCols.map((col, i) => {
                     return {
@@ -219,7 +228,7 @@
                         borderColor: chartColors[i],
                         fill: false,
                         pointRadius: 1,
-                        pointHoverRadius: 2,
+                        borderWidth: 2,
                     }
                 })
                 chartConf.data = { labels: labels, datasets: datasets }
@@ -243,7 +252,7 @@
 
             function viewBoth() {
                 eGridDiv.style.visibility = "visible";
-                eGridDiv.style.height = "50%";
+                eGridDiv.style.height = "100%";
                 eChartDiv.style.visibility = "visible";
                 eChartDiv.style.height = "auto";
             };
@@ -272,6 +281,59 @@
                 link.delete;
             }
 
+            function toggleTheme() {
+                let globalDefaults = Chart.defaults.global;
+                let options = chartConf.options;
+                let xGridLines = options.scales.xAxes[0].gridLines;
+                let yGridLines = options.scales.yAxes[0].gridLines;
+                let tooltips = options.tooltips;
+
+                if (!chartThemeIsLight) {
+                    // light
+                    chartThemeIsLight = true;
+                    xGridLines.color = yGridLines.color = 'rgba(0, 0, 0, 0.1)';
+                    xGridLines.zeroLineColor = yGridLines.zeroLineColor = 'rgba(0, 0, 0, 0.25)';
+                    globalDefaults.defaultFontColor = '#666';
+                    tooltips.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                    tooltips.titleFontColor = tooltips.bodyFontColor = '#fff';
+                    canvas.style.backgroundColor = '#FAFAFA';
+                    chartColors = [
+                        "rgb(31, 119, 180)",
+                        "rgb(255, 127, 14)",
+                        "rgb(44, 160, 44)",
+                        "rgb(214, 39, 40)",
+                        "rgb(148, 103, 189)",
+                        "rgb(140, 86, 75)",
+                        "rgb(227, 119, 194)",
+                        "rgb(127, 127, 127)",
+                        "rgb(188, 189, 34)",
+                        "rgb(23, 190, 207)",
+                    ];
+                } else {
+                    // dark
+                    chartThemeIsLight = false;
+                    xGridLines.color = yGridLines.color = 'rgba(255, 255, 255, 0.2)';
+                    xGridLines.zeroLineColor = yGridLines.zeroLineColor = 'rgba(255, 255, 255, 0.5)';
+                    globalDefaults.defaultFontColor = '#ccc';
+                    tooltips.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+                    tooltips.titleFontColor = tooltips.bodyFontColor = '#000';
+                    canvas.style.backgroundColor = '#212121';
+                    chartColors = [
+                        "rgb(78,  121, 167)",
+                        "rgb(242, 142, 43)",
+                        "rgb(225, 87,  89)",
+                        "rgb(118, 183, 178)",
+                        "rgb(89,  161, 79)",
+                        "rgb(237, 201, 72)",
+                        "rgb(176, 122, 161)",
+                        "rgb(255, 157, 167)",
+                        "rgb(156, 117, 95)",
+                        "rgb(186, 176, 172)",
+                    ]
+                }
+                drawChart(message);
+                chart.update();
+            }
         </script>
     </div>
 </body>
