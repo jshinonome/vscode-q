@@ -19,6 +19,10 @@ chartView {
     margin-bottom: 5px;
 }
 
+input {
+    margin-bottom: 5px;
+}
+
 gridView {
     margin-bottom: 5px;
     flex-direction: column;
@@ -55,4 +59,8 @@ option {
 
 label {
     font-weight: 900;
+}
+
+.border-right {
+    border-right: 0.1rem solid #9b4dca;
 }

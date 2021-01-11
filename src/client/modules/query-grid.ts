@@ -139,7 +139,12 @@ export class QueryGrid implements Disposable {
         );
         const data = result.meta.c.map(
             (col: string) => {
-                return { [col]: result.data[col].map(formatterMap[col]) };
+                // deal with char column
+                if (typeof result.data[col] === 'string') {
+                    return { [col]: [result.data[col]] };
+                } else {
+                    return { [col]: result.data[col].map(formatterMap[col]) };
+                }
             }
         );
         result.data = Object.assign({}, ...data);

@@ -40,37 +40,78 @@
 <body>
     <div class="grid-wrapper">
         <div id="buttons">
-            <button class="button button-outline button-small" onclick="viewGrid()">View Grid</button>
-            <button class="button button-outline button-small" onclick="viewChart()">View Chart</button>
-            <button class="button button-outline button-small" onclick="viewBoth()">View Both</button>
-            <button class="button button-outline button-small" onclick="downloadData()">Download Data</button>
-        </div>
-        <div id="chartView">
             <div class="row">
                 <div class="column column-50">
-                    <button class="button button-outline button-black button-small" onclick="updateChart()">
-                        Update Chart</button>
-                    <button class="button button-outline button-black button-small" onclick="saveChartAsPNG()">
-                        Save Chart</button>
-                    <button class="button button-outline button-black button-small" onclick="toggleTheme()">
-                        Toggle Theme</button>
+                    <button class="button button-outline" onclick="viewGrid()">View Grid</button>
+                    <button class="button button-outline" onclick="viewChart()">View Chart</button>
+                    <button class="button button-outline" onclick="viewBoth()">View Both</button>
+                    <button class="button button-outline" onclick="toggleConf()">Toggle Chart Configure</button>
                 </div>
                 <div class="column">
-                    <select id="chart-type-selector" title="chart type" onChange="selectChartType()">
-                        <option value="">Chart Type</option>
-                        <option value="line">Line</option>
-                        <option value="bar">Bar</option>
-                    </select>
+                    <button class="button" onclick="downloadData()">Download Data</button>
+                    <button class="button" onclick="saveChartAsPNG()">Save Chart</button>
                 </div>
             </div>
-            <div class="row">
-                <div class="column column-50">
-                    <label for="title">Chart Title:</label>
-                    <input type="text" id="chart-title" name="title">
-                </div>
-                <div class="column column-50">
-                    <label for="yaxes">Y Axes Label:</label>
-                    <input type="text" id="chart-yaxes" name="yaxes">
+        </div>
+        <div id="chartView">
+            <div id="chart-conf">
+                <div class="row">
+                    <div class="column column-50 border-right">
+                        <div class="row">
+                            <div class="column column-50">
+                                <button class="button button-outline button-black" onclick="updateChart()">
+                                    Update Chart</button>
+                                <button class="button button-outline button-black" onclick="toggleTheme()">
+                                    Toggle Theme</button>
+                            </div>
+                            <div class="column">
+                                <select id="chart-type-selector" title="chart type" onChange="selectChartType()">
+                                    <option value="">Chart Type</option>
+                                    <option value="line">Line</option>
+                                    <option value="bar">Bar</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column column-50">
+                                <label for="title">Chart Title:</label>
+                                <input type="text" id="chart-title" name="title">
+                            </div>
+                            <div class="column">
+                                <label for="yaxes">Y Axes Label:</label>
+                                <input type="text" id="chart-yaxes" name="yaxes">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column">
+                        <div class="row">
+                            <div class="column column-50">
+                                <button class="button button-outline button-black" onclick="startPolling()">
+                                    Start Polling</button>
+                                <button class="button button-outline button-black" onclick="stopPolling()">
+                                    Stop Polling</button>
+                            </div>
+                            <div class="column">
+                                <select id="polling-inverval" title="Polling Interval"
+                                    onChange="updatePollingInterval()">
+                                    <option value="">Polling Interval</option>
+                                    <option value="1">1 second</option>
+                                    <option value="5">5 seconds</option>
+                                    <option value="15">15 seconds</option>
+                                    <option value="30">30 seconds</option>
+                                    <option value="60">60 seconds</option>
+                                    <option value="120">120 seconds</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <label for="polling-query">Query:</label>
+                                <input type="text" id="polling-query" name="query">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <canvas id="canvas"></canvas>
@@ -180,6 +221,10 @@
 
             let chartThemeIsLight = true;
 
+            let chartConfPanel = document.getElementById('chart-conf');
+            chartConfPanel.style.visibility = "hidden";
+            chartConfPanel.style.height = "0";
+
             window.onload = (event) => {
                 console.log("Page is fully loaded");
                 isReady = true;
@@ -268,6 +313,7 @@
                 const chartType = chartTypeSelector.value;
                 if (chartType) {
                     chartConf.type = chartType;
+                    chartConf.options.scales.xAxes[0].offset = chartType === "bar";
                     chart.update();
                 }
             }
@@ -348,6 +394,17 @@
                 link.click();
                 // document.body.removeChild(link);
             }
+
+            function toggleConf() {
+                if (chartConfPanel.style.visibility === "hidden") {
+                    chartConfPanel.style.height = "auto";
+                    chartConfPanel.style.visibility = "visible";
+                } else {
+                    chartConfPanel.style.visibility = "hidden";
+                    chartConfPanel.style.height = "0";
+                }
+            }
+
         </script>
     </div>
 </body>
