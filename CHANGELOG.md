@@ -2,6 +2,16 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 2.0.2
+
+### added
+
+-   auto clear output configuration
+
+### fixed
+
+-   query-grid not works for char column
+
 ## 2.0.1
 
 ### added

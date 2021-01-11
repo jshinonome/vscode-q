@@ -472,6 +472,12 @@
 					"type": "number",
 					"default": 5,
 					"description": "Preview Query Limit"
+				},
+				"q-client.output.autoClear": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": false,
+					"description": "Auto Clear Output"
 				}
 			}
 		}

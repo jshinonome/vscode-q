@@ -69,6 +69,7 @@ Create a server and click to connect
 | q-client.term.qBinary              | string  | `q`                              | q executable file or full path              |
 | q-client.term.envPath              | string  | ``                               | environment file relative or absolute path  |
 | q-client.expl.prevQueryLimit       | string  | `5`                              | q explorer preview query limit              |
+| q-client.output.autoClear          | boolean | false                            | Auto Clear Output                           |
 
 ## q Language Server(local server, no connection to the internet)
 

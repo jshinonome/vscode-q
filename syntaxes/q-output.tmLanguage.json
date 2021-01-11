@@ -29,11 +29,11 @@
       "patterns": [
         {
           "name": "markup.error.q-output",
-          "match": "^>\\sERROR.*"
+          "match": "^>>>\\sERROR.*"
         },
         {
           "name": "source.q-output",
-          "match": "^>\\s.*"
+          "match": "^>>>\\s.*"
         },
         {
           "name": "source.q-output",
@@ -41,7 +41,7 @@
         },
         {
           "name": "source.q-output",
-          "match": "^<\\s.*"
+          "match": "^<<<\\s.*"
         }
       ]
     },

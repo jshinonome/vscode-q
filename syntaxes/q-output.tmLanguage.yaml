@@ -13,13 +13,13 @@ repository:
   outputs:
     patterns:
       - name: markup.error.q-output
-        match: ^>\sERROR.*
+        match: ^>>>\sERROR.*
       - name: source.q-output
-        match: ^>\s.*
+        match: ^>>>\s.*
       - name: source.q-output
         match: ^\s\s\[\d+\]\s*
       - name: source.q-output
-        match: ^<\s.*
+        match: ^<<<\s.*
   comments:
     patterns:
       - name: comment.block.q-output

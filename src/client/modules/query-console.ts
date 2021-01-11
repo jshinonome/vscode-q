@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import { Disposable, OutputChannel, window } from 'vscode';
+import { Disposable, OutputChannel, window, workspace } from 'vscode';
 import fs = require('fs');
 import csvParser = require('csv-parser');
 import path = require('path');
@@ -30,6 +30,7 @@ export class QueryConsole {
     private readonly _console: OutputChannel;
     private _disposables: Disposable[] = [];
     private errorMsgMap = getErrorMsgMap();
+    private autoClear = workspace.getConfiguration().get('q-client.output.autoClear') as boolean;
     public static createOrShow(): void {
         if (QueryConsole.current) {
             QueryConsole.current._console.show(true);
@@ -57,35 +58,40 @@ export class QueryConsole {
     }
 
     public append(output: string | string[], time = 0, uniqLabel: string): void {
+        if (this.autoClear) {
+            this._console.clear();
+        }
         const label = uniqLabel.replace(',', '-');
         const date = new Date();
-        this._console.appendLine(`> ${label} @ ${date.toLocaleTimeString()}`);
-        this._console.appendLine('>');
+        this._console.appendLine(`>>> ${label} @ ${date.toLocaleTimeString()}`);
+        this._console.appendLine(`>>> ${time}(ms) elapsed`);
         if (Array.isArray(output)) {
             output.forEach(o => this._console.appendLine(o));
         } else {
             this._console.appendLine(output);
         }
-        this._console.appendLine('<');
-        this._console.appendLine(`< ${time}(ms) elapsed\n`);
+        this._console.appendLine('<<<\n');
     }
 
     public appendError(msg: string[], time = 0, uniqLabel: string): void {
+        if (this.autoClear) {
+            this._console.clear();
+        }
         const label = uniqLabel.replace(',', '-');
         const date = new Date();
-        this._console.appendLine(`> ${label} @ ${date.toLocaleTimeString()}`);
-        this._console.appendLine(`> ${msg[0]}: ${msg[1]}`);
+        this._console.appendLine(`>>> ${label} @ ${date.toLocaleTimeString()}`);
+        this._console.appendLine(`>>> ${time}(ms) elapsed`);
+        this._console.appendLine(`>>> ${msg[0]}: ${msg[1]}`);
         const explanation = this.errorMsgMap.get(msg[1]) ?? `Value error (${msg[1]} undefined)`;
-        this._console.appendLine(`> Explanation: ${explanation}`);
+        this._console.appendLine(`>>> Explanation: ${explanation}`);
         msg.shift();
         msg.shift();
         msg.pop();
         if (msg.length > 0) {
-            this._console.appendLine('>');
+            this._console.appendLine('>>>');
             msg.forEach(o => this._console.appendLine(o));
-            this._console.appendLine('<');
         }
-        this._console.appendLine(`< ${time}(ms) elapsed\n`);
+        this._console.appendLine('<<<\n');
     }
 
 }
