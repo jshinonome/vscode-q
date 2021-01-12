@@ -69,6 +69,7 @@
                                     <option value="">Chart Type</option>
                                     <option value="line">Line</option>
                                     <option value="bar">Bar</option>
+                                    <option value="scatter">Scatter</option>
                                 </select>
                             </div>
                         </div>
@@ -130,7 +131,6 @@
                     loadGrid(message);
                     drawChart(message);
                 }
-                toggleTheme();
                 viewBoth();
             });
 
@@ -225,7 +225,6 @@
                 try {
                     loadGrid(message);
                     drawChart(message);
-                    toggleTheme();
                 }
                 catch (error) {
                     console.error(`Fail to load data - error: ${error.message}`);
@@ -258,20 +257,7 @@
                 if (msg.numericCols === 0) {
                     viewGrid();
                 }
-                const labels = msg.labelCol ? msg.data[msg.labelCol] : Array.from(msg.data[msg.numericCols[0]].keys());
-                const numericCols = msg.numericCols.slice(0, 7)
-                const datasets = numericCols.map((col, i) => {
-                    return {
-                        label: col,
-                        data: msg.data[col],
-                        backgroundColor: chartColors[i],
-                        borderColor: chartColors[i],
-                        fill: false,
-                        pointRadius: 1,
-                        borderWidth: 1,
-                    }
-                })
-                chartConf.data = { labels: labels, datasets: datasets }
+                chartConf.data = generateData(msg);
                 chartConf.options.scales.xAxes[0].scaleLabel.labelString = msg.labelCol
                 chart.update();
             }
@@ -308,7 +294,49 @@
                 if (chartType) {
                     chartConf.type = chartType;
                     chartConf.options.scales.xAxes[0].offset = chartType === "bar";
+                    chartConf.data = generateData(message);
                     chart.update();
+                }
+            }
+
+            function generateData(msg) {
+                const labels = msg.labelCol ? msg.data[msg.labelCol] : Array.from(msg.data[msg.numericCols[0]].keys());
+                const numericCols = msg.numericCols.slice(0, 10)
+                switch (chartTypeSelector.value) {
+                    case "scatter":
+                        chartConf.options.scales.xAxes[0].type = "linear";
+                        const datasets = [];
+                        for (let i = 0; i * 2 < numericCols.length; i++) {
+                            const x = msg.data[numericCols[2 * i]]
+                            const y = msg.data[numericCols[1 + 2 * i]]
+                            datasets.push(
+                                {
+                                    label: "dataset-" + (i + 1),
+                                    data: x.map((v, i) => { return { x: Number(v), y: Number(y[i]) } }),
+                                    backgroundColor: chartColors[i],
+                                    borderColor: chartColors[i],
+                                }
+                            )
+                        }
+                        console.log(datasets);
+                        return { datasets: datasets };
+                        break;
+                    default:
+                        chartConf.options.scales.xAxes[0].type = "category";
+                        return {
+                            labels: labels,
+                            datasets: numericCols.map((col, i) => {
+                                return {
+                                    label: col,
+                                    data: msg.data[col],
+                                    backgroundColor: chartColors[i],
+                                    borderColor: chartColors[i],
+                                    fill: false,
+                                    pointRadius: 1,
+                                    borderWidth: 1,
+                                }
+                            })
+                        }
                 }
             }
 
