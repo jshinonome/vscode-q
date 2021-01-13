@@ -41,11 +41,11 @@
     <div class="grid-wrapper">
         <div id="buttons">
             <div class="row">
-                <div class="column column-50">
+                <div class="column column-66">
                     <button class="button button-outline" onclick="viewGrid()">View Grid</button>
                     <button class="button button-outline" onclick="viewChart()">View Chart</button>
                     <button class="button button-outline" onclick="viewBoth()">View Both</button>
-                    <button class="button button-outline" onclick="toggleConf()">Toggle Chart Configure</button>
+                    <button class="button button-outline" onclick="toggleConf()">Chart Config</button>
                 </div>
                 <div class="column">
                     <button class="button" onclick="downloadData()">Download Data</button>
@@ -58,7 +58,7 @@
                 <div class="row">
                     <div class="column column-50 border-right">
                         <div class="row">
-                            <div class="column column-50">
+                            <div class="column column-66">
                                 <button class="button button-outline button-black" onclick="updateChart()">
                                     Update Chart</button>
                                 <button class="button button-outline button-black" onclick="toggleTheme()">
@@ -74,7 +74,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="column column-50">
+                            <div class="column column-66">
                                 <label for="title">Chart Title:</label>
                                 <input type="text" id="chart-title" name="title">
                             </div>
@@ -87,7 +87,7 @@
 
                     <div class="column">
                         <div class="row">
-                            <div class="column column-50">
+                            <div class="column column-66">
                                 <button class="button button-outline button-black" onclick="startPolling()" disabled>
                                     Start Polling(nyi)</button>
                                 <button class="button button-outline button-black" onclick="stopPolling()">
@@ -131,7 +131,6 @@
                     loadGrid(message);
                     drawChart(message);
                 }
-                viewBoth();
             });
 
             // let the grid know which columns and what data to use
@@ -141,6 +140,7 @@
                     resizable: true,
                     filter: true,
                 },
+                applyColumnDefOrder: true,
             };
 
             // lookup the container we want the Grid to use
@@ -254,11 +254,10 @@
 
             function drawChart(msg) {
                 // find label column
-                if (msg.numericCols === 0) {
+                if (msg.numericCols.length === 0) {
                     viewGrid();
                 }
                 chartConf.data = generateData(msg);
-                chartConf.options.scales.xAxes[0].scaleLabel.labelString = msg.labelCol
                 chart.update();
             }
 
@@ -305,13 +304,14 @@
                 switch (chartTypeSelector.value) {
                     case "scatter":
                         chartConf.options.scales.xAxes[0].type = "linear";
+                        chartConf.options.scales.xAxes[0].scaleLabel.labelString = "";
                         const datasets = [];
                         for (let i = 0; i * 2 < numericCols.length; i++) {
                             const x = msg.data[numericCols[2 * i]]
                             const y = msg.data[numericCols[1 + 2 * i]]
                             datasets.push(
                                 {
-                                    label: "dataset-" + (i + 1),
+                                    label: msg.meta.c[2 * i] + "-" + msg.meta.c[1 + 2 * i],
                                     data: x.map((v, i) => { return { x: Number(v), y: Number(y[i]) } }),
                                     backgroundColor: chartColors[i],
                                     borderColor: chartColors[i],
@@ -323,6 +323,7 @@
                         break;
                     default:
                         chartConf.options.scales.xAxes[0].type = "category";
+                        chartConf.options.scales.xAxes[0].scaleLabel.labelString = msg.labelCol
                         return {
                             labels: labels,
                             datasets: numericCols.map((col, i) => {

@@ -2,15 +2,27 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 2.0.4
+
+### changed
+
+-   query grid: layout of configuration
+-   query grid: column order
+-   query grid: remove x axes label for scatter
+
+### fixed
+
+-   query grid: char column
+
 ## 2.0.3
 
 ### added
 
--   scatter for query grid
+-   query grid: scatter
 
 ### fixed
 
--   float null for query grid
+-   query grid: float null
 
 ## 2.0.2
 

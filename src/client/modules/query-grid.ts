@@ -141,7 +141,7 @@ export class QueryGrid implements Disposable {
             (col: string) => {
                 // deal with char column
                 if (typeof result.data[col] === 'string') {
-                    return { [col]: [result.data[col]] };
+                    return { [col]: result.data[col].split('') };
                 } else {
                     return { [col]: result.data[col].map(formatterMap[col]) };
                 }
