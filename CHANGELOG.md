@@ -2,6 +2,12 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 2.0.5
+
+### changed
+
+-   query grid: allow text selection
+
 ## 2.0.4
 
 ### changed
