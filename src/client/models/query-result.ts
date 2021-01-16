@@ -13,6 +13,7 @@ export type QueryResult = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     meta?: any,
     keys?: string[],
+    query?: string,
     labelCol?: string,
     numericCols?: string[]
 }

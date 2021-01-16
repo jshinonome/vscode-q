@@ -8,6 +8,7 @@
 import * as fs from 'fs';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
 import { QueryResult } from '../models/query-result';
+import { QConnManager } from './q-conn-manager';
 import path = require('path');
 import moment = require('moment');
 
@@ -92,6 +93,16 @@ export class QueryGrid implements Disposable {
         this.configure();
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
         this._panel.webview.html = this._getHtmlForWebview();
+        this._panel.webview.onDidReceiveMessage(message => {
+            switch (message.cmd) {
+                case 'startPolling':
+                    QConnManager.current?.startPolling(message.interval, message.query);
+                    break;
+                case 'stopPolling':
+                    QConnManager.current?.stopPolling();
+                    break;
+            }
+        });
         this._panel.title = 'Query Grid';
         this._panel.iconPath = Uri.file(path.join(extensionPath, 'icon.png'));
     }
@@ -114,6 +125,7 @@ export class QueryGrid implements Disposable {
                 x.dispose();
             }
         }
+        QConnManager.current?.stopPolling();
     }
 
     public update(result: QueryResult): void {

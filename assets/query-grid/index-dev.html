@@ -41,11 +41,11 @@
     <div class="grid-wrapper">
         <div id="buttons">
             <div class="row">
-                <div class="column column-50">
+                <div class="column column-66">
                     <button class="button button-outline" onclick="viewGrid()">View Grid</button>
                     <button class="button button-outline" onclick="viewChart()">View Chart</button>
                     <button class="button button-outline" onclick="viewBoth()">View Both</button>
-                    <button class="button button-outline" onclick="toggleConf()">Toggle Chart Configure</button>
+                    <button class="button button-outline" onclick="toggleConf()">Chart Config</button>
                 </div>
                 <div class="column">
                     <button class="button" onclick="downloadData()">Download Data</button>
@@ -58,7 +58,7 @@
                 <div class="row">
                     <div class="column column-50 border-right">
                         <div class="row">
-                            <div class="column column-50">
+                            <div class="column column-66">
                                 <button class="button button-outline button-black" onclick="updateChart()">
                                     Update Chart</button>
                                 <button class="button button-outline button-black" onclick="toggleTheme()">
@@ -69,11 +69,12 @@
                                     <option value="">Chart Type</option>
                                     <option value="line">Line</option>
                                     <option value="bar">Bar</option>
+                                    <option value="scatter">Scatter</option>
                                 </select>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="column column-50">
+                            <div class="column column-66">
                                 <label for="title">Chart Title:</label>
                                 <input type="text" id="chart-title" name="title">
                             </div>
@@ -86,9 +87,9 @@
 
                     <div class="column">
                         <div class="row">
-                            <div class="column column-50">
-                                <button class="button button-outline button-black" onclick="startPolling()">
-                                    Start Polling</button>
+                            <div class="column column-66">
+                                <button class="button button-outline button-black" onclick="startPolling()" disabled>
+                                    Start Polling(nyi)</button>
                                 <button class="button button-outline button-black" onclick="stopPolling()">
                                     Stop Polling</button>
                             </div>
@@ -147,6 +148,8 @@
                     resizable: true,
                     filter: true,
                 },
+                applyColumnDefOrder: true,
+                enableCellTextSelection: true,
             };
 
             // lookup the container we want the Grid to use
@@ -219,11 +222,11 @@
             let chart = new Chart(canvas.getContext("2d"), chartConf);
             let chartTypeSelector = document.getElementById('chart-type-selector');
 
-            let chartThemeIsLight = true;
-
             let chartConfPanel = document.getElementById('chart-conf');
             chartConfPanel.style.visibility = "hidden";
             chartConfPanel.style.height = "0";
+
+            let chartThemeIsLight = true;
 
             window.onload = (event) => {
                 console.log("Page is fully loaded");
@@ -231,7 +234,6 @@
                 try {
                     loadGrid(message);
                     drawChart(message);
-                    viewGrid();
                 }
                 catch (error) {
                     console.error(`Fail to load data - error: ${error.message}`);
@@ -261,24 +263,10 @@
 
             function drawChart(msg) {
                 // find label column
-                if (msg.numericCols === 0) {
+                if (msg.numericCols.length === 0) {
                     viewGrid();
                 }
-                const labels = msg.labelCol ? msg.data[msg.labelCol] : Array.from(msg.data[msg.numericCols[0]].keys());
-                const numericCols = msg.numericCols.slice(0, 7)
-                const datasets = numericCols.map((col, i) => {
-                    return {
-                        label: col,
-                        data: msg.data[col],
-                        backgroundColor: chartColors[i],
-                        borderColor: chartColors[i],
-                        fill: false,
-                        pointRadius: 1,
-                        borderWidth: 2,
-                    }
-                })
-                chartConf.data = { labels: labels, datasets: datasets }
-                chartConf.options.scales.xAxes[0].scaleLabel.labelString = msg.labelCol
+                chartConf.data = generateData(msg);
                 chart.update();
             }
 
@@ -314,19 +302,60 @@
                 if (chartType) {
                     chartConf.type = chartType;
                     chartConf.options.scales.xAxes[0].offset = chartType === "bar";
+                    chartConf.data = generateData(message);
                     chart.update();
+                }
+            }
+
+            function generateData(msg) {
+                const labels = msg.labelCol ? msg.data[msg.labelCol] : Array.from(msg.data[msg.numericCols[0]].keys());
+                const numericCols = msg.numericCols.slice(0, 10)
+                switch (chartTypeSelector.value) {
+                    case "scatter":
+                        chartConf.options.scales.xAxes[0].type = "linear";
+                        chartConf.options.scales.xAxes[0].scaleLabel.labelString = "";
+                        const datasets = [];
+                        for (let i = 0; i * 2 < numericCols.length; i++) {
+                            const x = msg.data[numericCols[2 * i]]
+                            const y = msg.data[numericCols[1 + 2 * i]]
+                            datasets.push(
+                                {
+                                    label: msg.meta.c[2 * i] + "-" + msg.meta.c[1 + 2 * i],
+                                    data: x.map((v, i) => { return { x: Number(v), y: Number(y[i]) } }),
+                                    backgroundColor: chartColors[i],
+                                    borderColor: chartColors[i],
+                                }
+                            )
+                        }
+                        console.log(datasets);
+                        return { datasets: datasets };
+                        break;
+                    default:
+                        chartConf.options.scales.xAxes[0].type = "category";
+                        chartConf.options.scales.xAxes[0].scaleLabel.labelString = msg.labelCol
+                        return {
+                            labels: labels,
+                            datasets: numericCols.map((col, i) => {
+                                return {
+                                    label: col,
+                                    data: msg.data[col],
+                                    backgroundColor: chartColors[i],
+                                    borderColor: chartColors[i],
+                                    fill: false,
+                                    pointRadius: 1,
+                                    borderWidth: 1,
+                                }
+                            })
+                        }
                 }
             }
 
             function saveChartAsPNG() {
                 const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false }).replace(/:/g, "");
                 let link = document.createElement('a');
-                console.log(timestamp);
                 link.download = 'chart_' + document.getElementById("chart-title").value + "_" + timestamp + '.png';
                 link.href = canvas.toDataURL()
-                // document.body.appendChild(link);
                 link.click();
-                // document.body.removeChild(link);
             }
 
             function toggleTheme() {
@@ -389,7 +418,7 @@
                 let link = document.createElement("a");
                 url = URL.createObjectURL(blob);
                 link.href = url;
-                link.download = 'chart_' + document.getElementById("chart-title").value + "_" + timestamp + '.csv';
+                link.download = 'data_' + document.getElementById("chart-title").value + "_" + timestamp + '.csv';
                 // document.body.appendChild(link);
                 link.click();
                 // document.body.removeChild(link);

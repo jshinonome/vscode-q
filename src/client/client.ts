@@ -375,4 +375,5 @@ export function activate(context: ExtensionContext): void {
 
 export function deactivate(): void {
     QueryView.currentPanel?.dispose();
+    QueryGrid.currentPanel?.dispose();
 }

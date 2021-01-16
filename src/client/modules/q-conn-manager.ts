@@ -31,6 +31,7 @@ export class QConnManager {
     busyConn: QConn | undefined = undefined;
     queryWrapper = '';
     isLimited = true;
+    pollingId = 0;
     public static queryMode = 'Console';
     public static queryWrapper = '';
     public static consoleMode = true;
@@ -144,7 +145,7 @@ export class QConnManager {
             }
             this.isBusy = true;
             this.busyConn = this.activeConn;
-            QStatusBarManager.updateQueryStatus(this.isBusy);
+            QStatusBarManager.toggleQueryStatus(this.isBusy);
             const uniqLabel = this.activeConn?.uniqLabel;
             const time = Date.now();
             const timestamp = new Date();
@@ -155,14 +156,14 @@ export class QConnManager {
                     QueryConsole.createOrShow();
                     const duration = Date.now() - time;
                     if (err) {
-                        QueryConsole.current?.appendError(['ERROR', err.message], Date.now() - time, uniqLabel);
+                        QueryConsole.current?.appendError(['ERROR', err.message], duration, uniqLabel);
                         HistoryTreeItem.appendHistory(
                             { uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: err.message });
                     }
                     if (res) {
                         if (typeof res.r === 'string' && res.r.startsWith('ERROR')) {
                             const msg: string[] = res.r.split('\n');
-                            QueryConsole.current?.appendError(msg, Date.now() - time, uniqLabel);
+                            QueryConsole.current?.appendError(msg, duration, uniqLabel);
                             HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: res.r });
                         } else if (QConnManager.consoleMode) {
                             QueryConsole.current?.append(res.r, duration, uniqLabel);
@@ -174,22 +175,88 @@ export class QConnManager {
                                     data: res.r,
                                     meta: res.m,
                                     keys: res.k,
+                                    query: query,
                                 });
-                                QueryConsole.current?.append(`> ${res.r[Object.keys(res.r)[0]].length} row(s) returned`, Date.now() - time, uniqLabel);
+                                QueryConsole.current?.append(`> ${res.r[Object.keys(res.r)[0]].length} row(s) returned`, duration, uniqLabel);
                             }
                             else {
-                                QueryConsole.current?.append(res.r, Date.now() - time, uniqLabel);
+                                QueryConsole.current?.append(res.r, duration, uniqLabel);
                             }
                             HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: '' });
                         }
                     }
-                    QStatusBarManager.updateQueryStatus(this.isBusy);
+                    QStatusBarManager.toggleQueryStatus(this.isBusy);
                 }
             );
         } else {
             commands.executeCommand('q-client.connectEntry').then(
                 uniqLabel => this.connect(uniqLabel as string, query)
             );
+        }
+    }
+
+    static polling(query: string): void {
+        const current = QConnManager.current;
+        if (current && !current.isBusy && current.activeConn) {
+            if (query.slice(-1) === ';') {
+                query = query.slice(0, -1);
+            } else if (query[0] === '`') {
+                // append space if query starts with back-tick, otherwise query will be treated as a symbol.
+                query = query + ' ';
+            }
+            current.isBusy = true;
+            current.busyConn = current.activeConn;
+            QStatusBarManager.toggleQueryStatus(current.isBusy);
+            const uniqLabel = current.activeConn?.uniqLabel;
+            const time = Date.now();
+            current.activeConn?.conn?.k(current.queryWrapper, query,
+                (err, res) => {
+                    current.isBusy = false;
+                    current.busyConn = undefined;
+                    QueryConsole.createOrShow();
+                    const duration = Date.now() - time;
+                    if (err) {
+                        QueryConsole.current?.appendError(['ERROR', err.message], duration, uniqLabel);
+                        current.stopPolling();
+                    }
+                    if (res) {
+                        if (typeof res.r === 'string' && res.r.startsWith('ERROR')) {
+                            const msg: string[] = res.r.split('\n');
+                            QueryConsole.current?.appendError(msg, duration, uniqLabel);
+                            current.stopPolling();
+                        } else {
+                            if (res.t) {
+                                current.update({
+                                    type: 'json',
+                                    data: res.r,
+                                    meta: res.m,
+                                    keys: res.k,
+                                });
+                                QueryConsole.current?.append(`> ${res.r[Object.keys(res.r)[0]].length} row(s) returned`, duration, uniqLabel);
+                            }
+                            else {
+                                QueryConsole.current?.append(res.r, duration, uniqLabel);
+                            }
+                        }
+                    }
+                    QStatusBarManager.toggleQueryStatus(current.isBusy);
+                }
+            );
+        }
+    }
+
+    startPolling(interval: number, query: string): void {
+        if (this.pollingId) {
+            this.stopPolling();
+        }
+        if (interval && query)
+            this.pollingId = setInterval(QConnManager.polling, interval, query);
+    }
+
+    stopPolling(): void {
+        if (this.pollingId) {
+            clearInterval(this.pollingId);
+            this.pollingId = 0;
         }
     }
 
@@ -294,7 +361,7 @@ export class QConnManager {
         this.busyConn?.conn?.close();
         this.isBusy = false;
         this.busyConn = undefined;
-        QStatusBarManager.updateQueryStatus(this.isBusy);
+        QStatusBarManager.toggleQueryStatus(this.isBusy);
     }
 
     addCfg(qcfg: QCfg): void {

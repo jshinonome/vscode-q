@@ -60,7 +60,7 @@ export class QStatusBarManager {
         }
     }
 
-    public static updateQueryStatus(show: boolean): void {
+    public static toggleQueryStatus(show: boolean): void {
         if (show) {
             this.current!.queryStatusBar.show();
         } else {

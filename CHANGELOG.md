@@ -4,6 +4,10 @@ all notable changes to the "vscode-q" extension will be documented in this file.
 
 ## 2.0.5
 
+### added
+
+-   query grid: polling
+
 ### changed
 
 -   query grid: allow text selection
@@ -38,20 +42,20 @@ all notable changes to the "vscode-q" extension will be documented in this file.
 
 ### fixed
 
--   char column for query grid
+-   query grid: char column
 
 ## 2.0.1
 
 ### added
 
--   save chart as png
--   save data as csv
+-   query grid: save chart as png
+-   query grid: save data as csv
 
 ## 2.0.0
 
 ### added
 
--   chart for query grid
+-   query grid: chart
 
 ## 1.9.10
 
