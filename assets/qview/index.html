@@ -32,7 +32,7 @@
   <perspective-viewer id="data-viewer" class="perspective-viewer-material{theme}" editable="true" selectable="true"
     style="--select--background-color: var(--vscode-editor-background)"></perspective-viewer>
   <script type="text/javascript" charset="utf-8">
-    let vscode, saveFileTypeSelector, viewer, msg, isReady;
+    let vscode, saveFileTypeSelector, viewer, msg, isReady = false;
     let keyColor = '{keyColor}';
     const overridden_types = {
       types: {
@@ -172,6 +172,7 @@
         // raw byte array
         case 'rba':
         case 'json':
+          msg = message;
           loadData(message);
           break;
       }

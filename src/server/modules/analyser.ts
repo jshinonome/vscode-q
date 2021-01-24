@@ -17,7 +17,7 @@ import {
 } from 'vscode-languageserver/node';
 import { URI } from 'vscode-uri';
 import * as Parser from 'web-tree-sitter';
-import { buildInFs } from '../util/build-in-fs';
+import { buildInFs, buildInFsSigs } from '../util/build-in-fs';
 import * as TreeSitterUtil from '../util/tree-sitter';
 
 import klaw = require('klaw');
@@ -40,6 +40,7 @@ export default class Analyzer {
     private connection: Connection;
     private rootPath: string | undefined | null;
     private reservedWord: string[];
+    private buildInFsSigSrc: string;
     public static async fromRoot(
         connection: Connection,
         workspaceFolder: string,
@@ -66,6 +67,7 @@ export default class Analyzer {
         this.workspaceFolder = URI.parse(workspaceFolder);
         this.rootPath = this.workspaceFolder.path;
         this.reservedWord = buildInFs.map(item => item.label);
+        this.buildInFsSigSrc = buildInFsSigs;
     }
 
     /**
@@ -259,6 +261,7 @@ export default class Analyzer {
 
                     this.connection.console.info(`Analyzing took ${getTimePassed()}`);
                 });
+            this.analyzeServerCache('');
         }
 
     }
@@ -413,7 +416,9 @@ export default class Analyzer {
     }
 
     public analyzeServerCache(content: string): void {
-        const tree = this.parser.parse(content);
+        // load build in functions signatures here
+        const source = this.buildInFsSigSrc + content;
+        const tree = this.parser.parse(source);
         this.serverIds = [];
         this.serverSyms = [];
         TreeSitterUtil.forEach(tree.rootNode, (n: Parser.SyntaxNode) => {

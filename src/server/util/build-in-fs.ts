@@ -25,4 +25,7 @@ export function getBuildInFsRef(): CompletionItem[] {
     return buildInFs;
 }
 
+const sigPath = path.join(__filename, '../../assets/source/build-in-fs-sigs.q');
+
 export const buildInFs = getBuildInFsRef();
+export const buildInFsSigs = fs.readFileSync(sigPath, 'utf8');

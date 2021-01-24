@@ -4,9 +4,9 @@ label,detail,documentation,kind
 .Q.addmonths,add months to date,.Q.addmonths[dates;ints],2
 .Q.addr,IP address,.Q.addr[sym],2
 .Q.b6,bicameral-alphanums,.Q.b6,6
-.Q.bt,backtrace,.Q.bt[],2
+.Q.bt,backtrace(error or debug),.Q.bt[],2
 .Q.btoa,b64 encode,.Q.btoa[string],2
-.Q.bv,build vp,.Q.bv[<`>],2
+.Q.bv,build schema for tables missing from partitions,.Q.bv[<`>],2
 .Q.Cf,create empty nested char file,.Q.Cf[file],2
 .Q.chk,fill HDB,.Q.chk[dir],2
 .Q.cn,count partitioned table,.Q.cn[partitioned table],2
@@ -19,18 +19,18 @@ label,detail,documentation,kind
 .Q.en,enumerate varchar cols,.Q.en[dir;table],2
 .Q.ens,enumerate against domain,.Q.ens[dir;table;sym],2
 .Q.f,format,.Q.f[int;number],2
-.Q.fc,parallel on cut,.Q.fc[v1;list],2
+.Q.fc,parallel on cut(apply parallel),.Q.fc[v1;list],2
 .Q.ff,append columns,.Q.ff[table;table],2
 .Q.fk,foreign key,.Q.fk[column sym],2
 .Q.fmt,format,.Q.fmt[length;decimal;number],2
 .Q.fps,streaming algorithm,.Q.fps[v1;file],2
 .Q.fs,streaming algorithm,.Q.fs[v1;file],2
-.Q.fsn,streaming algorithm,.Q.fs[v1;file;chunk size],2
+.Q.fsn,streaming algorithm,.Q.fsn[v1;file;chunk size],2
 .Q.ft,apply simple,.Q.ft[v1;keyed table],2
 .Q.fu,apply unique,.Q.fu[v1;list],2
 .Q.gc,garbage collect,.Q.gc[],2
 .Q.hdpf,save tables,.Q.hdpf[hdb handle;dir;part;column sym],2
-.Q.hg,HTTP get,.Q.hp[url|string],2
+.Q.hg,HTTP get,.Q.hg[url|string],2
 .Q.host,hostname,.Q.host[ip int],2
 .Q.hp,HTTP post,.Q.hp[url|string;MIME string;query string],2
 .Q.id,sanitize,.Q.id[sym|table],2
@@ -63,7 +63,7 @@ label,detail,documentation,kind
 .Q.ts,time and space,.Q.ts[v;args],2
 .Q.ty,type,.Q.ty[list],2
 .Q.u,is date based,.Q.u,6
-.Q.V,table to dict,.Q.v[table],2
+.Q.V,table to dict,.Q.V[table],2
 .Q.v,value,.Q.v[file|sym],2
 .Q.view,subview,.Q.view[parts],2
 .Q.vp,missing partitions,.Q.vp,6
@@ -279,7 +279,7 @@ prev,shift each to prev(first is null),prev[list],2
 prior,apply to each item and its preceding item,prior[v2|vv;list],2
 rand,pick randomly,rand[number]|rand[list],2
 rank,position in the sorted list,rank[list],2
-ratios,running ratios,rations[<default;>numbers],2
+ratios,running ratios,ratios[<default;>numbers],2
 raze,flat a list,raze[list],2
 read0,read text from a file or process handle,read0[hsym|(hsym;offset;length)],2
 read1,read bytes from a file or process handle,read1[hsym|(hsym;offset;length)],2
@@ -307,7 +307,7 @@ string,cast to string,string[any],2
 sublist,select a sublist,sublist[int;list],2
 sum,total,sum[numbers],2
 sums,running sums,sums[numbers],2
-sv,concatenate strings|syms,sv[sting;strings]|sv[`;syms]|sv[numbers;numbers],2
+sv,concatenate strings|syms,sv[string;strings]|sv[`;syms]|sv[numbers;numbers],2
 svar,sample variance,svar[numbers],2
 system,execute a system command,system[string],2
 tables,list tables,tables[namespace sym],2
@@ -317,7 +317,7 @@ trim,trim leading and trailing spaces,trim[string],2
 type,datatype,type[x],2
 uj,union join,uj[table;table],2
 ujf,union join(ignore nulls from RHS),ujf[table;table],2
-ungroup,ungroup list type columns in a table into rows,ugroup[table],2
+ungroup,ungroup list type columns in a table into rows,ungroup[table],2
 union,union of two lists,union[list;list],2
 update,amend table|dict,"update col1,col2 [by col3] from table [where cond]",2
 upper,upper case,upper[sym|string],2
@@ -326,13 +326,13 @@ value,value,value[symbol|string|list|dict],2
 var,variance,var[numbers],2
 view,expression defining a view,view[sym],2
 views,list veiws defined,views[namespace sym],2
-vs,split string|symbol,vs[sting;string]|sv[`;sym|dir]|sv[number;number],2
+vs,split string|symbol,vs[string;string]|sv[`;sym|dir]|sv[number;number],2
 wavg,weighted average,wavg[weights;numbers],2
 where,to indices,where[numbers]|where[booleans],2
 while,evaluate expression repeatedly,while[test;e1;e2...],2
 within,check bounds,within[list;range],2
 wj,window join(consider prevailing quotes before window),wj[windows;syms;table;(table;(aggr;sym)<;(aggr;sym)>)],2
-wj1,window join(consider quotes after entry to the window),wj[windows;syms;table;(table;(aggr;sym)<;(aggr;sym)>)],2
+wj1,window join(consider quotes after entry to the window),wj1[windows;syms;table;(table;(aggr;sym)<;(aggr;sym)>)],2
 wsum,weighted sum,wsum[weights;numbers],2
 xasc,ascending sort table by columns,xasc[syms;table],2
 xcol,rename columns,xcol[syms;table],2

@@ -8,22 +8,6 @@
         "prefix": "up",
         "body": "update ${1:column} from ${2:table}"
     },
-    "Partition table": {
-        "prefix": ".Q.dp",
-        "body": ".Q.dpft[${1:s_directory};${2:partition};${3:s_field};${4:s_table}]"
-    },
-    "Partition table with enum domain": {
-        "prefix": ".Q.dps",
-        "body": ".Q.dpfts[${1:s_directory};${2:partition};${3:s_field};${4:s_table};${5:s_sym}]"
-    },
-    "Enumerate table": {
-        "prefix": ".Q.en",
-        "body": ".Q.en[${1:s_directory};${4:table}]"
-    },
-    "Enumerate table with enum domain": {
-        "prefix": ".Q.ens",
-        "body": ".Q.ens[${1:s_directory};${4:table};${5:s_sym}]"
-    },
     "Load csv": {
         "prefix": "load",
         "body": "(${1:types};${2:delimiter})0:${3:handle/strings}"
