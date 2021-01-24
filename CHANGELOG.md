@@ -2,6 +2,12 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 2.0.6
+
+### added
+
+-   lang server: build in functions signatures
+
 ## 2.0.5
 
 ### added
