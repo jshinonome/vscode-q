@@ -9,30 +9,11 @@ import * as fs from 'fs';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
 import * as xlsx from 'xlsx';
 import { QueryResult } from '../models/query-result';
+import { kTypeMap } from '../util/k-map';
 import path = require('path');
 import moment = require('moment');
 
 const templatePath = './assets/qview';
-const kdbTypeMap = new Map<string, string>([
-    ['b', 'boolean'],
-    ['g', 'string'],
-    ['x', 'integer'],
-    ['h', 'integer'],
-    ['i', 'integer'],
-    ['j', 'integer'],
-    ['e', 'float'],
-    ['f', 'float'],
-    ['c', 'string'],
-    ['s', 'string'],
-    ['p', 'timestamp'],
-    ['m', 'month'],
-    ['d', 'date'],
-    ['z', 'datetime'],
-    ['n', 'timespan'],
-    ['u', 'minute'],
-    ['v', 'second'],
-    ['t', 'time'],
-]);
 
 export class QueryView implements Disposable {
     public static currentPanel: QueryView | undefined;
@@ -132,7 +113,7 @@ export class QueryView implements Disposable {
 
     public update(result: QueryResult): void {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const meta = result.meta.c.reduce((o: any, k: any, i: number) => ({ ...o, [k]: kdbTypeMap.get(result.meta.t[i]) ?? 'string' }), {});
+        const meta = result.meta.c.reduce((o: any, k: any, i: number) => ({ ...o, [k]: kTypeMap.get(result.meta.t[i]) ?? 'string' }), {});
         result.meta = meta;
         this._panel.webview.postMessage(result);
     }

@@ -17,20 +17,16 @@ type formatter = (value: any) => any;
 const decimals = workspace.getConfiguration().get('q-client.qgrid.decimals') as number;
 const kdbTypeMap = new Map<string, formatter>([
     ['b', (value) => value ? '1b' : '0b'],
-    // ['g', (value) => value],
     ['x', (value) => '0x' + value],
     ['h', (value) => value + 'h'],
-    // ['i', (value) => value],
-    // ['j', (value) => value],
     ['e', (value) => value ? value.toFixed(decimals) : value],
     ['f', (value) => value ? value.toFixed(decimals) : value],
-    // ['c', (value) => value],
-    // ['s', (value) => value],
-    ['p', (value) => moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSSSSSSS')],
+    // Nanoseconds is not native supported in javascript
+    ['p', (value) => moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSS')],
     ['m', (value) => moment(value).format('YYYY-MM')],
     ['d', (value) => moment(value).format('YYYY-MM-DD')],
     ['z', (value) => moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSS')],
-    ['n', (value) => moment(value).format('HH:mm:ss.SSSSSSSSS')],
+    ['n', (value) => moment(value).format('HH:mm:ss.SSS')],
     ['u', (value) => moment(value).format('HH:mm')],
     ['v', (value) => moment(value).format('HH:mm:ss')],
     ['t', (value) => moment(value).format('HH:mm:ss.SSS')],

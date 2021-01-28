@@ -1,8 +1,8 @@
 # vscode extension for q
 
-[![](https://img.shields.io/visual-studio-marketplace/v/jshinonome.vscode-q?color=blueviolet&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
-[![](https://vsmarketplacebadge.apphb.com/downloads/jshinonome.vscode-q.svg?color=blue&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
-[![](https://vsmarketplacebadge.apphb.com/installs/jshinonome.vscode-q.svg?color=success&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
+[![](https://img.shields.io/visual-studio-marketplace/v/jshinonome.vscode-q?color=blueviolet&style=for-the-badge)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
+[![](https://vsmarketplacebadge.apphb.com/downloads/jshinonome.vscode-q.svg?color=blue&style=for-the-badge)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
+[![](https://vsmarketplacebadge.apphb.com/installs/jshinonome.vscode-q.svg?color=success&style=for-the-badge)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 
 This extension provides kdb+\q language support:
 

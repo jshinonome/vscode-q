@@ -2,6 +2,16 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 2.0.7
+
+### added
+
+-   server explorer: show table schema
+
+### changed
+
+-   query grid: timestamp and timespan only show milliseconds, because javascript cannot show nanoseconds correctly
+
 ## 2.0.6
 
 ### added
