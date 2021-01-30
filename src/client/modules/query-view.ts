@@ -13,7 +13,7 @@ import { kTypeMap } from '../util/k-map';
 import path = require('path');
 import moment = require('moment');
 
-const templatePath = './assets/qview';
+const templatePath = './assets/query-view';
 
 export class QueryView implements Disposable {
     public static currentPanel: QueryView | undefined;
@@ -88,7 +88,7 @@ export class QueryView implements Disposable {
     }
 
     private configure(): void {
-        const cfg = workspace.getConfiguration('q-client.qview');
+        const cfg = workspace.getConfiguration('q-client.queryView');
         let isLightTheme = false;
         isLightTheme = window.activeColorTheme.kind === ColorThemeKind.Light;
         this._cssTheme = cfg.dense ? 'material-dense' : 'material';

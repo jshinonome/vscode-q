@@ -3,8 +3,8 @@
 # update packages
 npm update
 # copy perspective package files
-jsDir=assets/qview/js
-cssDir=assets/qview/css
+jsDir=assets/query-view/js
+cssDir=assets/query-view/css
 cp node_modules/@finos/perspective/dist/umd/perspective.inline*js $jsDir
 cp node_modules/@finos/perspective-viewer/dist/umd/material*css $cssDir
 cp node_modules/@finos/perspective-viewer/dist/umd/perspective-viewer*js $jsDir

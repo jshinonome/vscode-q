@@ -14,7 +14,7 @@ import moment = require('moment');
 
 const templatePath = './assets/query-grid';
 type formatter = (value: any) => any;
-const decimals = workspace.getConfiguration().get('q-client.qgrid.decimals') as number;
+const decimals = workspace.getConfiguration().get('q-client.queryGrid.decimals') as number;
 const kdbTypeMap = new Map<string, formatter>([
     ['b', (value) => value ? '1b' : '0b'],
     ['x', (value) => '0x' + value],

@@ -443,13 +443,13 @@
 					"default": "Console",
 					"description": "Query Mode"
 				},
-				"q-client.qview.dense": {
+				"q-client.queryView.dense": {
 					"scope": "resource",
 					"type": "boolean",
 					"default": false,
 					"description": "q View in Dense Mode"
 				},
-				"q-client.qgrid.decimals": {
+				"q-client.queryGrid.decimals": {
 					"scope": "resource",
 					"type": "number",
 					"default": 3,
