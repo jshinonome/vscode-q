@@ -28,7 +28,7 @@
     "outputs": {
       "patterns": [
         {
-          "name": "markup.error.q-output",
+          "name": "message.error.q-output",
           "match": "^>>>\\sERROR.*"
         },
         {

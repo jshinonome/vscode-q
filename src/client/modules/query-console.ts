@@ -63,8 +63,7 @@ export class QueryConsole {
         }
         const label = uniqLabel.replace(',', '-');
         const date = new Date();
-        this._console.appendLine(`>>> ${label} @ ${date.toLocaleTimeString()}`);
-        this._console.appendLine(`>>> ${time}(ms) elapsed`);
+        this._console.appendLine(`>>> ${label} @ ${date.toLocaleTimeString()} ---- ${time}(ms) elapsed`);
         if (Array.isArray(output)) {
             output.forEach(o => this._console.appendLine(o));
         } else {
@@ -79,11 +78,14 @@ export class QueryConsole {
         }
         const label = uniqLabel.replace(',', '-');
         const date = new Date();
-        this._console.appendLine(`>>> ${label} @ ${date.toLocaleTimeString()}`);
-        this._console.appendLine(`>>> ${time}(ms) elapsed`);
+        this._console.appendLine(`>>> ${label} @ ${date.toLocaleTimeString()} ---- ${time}(ms) elapsed`);
         this._console.appendLine(`>>> ${msg[0]}: ${msg[1]}`);
-        const explanation = this.errorMsgMap.get(msg[1]) ?? `Value error (${msg[1]} undefined)`;
-        this._console.appendLine(`>>> Explanation: ${explanation}`);
+        const explanation = this.errorMsgMap.get(msg[1])
+        if (explanation) {
+            this._console.appendLine(`>>> Explanation: ${explanation}`);
+        } else if (/^(\.[a-zA-Z][a-zA-Z\d_]*(?:\.[a-zA-Z\d_]+)*|[a-zA-z][a-zA-Z\d]*)$/gm.test(msg[1])) {
+            this._console.appendLine(`>>> Explanation: Value error (${msg[1]} undefined)`);
+        }
         msg.shift();
         msg.shift();
         msg.pop();

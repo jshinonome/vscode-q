@@ -12,7 +12,7 @@ patterns:
 repository:
   outputs:
     patterns:
-      - name: markup.error.q-output
+      - name: message.error.q-output
         match: ^>>>\sERROR.*
       - name: source.q-output
         match: ^>>>\s.*
