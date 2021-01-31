@@ -2,6 +2,16 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 2.0.8
+
+### added
+
+-   attention and todo tokens for comment, see tips in readme to add colors
+
+### fixed
+
+-   query view/grid: round temporal types in c.js to show more accurate datetime
+
 ## 2.0.7
 
 ### added

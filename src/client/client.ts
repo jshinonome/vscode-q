@@ -313,9 +313,9 @@ export function activate(context: ExtensionContext): void {
     }
 
     workspace.onDidChangeConfiguration(e => {
-        if (e.affectsConfiguration('q-ext') && !e.affectsConfiguration('q-client.term')) {
+        if (e.affectsConfiguration('q-client') && !e.affectsConfiguration('q-client.term')) {
             window.showInformationMessage('Reload/Restart vscode to Making the Configuration Take Effect.');
-        } else if (e.affectsConfiguration('q-ser')) {
+        } else if (e.affectsConfiguration('q-server')) {
             const cfg = workspace.getConfiguration('q-server.sourceFiles');
             client.sendNotification('$/analyze-source-code', { globsPattern: cfg.get('globsPattern'), ignorePattern: cfg.get('ignorePattern') });
         }

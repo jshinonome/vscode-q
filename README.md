@@ -172,6 +172,33 @@ Type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd>, call `Open Setting(Json)`, a
 
 There may be a conflict with other extensions. Disable or uninstall them and try again.
 
+### Enable Highlight for Attention And TODO of comments
+
+![comment-highlight](assets/demo/comment-highlight.png)
+
+Type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd>, call `Open Setting(Json)`, and add following configuration.
+
+```
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope":"comment.line.attention",
+                "settings": {
+                    "fontStyle": "italic",
+                    "foreground": "#B71C1C"
+                }
+            },
+            {
+                "scope":"comment.line.todo",
+                "settings": {
+                    "fontStyle": "italic",
+                    "foreground": "#2E7D32"
+                }
+            }
+        ]
+    }
+```
+
 ## Packages
 
 Special thanks to the following packages.
