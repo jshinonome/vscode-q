@@ -82,7 +82,6 @@ export class QConnManager {
             QConnManager.consoleMode = false;
         }
         QConnManager.current?.updateQueryWrapper();
-        QStatusBarManager.updateConnStatusColor();
     }
 
     getConn(uniqLabel: string): QConn | undefined {
