@@ -30,7 +30,7 @@ export class QStatusBarManager {
         this.connStatusBar.show();
 
         this.queryStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 98);
-        this.queryStatusBar.text = '$(loading)';
+        this.queryStatusBar.text = '$(play-circle)';
         this.queryStatusBar.color = '#4CAF50';
         this.queryStatusBar.tooltip = 'Querying';
         context.subscriptions.push(this.queryStatusBar);

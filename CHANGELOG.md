@@ -2,6 +2,12 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 2.0.9
+
+### added
+
+-   q language server: call hierarchy
+
 ## 2.0.8
 
 ### added
@@ -300,13 +306,13 @@ all notable changes to the "vscode-q" extension will be documented in this file.
 
 ### added
 
--   go to definition
--   go to reference
--   workspace symbol
--   document highlight
--   document symbol
--   completion(include all global namespace variables in src folder)
--   completion resolve
+-   q language server: go to definition
+-   q language server: go to reference
+-   q language server: workspace symbol
+-   q language server: document highlight
+-   q language server: document symbol
+-   q language server: completion(include all global namespace variables in src folder)
+-   q language server: completion resolve
 
 ### changed
 
@@ -318,8 +324,8 @@ all notable changes to the "vscode-q" extension will be documented in this file.
 ### added
 
 -   fix issue when query kdb+ version < 3.5, earlier version doesn't have .q.trp yet
--   add q language server, hope to add code jump soon.
--   auto insert semicolon ';'
+-   add q language server
+-   formatter: auto insert semicolon ';'
 
 ## 1.3.2
 
@@ -332,7 +338,7 @@ all notable changes to the "vscode-q" extension will be documented in this file.
 ### added
 
 -   show warning for lost connection
--   highlight @p, @r in comments
+-   q syntaxes: highlight @p, @r in comments
 -   auto append space to close brackets at beginning of line
 
 ## 1.3.0
@@ -350,17 +356,17 @@ all notable changes to the "vscode-q" extension will be documented in this file.
 
 ### added
 
--   automatically add space to start braces on enter
+-   formatter: automatically add space to start braces on enter
 
 ## 1.0.3
 
 ### added
 
--   snippets for .q.dpft(s), .q.en(s), select, update
+-   snippets: .q.dpft(s), .q.en(s), select, update
 
 ### changed
 
--   move '::' to keyword
+-   q syntaxes: move '::' to keyword
 
 ## 1.0.0
 

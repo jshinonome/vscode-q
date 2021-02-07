@@ -9,7 +9,7 @@
 import Fuse from 'fuse.js';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import {
-    CompletionItem,
+    CallHierarchyItem, CompletionItem,
     CompletionItemKind, Connection, Diagnostic, DiagnosticSeverity,
     DocumentUri, Location, ParameterInformation,
     Range, SemanticTokens, SemanticTokensBuilder,
@@ -25,6 +25,8 @@ import fs = require('graceful-fs');
 import picomatch = require('picomatch');
 
 type nameToSymbolInfo = Map<string, SymbolInformation[]>;
+type nameToCallHierarchy = Map<string, CallHierarchyItem[]>;
+type nameToGlobalId = Map<string, string[]>;
 
 export type word = {
     type: string,
@@ -59,6 +61,8 @@ export default class Analyzer {
     private nameToSigHelp = new Map<string, SignatureHelp>();
     private serverIds: CompletionItem[] = [];
     private serverSyms: string[] = [];
+    private uriToCallHierarchy = new Map<string, nameToCallHierarchy>();
+    private uriToGlobalId = new Map<string, nameToGlobalId>();
     private workspaceFolder: URI;
 
     public constructor(parser: Parser, connection: Connection, workspaceFolder: string) {
@@ -73,7 +77,7 @@ export default class Analyzer {
     /**
      * Find all the definition locations
      */
-    public findDefinition(word: word, uri: string): Location[] {
+    public getDefinitionByUriWord(uri: string, word: word): Location[] {
         let symbols: SymbolInformation[] = [];
 
         // search local id for current file, current function
@@ -108,10 +112,10 @@ export default class Analyzer {
 
         if (word.type === 'global_identifier' || word.containerName === '') {
             // find in all files
-            this.uriToTree.forEach((_, u) => locations = locations.concat(this.findSynNodeLocations(u, word)));
+            this.uriToTree.forEach((_, u) => locations = locations.concat(this.getSynNodeLocationsByUriWord(u, word)));
         } else {
             // find in current file
-            locations = this.findSynNodeLocations(uri, word);
+            locations = this.getSynNodeLocationsByUriWord(uri, word);
         }
         return locations;
     }
@@ -120,7 +124,7 @@ export default class Analyzer {
     /**
      * Find all syntax nodes of name in the given file.
      */
-    public findSynNodes(uri: string, word: word): Parser.SyntaxNode[] {
+    public getSynNodesByUriWord(uri: string, word: word): Parser.SyntaxNode[] {
         const tree = this.uriToTree.get(uri);
         const content = this.uriToFileContent.get(uri);
         const synNodes: Parser.SyntaxNode[] = [];
@@ -139,13 +143,13 @@ export default class Analyzer {
         }
     }
 
-    public findSynNodeLocations(uri: string, word: word): Location[] {
-        const synNodes = this.findSynNodes(uri, word);
+    public getSynNodeLocationsByUriWord(uri: string, word: word): Location[] {
+        const synNodes = this.getSynNodesByUriWord(uri, word);
         return synNodes.map(syn => Location.create(uri, TreeSitterUtil.range(syn)));
     }
 
 
-    public findSynNodeByType(uri: string, type: string): Parser.SyntaxNode[] {
+    public getSynNodeByType(uri: string, type: string): Parser.SyntaxNode[] {
         const tree = this.uriToTree.get(uri);
         const synNodes: Parser.SyntaxNode[] = [];
         if (tree) {
@@ -180,7 +184,7 @@ export default class Analyzer {
     /**
      * Find all symbol definitions in the given file.
      */
-    public findSymbolsForFile(uri: string): SymbolInformation[] {
+    public getSymbolsByUri(uri: string): SymbolInformation[] {
         const nameToSymInfos = this.uriToDefinition.get(uri)?.values();
         return nameToSymInfos ? Array.from(nameToSymInfos).flat() : [];
     }
@@ -281,6 +285,10 @@ export default class Analyzer {
         this.uriToFileContent.set(uri, content);
         this.uriToSymbol.set(uri, []);
         this.uriToSemanticTokes.set(uri, new SemanticTokensBuilder());
+        const callHierarchyMap = new Map<string, CallHierarchyItem[]>();
+        this.uriToCallHierarchy.set(uri, callHierarchyMap);
+        const globalIdMap = new Map<string, string[]>();
+        this.uriToGlobalId.set(uri, globalIdMap);
 
         const problems: Diagnostic[] = [];
 
@@ -378,21 +386,37 @@ export default class Analyzer {
                 this.uriToSymbol.get(uri)?.push(n.text.trim());
             } else if (TreeSitterUtil.isFunctionBody(n)) {
                 // tokenTypes: ['variable', 'parameter', 'type', 'class']
-                const params = TreeSitterUtil.extractParams(n).filter(param => this.reservedWord.indexOf(param) < 0);
+                const params = TreeSitterUtil.extractParams(n).filter(param => !this.reservedWord.includes(param));
                 const semanticTokensBuilder = this.uriToSemanticTokes.get(uri) ?? new SemanticTokensBuilder();
-                if (params.length > 0) {
-                    TreeSitterUtil.forEachAndSkip(n, 'function_body', node => {
-                        if (node.type === 'local_identifier') {
-                            const param = node.text.trim();
-                            if (params.indexOf(param) >= 0) {
-                                // 1 means paramter type here
-                                const token = TreeSitterUtil.token(node);
-                                token.push(1, 0);
-                                semanticTokensBuilder.push(token[0], token[1], token[2], token[3], token[4]);
-                            }
+
+                TreeSitterUtil.forEachAndSkip(n, 'function_body', node => {
+                    if (params.length > 0 && node.type === 'local_identifier') {
+                        const param = node.text.trim();
+                        if (params.includes(param)) {
+                            // 1 means paramter type here
+                            const token = TreeSitterUtil.token(node);
+                            token.push(1, 0);
+                            semanticTokensBuilder.push(token[0], token[1], token[2], token[3], token[4]);
                         }
-                    });
-                }
+                    } else if (node.type === 'global_identifier') {
+                        const name = node.text.trim();
+                        const callHierarchy = callHierarchyMap.get(name) ?? [];
+                        const containerName = this.getContainerName(node);
+                        const globalId = globalIdMap.get(containerName) ?? [];
+                        callHierarchy.push({
+                            kind: SymbolKind.Function,
+                            name: containerName,
+                            range: TreeSitterUtil.range(node),
+                            selectionRange: TreeSitterUtil.range(node),
+                            uri: uri,
+                            data: name
+                        });
+                        callHierarchyMap.set(name, callHierarchy);
+                        globalId.push(name);
+                        globalIdMap.set(containerName, globalId);
+                    }
+                });
+
             }
         });
 
@@ -575,7 +599,7 @@ export default class Analyzer {
         return this.serverIds;
     }
 
-    public getSyms(uri: DocumentUri): string[] {
+    public getSymsForUri(uri: DocumentUri): string[] {
         const srcSyms = this.uriToSymbol.get(uri) ?? [];
         return this.serverSyms.concat(srcSyms);
     }
@@ -609,5 +633,17 @@ export default class Analyzer {
 
     public getSemanticTokens(uri: DocumentUri): SemanticTokens {
         return this.uriToSemanticTokes.get(uri)?.build() ?? { data: [] };
+    }
+
+    public getCallHierarchyItemByUriWord(uri: string, word: string): CallHierarchyItem[] {
+        return this.uriToCallHierarchy.get(uri)?.get(word) ?? [];
+    }
+
+    public getCallHierarchyItemByWord(word: string): CallHierarchyItem[] {
+        return Array.from(this.uriToCallHierarchy.values()).flat(1).map(map => map.get(word) ?? []).flat(1);
+    }
+
+    public getGlobalIdByUriContainerName(uri: string, containerName: string): string[] {
+        return this.uriToGlobalId.get(uri)?.get(containerName) ?? [];
     }
 }

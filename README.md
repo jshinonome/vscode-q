@@ -25,6 +25,7 @@ This extension provides kdb+\q language support:
     -   completion resolve
     -   signature help
     -   semantic highlight
+    -   call hierarchy
 
 See the [change log](https://github.com/jshinonome/vscode-q/blob/master/CHANGELOG.md).
 

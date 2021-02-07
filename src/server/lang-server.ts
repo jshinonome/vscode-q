@@ -6,17 +6,19 @@
  */
 
 import * as fs from 'fs';
+import { TextDocument } from 'vscode-languageserver-textdocument';
 import {
     CompletionItem, CompletionItemKind, Connection, Diagnostic, DiagnosticSeverity,
     DidChangeWatchedFilesParams, DocumentHighlight, DocumentSymbolParams, FileChangeType, Hover,
     InitializeParams, Location, PrepareRenameParams, Range,
-    ReferenceParams, RenameParams, ServerCapabilities, SignatureHelp,
+    ReferenceParams, RenameParams,
+    SemanticTokens, SemanticTokensParams, ServerCapabilities, SignatureHelp,
     SignatureHelpParams, SymbolInformation, SymbolKind, TextDocumentPositionParams, TextDocuments,
-    TextDocumentSyncKind, TextEdit, WorkspaceEdit, WorkspaceSymbolParams, SemanticTokensParams, SemanticTokens
+    TextDocumentSyncKind, TextEdit, WorkspaceEdit, WorkspaceSymbolParams
 } from 'vscode-languageserver/node';
-import { TextDocument } from 'vscode-languageserver-textdocument';
 import { URI } from 'vscode-uri';
 import Analyzer, { word } from './modules/analyser';
+import CallHierarchyProvider from './modules/call-hierarchy-provider';
 import { buildInFs } from './util/build-in-fs';
 import { initializeParser } from './util/parser';
 
@@ -29,6 +31,7 @@ export default class LangServer {
     buildInFsRef: CompletionItem[] = [];
 
     private analyzer: Analyzer;
+    private callHierarchyProvider: CallHierarchyProvider;
 
     private constructor(connection: Connection, analyzer: Analyzer) {
         this.connection = connection;
@@ -53,6 +56,12 @@ export default class LangServer {
         this.connection.onSignatureHelp(this.onSignatureHelp.bind(this));
         this.connection.onNotification('$/analyze-server-cache', (code => this.analyzer.analyzeServerCache(code)));
         this.connection.onNotification('$/analyze-source-code', (cfg => this.analyzer.analyzeWorkspace(cfg)));
+
+        this.callHierarchyProvider = new CallHierarchyProvider(analyzer);
+        this.connection.languages.callHierarchy.onPrepare(this.callHierarchyProvider.onPrepare.bind(this));
+        this.connection.languages.callHierarchy.onIncomingCalls(this.callHierarchyProvider.onIncomingCalls.bind(this));
+        this.connection.languages.callHierarchy.onOutgoingCalls(this.callHierarchyProvider.onOutgoingCalls.bind(this));
+
         this.connection.languages.semanticTokens.on(this.onSemanticsToken.bind(this));
     }
 
@@ -96,7 +105,8 @@ export default class LangServer {
                     tokenModifiers: []
                 },
                 full: true,
-            }
+            },
+            callHierarchyProvider: true,
         };
     }
 
@@ -166,7 +176,7 @@ export default class LangServer {
                 }
             });
         } else if (word?.text.startsWith('`')) {
-            symbols = this.analyzer.getSyms(params.textDocument.uri);
+            symbols = this.analyzer.getSymsForUri(params.textDocument.uri);
             new Set(symbols).forEach(symbol => {
                 completionItem.push({ label: symbol, kind: CompletionItemKind.Enum });
             });
@@ -202,7 +212,7 @@ export default class LangServer {
         if (!word) {
             return [];
         }
-        return this.analyzer.findDefinition(word, params.textDocument.uri);
+        return this.analyzer.getDefinitionByUriWord(params.textDocument.uri, word);
     }
 
     private onWorkspaceSymbol(params: WorkspaceSymbolParams): SymbolInformation[] {
@@ -217,7 +227,7 @@ export default class LangServer {
         if (!word) {
             return [];
         }
-        return this.analyzer.findSynNodeLocations(params.textDocument.uri, word)
+        return this.analyzer.getSynNodeLocationsByUriWord(params.textDocument.uri, word)
             .map(syn => { return { range: syn.range }; });
     }
 
@@ -233,7 +243,7 @@ export default class LangServer {
     // todo: limit to global and null container
     private onDocumentSymbol(params: DocumentSymbolParams): SymbolInformation[] {
         // this.connection.console.log(`onDocumentSymbol`)
-        return this.analyzer.findSymbolsForFile(params.textDocument.uri);
+        return this.analyzer.getSymbolsByUri(params.textDocument.uri);
     }
 
     private onPrepareRename(params: PrepareRenameParams): Range | null {
