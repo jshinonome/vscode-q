@@ -114,7 +114,7 @@ export default class QDictTreeItem extends TreeItem
             r: select from r where not t in 101 -255h;
             r: update b: {string value x} each n from r where t within 100 111h;
             r: update t: {$[.Q.qt value x;98h;99h]} each n from r where t in 98 99h;
-            r: update m: {0!meta x} each n from r where t=98h;
+            r: update m: {@[0!meta@;x;{x}]} each n from r where t=98h;
             (\`n xasc select from r where p=\`root) uj \`p\`n xasc select from r where p<>\`root
          }[]`;
         if (conn) {
@@ -146,6 +146,10 @@ export default class QDictTreeItem extends TreeItem
                                 code.push(`${res.n[i]}:!;`);
                                 break;
                             case (type == 98):
+                                if ('string' === typeof res.m[i]) {
+                                    window.showWarningMessage('sym file is not loaded');
+                                    break;
+                                }
                                 new QTableTreeItem(name, parent, res.m[i]);
                                 code.push(`${res.n[i]}:([]${res.m[i].c.join(';')});`);
                                 res.m[i].c.forEach((col: string) => code.push(`${col}:\`${col};`));

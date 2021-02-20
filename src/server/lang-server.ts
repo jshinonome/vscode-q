@@ -95,8 +95,7 @@ export default class LangServer {
                 prepareProvider: true
             },
             signatureHelpProvider: {
-                triggerCharacters: ['['],
-                retriggerCharacters: [';']
+                triggerCharacters: ['[', ';'],
             },
             semanticTokensProvider: {
                 documentSelector: null,
@@ -371,17 +370,16 @@ export default class LangServer {
         if (node) {
             const callNode = this.analyzer.getCallNode(node);
             const sigHelp = this.analyzer.getSigHelp(callNode?.firstNamedChild?.text ?? '');
-            if (callNode && sigHelp && callNode.firstNamedChild) {
+            if (callNode && sigHelp) {
                 let child = callNode.firstNamedChild;
                 let index = -1;
-                while (child.nextNamedSibling !== null && node.startIndex > child.endIndex) {
+                while (child && node.startIndex > child.endIndex) {
                     index += 1;
                     child = child.nextNamedSibling;
                 }
                 sigHelp.activeParameter = index;
                 return sigHelp;
             }
-
         }
         return undefined;
     }
