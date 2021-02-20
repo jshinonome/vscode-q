@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# update packages
-npm update
 # copy perspective package files
 jsDir=assets/query-view/js
 cssDir=assets/query-view/css
