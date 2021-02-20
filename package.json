@@ -519,7 +519,7 @@
 		"vscode-languageserver": "^7.0.0",
 		"vscode-languageserver-textdocument": "^1.0.1",
 		"vscode-uri": "^3.0.2",
-		"web-tree-sitter": "^0.18.0",
+		"web-tree-sitter": "^0.18.1",
 		"xlsx": "^0.16.9"
 	}
 }
