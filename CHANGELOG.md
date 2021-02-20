@@ -2,6 +2,20 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 2.1.0
+
+### added
+
+-   q syntaxes: include '\_' as an operator
+
+### fixed
+
+-   lang server: fix to detect inline comment in function
+
+### changed
+
+-   query-view: remove moment dependency
+
 ## 2.0.9
 
 ### added

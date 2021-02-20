@@ -371,11 +371,10 @@ export default class LangServer {
             const callNode = this.analyzer.getCallNode(node);
             const sigHelp = this.analyzer.getSigHelp(callNode?.firstNamedChild?.text ?? '');
             if (callNode && sigHelp) {
-                let child = callNode.firstNamedChild;
                 let index = -1;
-                while (child && node.startIndex > child.endIndex) {
-                    index += 1;
-                    child = child.nextNamedSibling;
+                for (const child of callNode.namedChildren) {
+                    if (node.startIndex > child.endIndex)
+                        index += 1;
                 }
                 sigHelp.activeParameter = index;
                 return sigHelp;

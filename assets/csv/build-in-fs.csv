@@ -29,6 +29,7 @@ label,detail,documentation,kind
 .Q.ft,apply simple,.Q.ft[v1;keyed table],2
 .Q.fu,apply unique,.Q.fu[v1;list],2
 .Q.gc,garbage collect,.Q.gc[],2
+.Q.gz,GZip,.Q.gz[chars|bytes|(level;chars)|(level;bytes)],2
 .Q.hdpf,save tables,.Q.hdpf[hdb handle;dir;part;column sym],2
 .Q.hg,HTTP get,.Q.hg[url|string],2
 .Q.host,hostname,.Q.host[ip int],2

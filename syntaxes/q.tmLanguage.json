@@ -122,7 +122,7 @@
       "patterns": [
         {
           "name": "support.function.utility.q",
-          "match": "\\.Q\\.(a|A|addmonths|addr|bt|btoa|bv|Cf|chk|cn|D|D|dd|def|dpft|dpfts|dsftg|en|ens|f|fc|ff|fk|fmt|fps|fs|fsn|ft|fu|gc|hdpf|hg|host|hp|id|ind|j10|j12|k|l|M|MAP|opt|P|par|pd|PD|pf|pn|pt|pv|PV|qp|qp|qt|qt|res|s|s1|sbt|sha1|trp|ts|ty|u|u|v|V|view|vp|w|x|x10|x12|Xf)\\b"
+          "match": "\\.Q\\.(a|A|addmonths|addr|b6|bt|btoa|bv|Cf|chk|cn|D|D|dd|def|dpft|dpfts|dsftg|en|ens|f|fc|ff|fk|fmt|fps|fs|fsn|ft|fu|gc|gz|hdpf|hg|host|hp|id|ind|j10|j12|k|l|M|MAP|nA|opt|P|par|pd|PD|pf|pn|pt|pv|PV|qp|qp|qt|qt|res|s|s1|sbt|sha1|trp|ts|ty|u|u|v|V|view|vp|w|x|x10|x12|Xf)\\b"
         },
         {
           "name": "support.function.json.q",
@@ -194,7 +194,7 @@
         },
         {
           "name": "constant.numeric.decimal.q",
-          "match": "(?x)-?(?:\n  (?:\\b[0-9]+(\\.)[0-9]*e[+-]?[0-9]+[ef]?\\b)|    # 1.1e+3\n  (?:\\b[0-9]+(\\.)e[+-]?[0-9]+[ef]?\\b)|          # 1.e+3\n  (?:\\B(\\.)[0-9]+e[+-]?[0-9]+[ef]?\\b)|          # .1e+3\n  (?:\\b[0-9]+e[+-]?[0-9]+[ef]?\\b)|              # 1e+3\n  (?:\\b[0-9]+(\\.)[0-9]*[ef]?\\b)|                # 1.1\n  (?:\\b[0-9]+(\\.)[ef]?\\B)|                      # 1.\n  (?:\\B(\\.)[0-9]+[ef]?\\b)|                      # .1\n  (?:\\b[0-9]+[efhij]?\\b(?!\\.))                  # 1efhij\n)"
+          "match": "(?x)-?(?:\n  (?:\\b[0-9]+(\\.)[0-9]*e[+-]?[0-9]+[ef]?)|      # 1.1e+3\n  (?:\\b[0-9]+(\\.)e[+-]?[0-9]+[ef]?)|            # 1.e+3\n  (?:\\B(\\.)[0-9]+e[+-]?[0-9]+[ef]?)|            # .1e+3\n  (?:\\b[0-9]+e[+-]?[0-9]+[ef]?)|                # 1e+3\n  (?:\\b[0-9]+(\\.)[0-9]*[ef]?)|                  # 1.1\n  (?:\\b[0-9]+(\\.)[ef]?)|                        # 1.\n  (?:\\B(\\.)[0-9]+[ef]?)|                        # .1\n  (?:\\b[0-9]+[efhij]?(?!\\.))                    # 1efhij\n)"
         },
         {
           "name": "support.type.q",
@@ -253,7 +253,7 @@
         },
         {
           "name": "keyword.operator.q",
-          "match": "[\\@\\.\\$!?+\\-\\*%|&#^,]"
+          "match": "[\\@\\.\\$!?+\\-\\*%|&#^,_]"
         }
       ]
     },

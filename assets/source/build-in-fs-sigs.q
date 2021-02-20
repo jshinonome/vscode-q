@@ -21,6 +21,7 @@
 .Q.fsn:{[v1;file;chunkSize]};
 .Q.ft:{[v1;keyedTable]};
 .Q.fu:{[v1;list]};
+.Q.gz:{[charsOrBytes]};
 .Q.hdpf:{[hdbSocket;dir;partition;partedColumnSym]};
 .Q.hg:{[urlHsym]};
 .Q.host:{[ipInt]};
