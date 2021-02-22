@@ -2,6 +2,12 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 2.1.1
+
+### fixed
+
+-   q syntaxes: fix '\_' in a variable name
+
 ## 2.1.0
 
 ### added

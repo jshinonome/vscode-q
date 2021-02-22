@@ -262,6 +262,10 @@
         {
           "name": "entity.name.function.q-output",
           "match": "(?<![a-zA-Z\\d])\\.[a-zA-Z][a-zA-Z\\d_]*(\\.[a-zA-Z\\d_]+)*"
+        },
+        {
+          "name": "variable.other.q",
+          "match": "[a-zA-Z][a-zA-Z\\d_]*"
         }
       ]
     },
