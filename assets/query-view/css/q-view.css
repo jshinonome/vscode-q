@@ -59,7 +59,15 @@ select {
     background-color: var(--vscode-editor-background);
 }
 perspective-viewer {
-    /* --select--color: var(--vscode-editor-foreground); */
-    /* --select--background-color: var(--vscode-editor-background); */
     --select--padding: 0px 5px 0px 5px;
+}
+
+regular-table {
+    width: 100%;
+}
+
+regular-table tr td {
+    max-width: 328px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

@@ -2,6 +2,13 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 2.1.2
+
+### fixed
+
+-   query view: enable edit(copy)
+-   query view: set max width
+
 ## 2.1.1
 
 ### fixed
