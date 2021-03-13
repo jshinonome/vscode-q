@@ -187,6 +187,7 @@ export function activate(context: ExtensionContext): void {
             if (mode) {
                 window.showInformationMessage(`Switch to Query ${mode} Mode`);
                 QConnManager.setQueryMode(mode);
+                QStatusBarManager.updateQueryModeStatus();
             }
         });
 

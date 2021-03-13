@@ -12,6 +12,7 @@ export class QStatusBarManager {
     private connStatusBar: StatusBarItem;
     private queryStatusBar: StatusBarItem;
     private unlimitedQueryStatusBar: StatusBarItem;
+    private queryModeStatusBar: StatusBarItem;
     private isLightTheme = window.activeColorTheme.kind === ColorThemeKind.Light;
     public static current: QStatusBarManager | undefined;
     public static create(context: ExtensionContext): QStatusBarManager {
@@ -23,18 +24,25 @@ export class QStatusBarManager {
 
     private constructor(context: ExtensionContext) {
 
-        this.connStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 99);
+        this.queryModeStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 99);
+        context.subscriptions.push(this.queryModeStatusBar);
+        this.queryModeStatusBar.color = this.isLightTheme ? '#512DA8' : '#B39DDB';
+        this.queryModeStatusBar.command = 'q-client.switchMode';
+        this.queryModeStatusBar.text = QConnManager.queryMode;
+        this.queryModeStatusBar.show();
+
+        this.connStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 98);
         context.subscriptions.push(this.connStatusBar);
         this.connStatusBar.color = this.isLightTheme ? '#512DA8' : '#B39DDB';
         this.connStatusBar.command = 'q-client.connectEntry';
         this.connStatusBar.show();
 
-        this.queryStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 98);
+        this.queryStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 97);
         this.queryStatusBar.text = '$(play-circle)';
         this.queryStatusBar.color = '#4CAF50';
         this.queryStatusBar.tooltip = 'Querying';
         context.subscriptions.push(this.queryStatusBar);
-        this.unlimitedQueryStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 97);
+        this.unlimitedQueryStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 96);
         this.unlimitedQueryStatusBar.text = '$(flame)';
         this.unlimitedQueryStatusBar.color = '#F44336';
         this.unlimitedQueryStatusBar.tooltip = 'Unlimited Query';
@@ -44,8 +52,12 @@ export class QStatusBarManager {
 
 
     public static updateConnStatus(label: string | undefined): void {
-        const text = QConnManager.queryMode.toLocaleLowerCase() + ':' + (label ?? 'no connection').replace(',', '-');
+        const text = (label ?? 'no connection').replace(',', '-');
         this.current!.connStatusBar.text = text;
+    }
+
+    public static updateQueryModeStatus(): void {
+        this.current!.queryModeStatusBar.text = QConnManager.queryMode;
     }
 
     public static toggleQueryStatus(show: boolean): void {

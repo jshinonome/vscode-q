@@ -2,6 +2,21 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 2.1.3
+
+### changed
+
+-   status bar: separate query mode and connection, click to change query mode
+
+### fixed
+
+-   q syntaxes: keyword after underscore(\_keyword)
+
+### added
+
+-   query grid: show dictionary
+-   query view: show dictionary
+
 ## 2.1.2
 
 ### fixed
@@ -211,19 +226,19 @@ all notable changes to the "vscode-q" extension will be documented in this file.
 
 ### added
 
--   Query View: support time, minute, second
+-   query view: support time, minute, second
 -   offset timezone at node-q (treat temporal type in kdb+ as local time)
 
 ### removed
 
--   Query View: set timezone to UTC (cannot set timezone for graph label)
+-   query view: set timezone to UTC (cannot set timezone for graph label)
 
 ## 1.8.3
 
 ### added
 
--   Query View: set timezone to UTC
--   Query View: set 7 decimal digits
+-   query view: set timezone to UTC
+-   query view: set 7 decimal digits
 
 ## 1.8.2
 

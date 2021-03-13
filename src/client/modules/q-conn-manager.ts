@@ -54,7 +54,7 @@ export class QConnManager {
         const consoleSize = '36 180|system"c"';
         const wrapper = QConnManager.consoleMode
             ? `{\`t\`r!(0b;.Q.S[${consoleSize};0j;value x])}`
-            : `{res:value x;$[(count res) & .Q.qt res;:\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res;keys res);:\`t\`r!(0b;.Q.S[${consoleSize};0j;res])]}`;
+            : `{res:value x;$[(count res) & .Q.qt res;:\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res;keys res);99h=type res;\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res:{([]k:.Q.s1 each key x;v:.Q.s1 each value x)}res;());:\`t\`r!(0b;.Q.S[${consoleSize};0j;res])]}`;
         if (this.activeConn && this.activeConn.version < 3.5)
             this.queryWrapper = wrapper;
         else
