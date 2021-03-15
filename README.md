@@ -125,9 +125,16 @@ Append space to `},],)` by formatting the file. Turn on `Editor: Format On Save`
 ## Shortcuts
 
 -   <kbd>ctrl</kbd>+<kbd>q</kbd>: query current line
--   <kbd>ctrl</kbd>+<kbd>r</kbd>: query selected line(s)
--   <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>q</kbd>: send current line to active terminal
--   <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>r</kbd>: send selected line(s) to active terminal
+-   <kbd>ctrl</kbd>+<kbd>r</kbd>: query selection
+-   <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>q</kbd>: send current line to terminal
+-   <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>r</kbd>: send selection to terminal
+
+To change shortcuts
+
+1. type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd>
+2. input "shortcut"
+3. open the Keyboard Shortcuts
+4. search for "kdb+".
 
 ## Version Compatibility
 
