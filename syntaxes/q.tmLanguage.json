@@ -80,7 +80,33 @@
           "contentName": "comment.line.q"
         },
         {
-          "name": "comment.line.inline.q",
+          "begin": "(\\s//?)(?:\\s*)(!.*)",
+          "end": "(?=^)",
+          "beginCaptures": {
+            "1": {
+              "name": "comment.line.slash.q"
+            },
+            "2": {
+              "name": "comment.line.attention.q"
+            }
+          },
+          "contentName": "comment.line.q"
+        },
+        {
+          "begin": "(\\s//?)(?:\\s*)(\\?.*)",
+          "end": "(?=^)",
+          "beginCaptures": {
+            "1": {
+              "name": "comment.line.slash.q"
+            },
+            "2": {
+              "name": "comment.line.todo.q"
+            }
+          },
+          "contentName": "comment.line.q"
+        },
+        {
+          "name": "comment.inline.q",
           "match": "\\s/.*"
         }
       ]
