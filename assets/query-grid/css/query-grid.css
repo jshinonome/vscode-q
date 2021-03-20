@@ -42,23 +42,25 @@ gridView {
 .button-black.button-clear {
     border-color: transparent;
 }
-.button-small {
-    font-size: 0.8rem;
-    height: 2.8rem;
-    line-height: 2.8rem;
-    padding: 0 1.5rem;
+
+.button, button, input[type='button'], input[type='reset'], input[type='submit'] {
+    letter-spacing: 0;
+    padding: 0 1.0rem;
 }
 
 select {
-    font-weight: 900;
+    font-size: 1.1rem;
+    font-weight: 700;
 }
 
 option {
-    font-weight: 900;
+    font-size: 1.1rem;
+    font-weight: 700;
 }
 
 label {
-    font-weight: 900;
+    font-size: 1.1rem;
+    font-weight: 700;
 }
 
 .border-right {

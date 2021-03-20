@@ -135,7 +135,7 @@ export function activate(context: ExtensionContext): void {
         'q-client.reactions',
         async () => {
             const option = await window.showQuickPick(
-                ['1 - Raising an Issue', '2 - Writing a Review', '3 - Creating a Pull Request', '4 - Buying Me a Beer'],
+                ['1 - Raising an Issue', '2 - Writing a Review', '3 - Creating a Pull Request', '4 - Buying Me a Beer', '5 - Q & A'],
                 { placeHolder: 'Contribute to vscode-q by' });
             switch (option?.[0]) {
                 case '1':
@@ -150,6 +150,8 @@ export function activate(context: ExtensionContext): void {
                 case '4':
                     env.openExternal(Uri.parse('https://www.buymeacoffee.com/jshinonome'));
                     break;
+                case '5':
+                    env.openExternal(Uri.parse('https://github.com/jshinonome/vscode-q/discussions'));
             }
         });
 

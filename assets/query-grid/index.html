@@ -41,13 +41,13 @@
     <div class="grid-wrapper">
         <div id="buttons">
             <div class="row">
-                <div class="column column-66">
-                    <button class="button button-outline" onclick="viewGrid()">View Grid</button>
-                    <button class="button button-outline" onclick="viewChart()">View Chart</button>
-                    <button class="button button-outline" onclick="viewBoth()">View Both</button>
-                    <button class="button button-outline" onclick="toggleConf()">Chart Config</button>
+                <div class="column column-60">
+                    <button class="button" onclick="viewGrid()">Grid</button>
+                    <button class="button" onclick="viewChart()">Chart</button>
+                    <button class="button" onclick="viewBoth()">Grid & Chart</button>
+                    <button class="button" onclick="toggleConf()">Config</button>
                 </div>
-                <div class="column">
+                <div class="column" align="right">
                     <button class="button" onclick="downloadData()">Download Data</button>
                     <button class="button" onclick="saveChartAsPNG()">Save Chart</button>
                 </div>
@@ -60,7 +60,7 @@
                         <div class="row">
                             <div class="column column-66">
                                 <button class="button button-outline button-black" onclick="updateChart()">
-                                    Update Chart</button>
+                                    Update Label</button>
                                 <button class="button button-outline button-black" onclick="toggleTheme()">
                                     Toggle Theme</button>
                             </div>
@@ -87,18 +87,13 @@
 
                     <div class="column">
                         <div class="row">
-                            <div class="column column-66">
-                                <button class="button button-outline button-black"
-                                    onclick="sendMsgToVscode('startPolling')">
-                                    Start Polling</button>
-                                <button class="button button-outline button-black"
-                                    onclick="sendMsgToVscode('stopPolling')">
-                                    Stop Polling</button>
-                            </div>
                             <div class="column">
-                                <select id="polling-interval" title="Polling Interval"
-                                    onChange="updatePollingInterval()">
-                                    <option value="5000">Polling Interval</option>
+                                <button class="button button-outline button-black" onclick="sendMsgToVscode()">
+                                    Update Query</button>
+                            </div>
+                            <div class="column" align="right">
+                                <select id="polling-interval" title="Polling Interval" onChange="sendMsgToVscode()">
+                                    <option value="0">Polling Interval(Stop)</option>
                                     <option value="1000">1 second</option>
                                     <option value="5000">5 seconds</option>
                                     <option value="15000">15 seconds</option>
@@ -216,13 +211,12 @@
             const chart = new Chart(canvas.getContext("2d"), chartConf);
             const chartTypeSelector = document.getElementById('chart-type-selector');
             const pollingQuery = document.getElementById('polling-query');
-            const pollingInterval = document.getElementById('polling-interval');
 
             const chartConfPanel = document.getElementById('chart-conf');
             chartConfPanel.style.visibility = "hidden";
             chartConfPanel.style.height = "0";
 
-            const chartThemeIsLight = true;
+            let chartThemeIsLight = true;
 
             window.onload = (event) => {
                 console.log("Page is fully loaded");
@@ -433,10 +427,12 @@
                 }
             }
 
-            function sendMsgToVscode(cmd) {
+            function sendMsgToVscode() {
+                const pollingInterval = parseInt(document.getElementById('polling-interval').value);
+                const cmd = pollingInterval === 0 ? 'stopPolling' : 'startPolling';
                 vscode.postMessage({
                     cmd: cmd,
-                    interval: parseInt(pollingInterval.value),
+                    interval: pollingInterval,
                     query: pollingQuery.value
                 });
             }
