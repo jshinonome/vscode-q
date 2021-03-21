@@ -4,14 +4,14 @@
 <head>
     <!-- include styles -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:500,500italic,700,700italic">
-    <link href="css/milligram.min.css" rel="stylesheet">
-    <link href="css/ag-grid.min.css" rel="stylesheet">
-    <link href="css/ag-theme-balham-dark.min.css" rel="stylesheet">
-    <link href="css/normalize.css" rel="stylesheet">
-    <link href="css/query-grid.css" rel="stylesheet">
+    <link href="{assets}/css/milligram.min.css" rel="stylesheet">
+    <link href="{assets}/css/ag-grid.min.css" rel="stylesheet">
+    <link href="{assets}/css/ag-theme-balham{theme}.min.css" rel="stylesheet">
+    <link href="{assets}/css/normalize.css" rel="stylesheet">
+    <link href="{assets}/css/view{theme}.css" rel="stylesheet">
     <!-- include the lib -->
-    <script src="js/ag-grid-community.min.js"></script>
-    <script src="js/Chart.min.js"></script>
+    <script src="{assets}/js/ag-grid-community.min.js"></script>
+    <script src="{assets}/js/Chart.min.js"></script>
     <style media="only screen">
         html,
         body {
@@ -41,13 +41,13 @@
     <div class="grid-wrapper">
         <div id="buttons">
             <div class="row">
-                <div class="column column-66">
-                    <button class="button button-outline" onclick="viewGrid()">View Grid</button>
-                    <button class="button button-outline" onclick="viewChart()">View Chart</button>
-                    <button class="button button-outline" onclick="viewBoth()">View Both</button>
-                    <button class="button button-outline" onclick="toggleConf()">Chart Config</button>
+                <div class="column column-60">
+                    <button class="button" onclick="viewGrid()">Grid</button>
+                    <button class="button" onclick="viewChart()">Chart</button>
+                    <button class="button" onclick="viewBoth()">Grid & Chart</button>
+                    <button class="button" onclick="toggleConf()">Config</button>
                 </div>
-                <div class="column">
+                <div class="column" align="right">
                     <button class="button" onclick="downloadData()">Download Data</button>
                     <button class="button" onclick="saveChartAsPNG()">Save Chart</button>
                 </div>
@@ -60,7 +60,7 @@
                         <div class="row">
                             <div class="column column-66">
                                 <button class="button button-outline button-black" onclick="updateChart()">
-                                    Update Chart</button>
+                                    Update Label</button>
                                 <button class="button button-outline button-black" onclick="toggleTheme()">
                                     Toggle Theme</button>
                             </div>
@@ -87,22 +87,19 @@
 
                     <div class="column">
                         <div class="row">
-                            <div class="column column-66">
-                                <button class="button button-outline button-black" onclick="startPolling()" disabled>
-                                    Start Polling(nyi)</button>
-                                <button class="button button-outline button-black" onclick="stopPolling()">
-                                    Stop Polling</button>
-                            </div>
                             <div class="column">
-                                <select id="polling-inverval" title="Polling Interval"
-                                    onChange="updatePollingInterval()">
-                                    <option value="">Polling Interval</option>
-                                    <option value="1">1 second</option>
-                                    <option value="5">5 seconds</option>
-                                    <option value="15">15 seconds</option>
-                                    <option value="30">30 seconds</option>
-                                    <option value="60">60 seconds</option>
-                                    <option value="120">120 seconds</option>
+                                <button class="button button-outline button-black" onclick="sendMsgToVscode()">
+                                    Update Query</button>
+                            </div>
+                            <div class="column" align="right">
+                                <select id="polling-interval" title="Polling Interval" onChange="sendMsgToVscode()">
+                                    <option value="0">Polling Interval(Stop)</option>
+                                    <option value="1000">1 second</option>
+                                    <option value="5000">5 seconds</option>
+                                    <option value="15000">15 seconds</option>
+                                    <option value="30000">30 seconds</option>
+                                    <option value="60000">60 seconds</option>
+                                    <option value="120000">120 seconds</option>
                                 </select>
                             </div>
                         </div>
@@ -117,29 +114,21 @@
             </div>
             <canvas id="canvas"></canvas>
         </div>
-        <div id="gridView" class="ag-theme-balham-dark"></div>
+        <div id="gridView" class="ag-theme-balham{theme}"></div>
         <script type="text/javascript" charset="utf-8">
-            // specify the columns
-            let message =
-            {
-                cols: [
-                    { headerName: "date", field: "date" },
-                    { headerName: "qty", field: "qty", type: "numericColumn" },
-                    { headerName: "price", field: "price", type: "numericColumn" },
-                ],
-                data: {
-                    "date": ["2020-12-31", "2021-01-01", "2021-01-02", "2021-01-03", "2021-01-04", "2021-01-05", "2021-01-06", "2021-01-07", "2021-01-08", "2021-01-09"],
-                    "qty": [22, 10, 77, 60, 60, 2, 75, 79, 3, 14],
-                    "price": [6.622945, 6.876924, 3.303231, 0.7176765, 1.588603, 9.082041, 4.509384, 8.597389, 4.630911, 4.218259]
-                },
-                meta: {
-                    "c": ["date", "qty", "price"],
-                    "t": "djf",
-                    "f": ["", "", ""], "a": ["", "", ""]
-                },
-                labelCol: "date",
-                numericCols: ["qty", "price"],
-            };
+            // get api to interact with vscode
+            let vscode = acquireVsCodeApi();
+            let isReady = false;
+            let message;
+            // add vscode message handler
+            window.addEventListener('message', event => {
+                message = event.data;
+                console.log(`got a vscode message, type: ${message.type}`);
+                if (isReady) {
+                    loadGrid(message);
+                    drawChart(message);
+                }
+            });
 
             // let the grid know which columns and what data to use
             let gridOptions = {
@@ -219,10 +208,11 @@
                     responsiveAnimationDuration: 0 // animation duration after a resize
                 }
             }
-            let chart = new Chart(canvas.getContext("2d"), chartConf);
-            let chartTypeSelector = document.getElementById('chart-type-selector');
+            const chart = new Chart(canvas.getContext("2d"), chartConf);
+            const chartTypeSelector = document.getElementById('chart-type-selector');
+            const pollingQuery = document.getElementById('polling-query');
 
-            let chartConfPanel = document.getElementById('chart-conf');
+            const chartConfPanel = document.getElementById('chart-conf');
             chartConfPanel.style.visibility = "hidden";
             chartConfPanel.style.height = "0";
 
@@ -265,6 +255,9 @@
                 // find label column
                 if (msg.numericCols.length === 0) {
                     viewGrid();
+                }
+                if (msg.query) {
+                    pollingQuery.value = msg.query;
                 }
                 chartConf.data = generateData(msg);
                 chart.update();
@@ -432,6 +425,16 @@
                     chartConfPanel.style.visibility = "hidden";
                     chartConfPanel.style.height = "0";
                 }
+            }
+
+            function sendMsgToVscode() {
+                const pollingInterval = parseInt(document.getElementById('polling-interval').value);
+                const cmd = pollingInterval === 0 ? 'stopPolling' : 'startPolling';
+                vscode.postMessage({
+                    cmd: cmd,
+                    interval: pollingInterval,
+                    query: pollingQuery.value
+                });
             }
 
         </script>

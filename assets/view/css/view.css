@@ -43,9 +43,13 @@ gridView {
     border-color: transparent;
 }
 
-.button, button, input[type='button'], input[type='reset'], input[type='submit'] {
+.button,
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
     letter-spacing: 0;
-    padding: 0 1.0rem;
+    padding: 0 1rem;
 }
 
 select {
@@ -65,4 +69,22 @@ label {
 
 .border-right {
     border-right: 0.1rem solid #9b4dca;
+}
+
+.form {
+    width: 600px;
+    margin: auto;
+    margin-top: 10px;
+    border-width: 1px;
+    border-style: solid;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.alert {
+    width: 600px;
+    margin: auto;
+    padding: 10px;
+    color: red;
+    display: none;
 }

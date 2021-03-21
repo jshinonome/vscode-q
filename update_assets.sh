@@ -9,9 +9,9 @@ cp node_modules/@finos/perspective-viewer/dist/umd/perspective-viewer*js $jsDir
 cp node_modules/@finos/perspective-viewer-d3fc/dist/umd/perspective-viewer-d3fc.js $jsDir
 cp node_modules/@finos/perspective-viewer-datagrid/dist/umd/perspective-viewer-datagrid.js $jsDir
 
-# update js for query-grid
-cp node_modules/ag-grid-community/dist/ag-grid-community.min.js assets/query-grid/js/
-cp node_modules/ag-grid-community/dist/styles/ag-grid.min.css assets/query-grid/css/
-cp node_modules/ag-grid-community/dist/styles/ag-theme-balham*min.css assets/query-grid/css/
-cp node_modules/chart.js/dist/Chart.min.css assets/query-grid/css
-cp node_modules/chart.js/dist/Chart.min.js assets/query-grid/js
+# update js for view
+cp node_modules/ag-grid-community/dist/ag-grid-community.min.js assets/view/js/
+cp node_modules/ag-grid-community/dist/styles/ag-grid.min.css assets/view/css/
+cp node_modules/ag-grid-community/dist/styles/ag-theme-balham*min.css assets/view/css/
+cp node_modules/chart.js/dist/Chart.min.css assets/view/css
+cp node_modules/chart.js/dist/Chart.min.js assets/view/js

@@ -13,17 +13,17 @@ import {
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 import QDictTreeItem from './items/q-dict';
 import QFunctionTreeItem from './items/q-function';
-import { qCfgInput } from './modules/q-cfg-input';
 import { QConn } from './modules/q-conn';
 import { QConnManager } from './modules/q-conn-manager';
 import { QServerTree } from './modules/q-server-tree';
 import { QStatusBarManager } from './modules/q-status-bar-manager';
 import { runQFile, sendToCurrentTerm } from './modules/q-term';
 import { QueryConsole } from './modules/query-console';
-import { QueryGrid } from './modules/query-grid';
-import { QueryView } from './modules/query-view';
+import { QueryGrid } from './component/query-grid';
+import { QueryView } from './component/query-view';
 import path = require('path');
 import HistoryTreeItem from './items/history';
+import { AddServer } from './component/add-server';
 
 
 
@@ -92,6 +92,7 @@ export function activate(context: ExtensionContext): void {
     QueryConsole.createOrShow();
     QueryView.setExtensionPath(context.extensionPath);
     QueryGrid.setExtensionPath(context.extensionPath);
+    AddServer.setExtensionPath(context.extensionPath);
     // --> init
 
 
@@ -106,16 +107,15 @@ export function activate(context: ExtensionContext): void {
     // q cfg input
     commands.registerCommand(
         'q-client.addEntry',
-        async () => {
-            const qcfg = await qCfgInput(undefined);
-            QConnManager.current?.addCfg(qcfg);
+        () => {
+            AddServer.createOrShow();
         });
 
     commands.registerCommand(
         'q-client.editEntry',
-        async (qConn: QConn) => {
-            const qcfg = await qCfgInput(qConn, false);
-            QConnManager.current?.addCfg(qcfg);
+        (qConn: QConn) => {
+            AddServer.createOrShow();
+            AddServer.currentPanel?.update(qConn);
         });
 
     commands.registerCommand(

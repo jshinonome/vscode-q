@@ -8,11 +8,11 @@
 import * as fs from 'fs';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
 import { QueryResult } from '../models/query-result';
-import { QConnManager } from './q-conn-manager';
+import { QConnManager } from '../modules/q-conn-manager';
 import path = require('path');
 import moment = require('moment');
 
-const templatePath = './assets/query-grid';
+const templatePath = './assets/view';
 type formatter = (value: any) => any;
 const decimals = workspace.getConfiguration().get('q-client.queryGrid.decimals') as number;
 const kdbTypeMap = new Map<string, formatter>([
@@ -168,7 +168,7 @@ export class QueryGrid implements Disposable {
         // And the uri we use to load this script in the webview
         const dirUri = webview.asWebviewUri(dir);
         let template = fs.readFileSync(
-            path.join(this._extensionPath, templatePath, 'index.html')).toString();
+            path.join(this._extensionPath, templatePath, 'query-grid.html')).toString();
         template = template.replace(/{assets}/g, dirUri.toString())
             .replace(/{theme}/g, this._theme);
         return template;

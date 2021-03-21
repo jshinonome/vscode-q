@@ -14,8 +14,8 @@ import { QueryResult } from '../models/query-result';
 import { QConn } from './q-conn';
 import { QStatusBarManager } from './q-status-bar-manager';
 import { QueryConsole } from './query-console';
-import { QueryGrid } from './query-grid';
-import { QueryView } from './query-view';
+import { QueryGrid } from '../component/query-grid';
+import { QueryView } from '../component/query-view';
 import path = require('path');
 
 const cfgDir = homedir() + '/.vscode/';
