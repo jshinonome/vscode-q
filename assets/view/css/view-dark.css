@@ -87,7 +87,7 @@ input {
 }
 
 .form {
-    width: 600px;
+    max-width: 600px;
     margin: auto;
     margin-top: 10px;
     border-width: 1px;
@@ -97,7 +97,7 @@ input {
 }
 
 .alert {
-    width: 600px;
+    max-width: 600px;
     margin: auto;
     padding: 10px;
     color: red;

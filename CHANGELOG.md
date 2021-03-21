@@ -2,6 +2,13 @@
 
 all notable changes to the "vscode-q" extension will be documented in this file.
 
+## 2.1.4
+
+### added
+
+-   add server view
+-   q syntaxes: inline attention/todo
+
 ## 2.1.3
 
 ### changed
