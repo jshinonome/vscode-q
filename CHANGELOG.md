@@ -1,5 +1,11 @@
 # change log
 
+## 2.1.5
+
+### fixed
+
+-   add server view: hostname
+
 all notable changes to the "vscode-q" extension will be documented in this file.
 
 ## 2.1.4

@@ -13,8 +13,8 @@
     <div class="alert" id="alert">
     </div>
     <div class="form">
-        <label for="hostname">Hostname</label>
-        <input type="text" placeholder="localhost" id="hostname">
+        <label for="host">Hostname</label>
+        <input type="text" placeholder="localhost" id="host">
         <label for="port">Port</label>
         <input type="text" placeholder="e.g. 1800" id="port">
         <label for="user">User</label>
@@ -58,7 +58,7 @@
                 }
             };
 
-            const hostname = document.getElementById('hostname');
+            const host = document.getElementById('host');
             const port = document.getElementById('port');
             const user = document.getElementById('user');
             const password = document.getElementById('password');
@@ -69,7 +69,7 @@
             const alert = document.getElementById('alert');
             function generateDefaultLabel() {
                 if (label.value === '')
-                    label.value = hostname.value + '-' + port.value;
+                    label.value = host.value + '-' + port.value;
             }
             function validateInput() {
                 let errorMsg = '';
@@ -101,7 +101,7 @@
             }
             function getCfg() {
                 return {
-                    hostname: hostname.value.trim(),
+                    host: host.value.trim(),
                     port: parseInt(port.value.trim()),
                     user: user.value.trim(),
                     password: password.value.trim(),
@@ -115,7 +115,7 @@
 
             function loadCfg() {
                 if (cfg) {
-                    hostname.value = cfg.hostname ?? '';
+                    host.value = cfg.host ?? '';
                     port.value = cfg.port;
                     user.value = cfg.user;
                     password.value = cfg.password;
