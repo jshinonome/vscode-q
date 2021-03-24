@@ -11,7 +11,10 @@ import * as xlsx from 'xlsx';
 import { QueryResult } from '../models/query-result';
 import { kTypeMap } from '../util/k-map';
 import path = require('path');
-import moment = require('moment');
+import dayjs = require('dayjs');
+import utc = require('dayjs/plugin/utc');
+
+dayjs.extend(utc);
 
 const templatePath = './assets/query-view';
 
@@ -112,6 +115,15 @@ export class QueryView implements Disposable {
     }
 
     public update(result: QueryResult): void {
+        const timezoneOffset = new Date().getTimezoneOffset();
+        // convert temporal types
+        [...result.meta.t].forEach((type: string, i: number) => {
+            if ('pmdznuvt'.includes(type)) {
+                const column = result.meta.c[i];
+                result.data[column] = result.data[column].map(
+                    (time: Date) => dayjs.utc(time).utcOffset(timezoneOffset).format('YYYY-MM-DD[T]HH:mm:ss.SSS'));
+            }
+        });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const meta = result.meta.c.reduce((o: any, k: any, i: number) => ({ ...o, [k]: kTypeMap.get(result.meta.t[i]) ?? 'string' }), {});
         result.meta = meta;
@@ -120,7 +132,7 @@ export class QueryView implements Disposable {
 
     public async saveData(data: any, fileType: string): Promise<void> {
         console.log('save data called');
-        const fileName = `query-view-${moment().format('YYYYMMDD')}${fileType}`;
+        const fileName = `query-view-${dayjs().format('YYYYMMDD')}${fileType}`;
         if (!workspace.workspaceFolders) {
             return;
         }

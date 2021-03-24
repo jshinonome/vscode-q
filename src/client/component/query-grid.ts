@@ -10,26 +10,29 @@ import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window, work
 import { QueryResult } from '../models/query-result';
 import { QConnManager } from '../modules/q-conn-manager';
 import path = require('path');
-import moment = require('moment');
+import dayjs = require('dayjs');
+import utc = require('dayjs/plugin/utc');
+
+dayjs.extend(utc);
 
 const templatePath = './assets/view';
 type formatter = (value: any) => any;
 const decimals = workspace.getConfiguration().get('q-client.queryGrid.decimals') as number;
-const kdbTypeMap = new Map<string, formatter>([
+export const kdbTypeMap = new Map<string, formatter>([
     ['b', (value) => value ? '1b' : '0b'],
     ['x', (value) => '0x' + value],
     ['h', (value) => value + 'h'],
     ['e', (value) => value ? value.toFixed(decimals) : value],
     ['f', (value) => value ? value.toFixed(decimals) : value],
     // Nanoseconds is not native supported in javascript
-    ['p', (value) => moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSS')],
-    ['m', (value) => moment(value).format('YYYY-MM')],
-    ['d', (value) => moment(value).format('YYYY-MM-DD')],
-    ['z', (value) => moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSS')],
-    ['n', (value) => moment(value).format('HH:mm:ss.SSS')],
-    ['u', (value) => moment(value).format('HH:mm')],
-    ['v', (value) => moment(value).format('HH:mm:ss')],
-    ['t', (value) => moment(value).format('HH:mm:ss.SSS')],
+    ['p', (value) => dayjs.utc(value).format('YYYY-MM-DD[T]HH:mm:ss.SSS')],
+    ['m', (value) => dayjs.utc(value).format('YYYY-MM')],
+    ['d', (value) => dayjs.utc(value).format('YYYY-MM-DD')],
+    ['z', (value) => dayjs.utc(value).format('YYYY-MM-DD[T]HH:mm:ss.SSS')],
+    ['n', (value) => dayjs.utc(value).format('HH:mm:ss.SSS')],
+    ['u', (value) => dayjs.utc(value).format('HH:mm')],
+    ['v', (value) => dayjs.utc(value).format('HH:mm:ss')],
+    ['t', (value) => dayjs.utc(value).format('HH:mm:ss.SSS')],
     [' ', (value) => JSON.stringify(value)]
 ]);
 

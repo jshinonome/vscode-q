@@ -1,5 +1,11 @@
 # change log
 
+## 2.1.6
+
+### fixed
+
+-   query grid: fix daylight saving change issue
+
 ## 2.1.5
 
 ### fixed
