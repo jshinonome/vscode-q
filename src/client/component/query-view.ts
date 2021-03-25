@@ -30,7 +30,8 @@ export class QueryView implements Disposable {
     private _theme = '';
     private _dataViewBg = '#2f3136;'
     private _keyColor = '#6A1B9A';
-    public isReady = false;
+    private _timezoneOffset = new Date().getTimezoneOffset();
+    public static isReady = false;
 
     public static setExtensionPath(extensionPath: string): void {
         QueryView.extensionPath = extensionPath;
@@ -63,6 +64,7 @@ export class QueryView implements Disposable {
             }
         );
         QueryView.currentPanel = new QueryView(panel, extensionPath);
+        QueryView.isReady = false;
         return QueryView.currentPanel;
     }
 
@@ -78,7 +80,8 @@ export class QueryView implements Disposable {
         this._panel.webview.onDidReceiveMessage(message => {
             switch (message.cmd) {
                 case 'ready':
-                    this.isReady = true;
+                    this._timezoneOffset = message.timezoneOffset;
+                    QueryView.isReady = true;
                     break;
                 case 'saveData':
                     this.saveData(message.data, message.fileType);
@@ -115,13 +118,12 @@ export class QueryView implements Disposable {
     }
 
     public update(result: QueryResult): void {
-        const timezoneOffset = new Date().getTimezoneOffset();
         // convert temporal types
         [...result.meta.t].forEach((type: string, i: number) => {
             if ('pmdznuvt'.includes(type)) {
                 const column = result.meta.c[i];
                 result.data[column] = result.data[column].map(
-                    (time: Date) => dayjs.utc(time).utcOffset(timezoneOffset).format('YYYY-MM-DD[T]HH:mm:ss.SSS'));
+                    (time: Date) => dayjs.utc(time).utcOffset(this._timezoneOffset).format('YYYY-MM-DD[T]HH:mm:ss.SSS'));
             }
         });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

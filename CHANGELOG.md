@@ -1,5 +1,11 @@
 # change log
 
+## 2.1.7
+
+### fixed
+
+-   query view: timezone offset(connect to a different timezone remote server)
+
 ## 2.1.6
 
 ### fixed
