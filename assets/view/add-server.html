@@ -51,6 +51,7 @@
                 console.log("Page is fully loaded");
                 isReady = true;
                 try {
+                    vscode.postMessage({ cmd: 'ready' });
                     loadCfg();
                 }
                 catch (error) {
@@ -128,6 +129,7 @@
 
             function sendCfgToVscode(cfg, overwrite) {
                 vscode.postMessage({
+                    cmd: "updateCfg",
                     cfg: cfg,
                     overwrite: overwrite
                 });

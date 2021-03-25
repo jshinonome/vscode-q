@@ -22,7 +22,7 @@ export class AddServer implements Disposable {
     private _disposables: Disposable[] = [];
 
     private _theme = '-dark';
-    public isReady = false;
+    public static isReady = false;
 
     public static setExtensionPath(extensionPath: string): void {
         AddServer.extensionPath = extensionPath;
@@ -55,6 +55,7 @@ export class AddServer implements Disposable {
             }
         );
         AddServer.currentPanel = new AddServer(panel, extensionPath);
+        AddServer.isReady = false;
         return AddServer.currentPanel;
     }
 
@@ -70,7 +71,14 @@ export class AddServer implements Disposable {
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
         this._panel.webview.html = this._getHtmlForWebview();
         this._panel.webview.onDidReceiveMessage(message => {
-            this.updateServerCfg(message.cfg, message.overwrite);
+            switch (message.cmd) {
+                case 'ready':
+                    AddServer.isReady = true;
+                    break;
+                case 'updateCfg':
+                    this.updateServerCfg(message.cfg, message.overwrite);
+                    break;
+            }
         });
         this._panel.title = 'Add a Server';
         this._panel.iconPath = Uri.file(path.join(extensionPath, 'icon.png'));
@@ -94,9 +102,15 @@ export class AddServer implements Disposable {
         }
     }
 
-    public update(qcfg: QCfg): void {
-        this._currentQCfg = qcfg;
-        this._panel.webview.postMessage(qcfg);
+    public static update(qcfg: QCfg): void {
+        if (!AddServer.isReady) {
+            setTimeout(AddServer.update, 100, qcfg);
+        } else {
+            const current = AddServer.currentPanel as AddServer;
+            current._currentQCfg = qcfg;
+            current._panel.webview.postMessage(qcfg);
+
+        }
     }
 
     public async updateServerCfg(qcfg: QCfg, overwrite: boolean): Promise<void> {

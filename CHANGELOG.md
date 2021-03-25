@@ -2,6 +2,12 @@
 
 ## 2.1.7
 
+### added
+
+-   query view: load content after webview is loaded
+-   query grid: load content after webview is loaded
+-   add server: load content after webview is loaded
+
 ### fixed
 
 -   query view: timezone offset(connect to a different timezone remote server)

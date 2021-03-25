@@ -262,10 +262,10 @@ export class QConnManager {
     update(result: QueryResult): void {
         if (QConnManager.queryMode === 'Grid') {
             QueryGrid.createOrShow();
-            QueryGrid.currentPanel?.update(result);
+            QueryGrid.update(result);
         } else {
             QueryView.createOrShow();
-            QueryView.currentPanel?.update(result);
+            QueryView.update(result);
         }
     }
 

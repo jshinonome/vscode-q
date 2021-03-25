@@ -46,7 +46,7 @@ export class QueryGrid implements Disposable {
 
     private _theme = '-dark';
     private _keyColor = '#6A1B9A';
-    public isReady = false;
+    public static isReady = false;
 
     public static setExtensionPath(extensionPath: string): void {
         QueryGrid.extensionPath = extensionPath;
@@ -79,6 +79,7 @@ export class QueryGrid implements Disposable {
             }
         );
         QueryGrid.currentPanel = new QueryGrid(panel, extensionPath);
+        QueryGrid.isReady = false;
         return QueryGrid.currentPanel;
     }
 
@@ -94,6 +95,9 @@ export class QueryGrid implements Disposable {
         this._panel.webview.html = this._getHtmlForWebview();
         this._panel.webview.onDidReceiveMessage(message => {
             switch (message.cmd) {
+                case 'ready':
+                    QueryGrid.isReady = true;
+                    break;
                 case 'startPolling':
                     QConnManager.current?.startPolling(message.interval, message.query);
                     break;
@@ -127,41 +131,46 @@ export class QueryGrid implements Disposable {
         QConnManager.current?.stopPolling();
     }
 
-    public update(result: QueryResult): void {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const numericCols: string[] = [];
-        let labelCol = '';
-        result.cols = result.meta.c.map((col: string, i: number) => {
-            const colDef: { headerName: string, field: string, type?: string, cellStyle?: { 'background-color': string } } = { headerName: col, field: col };
-            if ('xhijef'.includes(result.meta.t[i])) {
-                colDef.type = 'numericColumn';
-                numericCols.push(result.meta.c[i]);
-            } else if (!labelCol) {
-                labelCol = result.meta.c[i];
-            }
-            if (result.keys?.includes(col))
-                colDef.cellStyle = { 'background-color': this._keyColor };
-            return colDef;
-        });
-        const formatterMap = result.meta.c.reduce((o: any, k: any, i: number) => (
-            {
-                ...o, [k]: kdbTypeMap.get(result.meta.t[i]) ?? ((value) => value)
-            }), {}
-        );
-        const data = result.meta.c.map(
-            (col: string) => {
-                // deal with char column
-                if (typeof result.data[col] === 'string') {
-                    return { [col]: result.data[col].split('') };
-                } else {
-                    return { [col]: result.data[col].map(formatterMap[col]) };
+    public static update(result: QueryResult): void {
+        if (!QueryGrid.isReady) {
+            setTimeout(QueryGrid.update, 100, result);
+        } else {
+            const current = QueryGrid.currentPanel as QueryGrid;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const numericCols: string[] = [];
+            let labelCol = '';
+            result.cols = result.meta.c.map((col: string, i: number) => {
+                const colDef: { headerName: string, field: string, type?: string, cellStyle?: { 'background-color': string } } = { headerName: col, field: col };
+                if ('xhijef'.includes(result.meta.t[i])) {
+                    colDef.type = 'numericColumn';
+                    numericCols.push(result.meta.c[i]);
+                } else if (!labelCol) {
+                    labelCol = result.meta.c[i];
                 }
-            }
-        );
-        result.data = Object.assign({}, ...data);
-        result.labelCol = labelCol;
-        result.numericCols = numericCols;
-        this._panel.webview.postMessage(result);
+                if (result.keys?.includes(col))
+                    colDef.cellStyle = { 'background-color': current._keyColor };
+                return colDef;
+            });
+            const formatterMap = result.meta.c.reduce((o: any, k: any, i: number) => (
+                {
+                    ...o, [k]: kdbTypeMap.get(result.meta.t[i]) ?? ((value) => value)
+                }), {}
+            );
+            const data = result.meta.c.map(
+                (col: string) => {
+                    // deal with char column
+                    if (typeof result.data[col] === 'string') {
+                        return { [col]: result.data[col].split('') };
+                    } else {
+                        return { [col]: result.data[col].map(formatterMap[col]) };
+                    }
+                }
+            );
+            result.data = Object.assign({}, ...data);
+            result.labelCol = labelCol;
+            result.numericCols = numericCols;
+            current._panel.webview.postMessage(result);
+        }
     }
 
     private _getHtmlForWebview() {

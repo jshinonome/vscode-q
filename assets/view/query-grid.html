@@ -222,6 +222,7 @@
                 console.log("Page is fully loaded");
                 isReady = true;
                 try {
+                    vscode.postMessage({ cmd: 'ready' });
                     loadGrid(message);
                     drawChart(message);
                 }

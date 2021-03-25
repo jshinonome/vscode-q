@@ -11,6 +11,10 @@ import {
     window, workspace
 } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
+import { AddServer } from './component/add-server';
+import { QueryGrid } from './component/query-grid';
+import { QueryView } from './component/query-view';
+import HistoryTreeItem from './items/history';
 import QDictTreeItem from './items/q-dict';
 import QFunctionTreeItem from './items/q-function';
 import { QConn } from './modules/q-conn';
@@ -19,11 +23,7 @@ import { QServerTree } from './modules/q-server-tree';
 import { QStatusBarManager } from './modules/q-status-bar-manager';
 import { runQFile, sendToCurrentTerm } from './modules/q-term';
 import { QueryConsole } from './modules/query-console';
-import { QueryGrid } from './component/query-grid';
-import { QueryView } from './component/query-view';
 import path = require('path');
-import HistoryTreeItem from './items/history';
-import { AddServer } from './component/add-server';
 
 
 
@@ -115,7 +115,7 @@ export function activate(context: ExtensionContext): void {
         'q-client.editEntry',
         (qConn: QConn) => {
             AddServer.createOrShow();
-            AddServer.currentPanel?.update(qConn);
+            AddServer.update(qConn);
         });
 
     commands.registerCommand(

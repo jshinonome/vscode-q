@@ -117,19 +117,24 @@ export class QueryView implements Disposable {
         }
     }
 
-    public update(result: QueryResult): void {
-        // convert temporal types
-        [...result.meta.t].forEach((type: string, i: number) => {
-            if ('pmdznuvt'.includes(type)) {
-                const column = result.meta.c[i];
-                result.data[column] = result.data[column].map(
-                    (time: Date) => dayjs.utc(time).utcOffset(this._timezoneOffset).format('YYYY-MM-DD[T]HH:mm:ss.SSS'));
-            }
-        });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const meta = result.meta.c.reduce((o: any, k: any, i: number) => ({ ...o, [k]: kTypeMap.get(result.meta.t[i]) ?? 'string' }), {});
-        result.meta = meta;
-        this._panel.webview.postMessage(result);
+    public static update(result: QueryResult): void {
+        if (!QueryView.isReady) {
+            setTimeout(QueryView.update, 500, result);
+        } else {
+            const current = QueryView.currentPanel as QueryView;
+            // convert temporal types
+            [...result.meta.t].forEach((type: string, i: number) => {
+                if ('pmdznuvt'.includes(type)) {
+                    const column = result.meta.c[i];
+                    result.data[column] = result.data[column].map(
+                        (time: Date) => dayjs.utc(time).utcOffset(current._timezoneOffset).format('YYYY-MM-DD[T]HH:mm:ss.SSS'));
+                }
+            });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const meta = result.meta.c.reduce((o: any, k: any, i: number) => ({ ...o, [k]: kTypeMap.get(result.meta.t[i]) ?? 'string' }), {});
+            result.meta = meta;
+            current._panel.webview.postMessage(result);
+        }
     }
 
     public async saveData(data: any, fileType: string): Promise<void> {
