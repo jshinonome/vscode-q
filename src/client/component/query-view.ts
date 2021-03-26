@@ -30,7 +30,6 @@ export class QueryView implements Disposable {
     private _theme = '';
     private _dataViewBg = '#2f3136;'
     private _keyColor = '#6A1B9A';
-    private _timezoneOffset = new Date().getTimezoneOffset();
     public static isReady = false;
 
     public static setExtensionPath(extensionPath: string): void {
@@ -80,7 +79,6 @@ export class QueryView implements Disposable {
         this._panel.webview.onDidReceiveMessage(message => {
             switch (message.cmd) {
                 case 'ready':
-                    this._timezoneOffset = message.timezoneOffset;
                     QueryView.isReady = true;
                     break;
                 case 'saveData':
@@ -127,7 +125,7 @@ export class QueryView implements Disposable {
                 if ('pmdznuvt'.includes(type)) {
                     const column = result.meta.c[i];
                     result.data[column] = result.data[column].map(
-                        (time: Date) => dayjs.utc(time).utcOffset(current._timezoneOffset).format('YYYY-MM-DD[T]HH:mm:ss.SSS'));
+                        (date: Date) => date.toISOString());
                 }
             });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

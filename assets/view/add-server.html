@@ -37,22 +37,17 @@
         <script type="text/javascript" charset="utf-8">
             // get api to interact with vscode
             let vscode = acquireVsCodeApi();
-            let isReady = false;
             let cfg;
             window.addEventListener('message', event => {
                 cfg = event.data;
                 console.log(`got a configuration`);
-                if (isReady) {
-                    loadCfg();
-                }
+                loadCfg();
             });
 
             window.onload = (event) => {
                 console.log("Page is fully loaded");
-                isReady = true;
                 try {
                     vscode.postMessage({ cmd: 'ready' });
-                    loadCfg();
                 }
                 catch (error) {
                     console.error(`Fail to load configuration - error: ${error.message}`);

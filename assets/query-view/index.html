@@ -8,6 +8,8 @@
   <title>q view</title>
   <link rel="stylesheet" type="text/css" href="{assets}/css/{cssTheme}.css">
   <link rel="stylesheet" type="text/css" href="{assets}/css/q-view.css">
+  <script type="text/javascript" src="{assets}/js/dayjs.min.js"></script>
+  <script type="text/javascript" src="{assets}/js/plugin/utc.js"></script>
   <script type="text/javascript" src="{assets}/js/perspective.inline.js"></script>
   <script type="text/javascript" src="{assets}/js/perspective-viewer.js"></script>
   <script type="text/javascript" src="{assets}/js/perspective-viewer-datagrid.js"></script>
@@ -32,8 +34,11 @@
   <perspective-viewer id="data-viewer" class="perspective-viewer-material{theme}" editable="true"
     style="--select--background-color: var(--vscode-editor-background)"></perspective-viewer>
   <script type="text/javascript" charset="utf-8">
-    let vscode, saveFileTypeSelector, viewer, msg, isReady = false;
+    dayjs.extend(window.dayjs_plugin_utc);
+    let vscode, saveFileTypeSelector, viewer, msg;
     let keyColor = '{keyColor}';
+    const dateType = ['timestamp', 'month', 'date', 'datetime', 'timespan', 'minute', 'second', 'time'];
+
     const overridden_types = {
       types: {
         float: {
@@ -186,9 +191,7 @@
       viewer.toggleConfig();
       try {
         // request first data update
-        vscode.postMessage({ cmd: 'ready', timezoneOffset: new Date().getTimezoneOffset() });
-        isReady = true;
-        loadData(msg);
+        vscode.postMessage({ cmd: 'ready' });
       }
       catch (error) {
         console.error(`sending msg failed - error: ${error.message}`);
@@ -208,36 +211,45 @@
 
     // load data to table(required for offline) and to viewer
     function loadData(msg) {
-      if (isReady && msg) {
-        try {
-          var table;
-          switch (msg.type) {
-            case 'rba':
-              table = worker.table(Uint8Array.from(msg.data).buffer);
-              break;
-            case 'json':
-              table = worker.table(msg.meta);
-              table.update(msg.data);
-              break;
-          }
 
-          viewer.load(table)
-            .then(_ => {
-              viewer.reset();
-              updateStats();
-              const datagrid = viewer.querySelector('regular-table');
-              for (const th of datagrid.querySelectorAll('th')) {
-                const metadata = datagrid.getMeta(th);
-                if (msg.keys.includes(metadata.value)) {
-                  th.style.background = keyColor;
-                }
+      try {
+        var table;
+        switch (msg.type) {
+          case 'rba':
+            table = worker.table(Uint8Array.from(msg.data).buffer);
+            break;
+          case 'json':
+            for (const column in msg.meta) {
+              const type = msg.meta[column];
+              if (dateType.includes(type)) {
+                msg.data[column] = msg.data[column].map(
+                  date => {
+                    const d = new Date(date);
+                    return dayjs(d).utcOffset(d.getTimezoneOffset()).format('YYYY-MM-DD[T]HH:mm:ss.SSS')
+                  });
               }
-              datagrid.draw();
-            });
-
-        } catch (error) {
-          console.error(`loadData - error: ${error.message}`);
+            };
+            table = worker.table(msg.meta);
+            table.update(msg.data);
+            break;
         }
+
+        viewer.load(table)
+          .then(_ => {
+            viewer.reset();
+            updateStats();
+            const datagrid = viewer.querySelector('regular-table');
+            for (const th of datagrid.querySelectorAll('th')) {
+              const metadata = datagrid.getMeta(th);
+              if (msg.keys.includes(metadata.value)) {
+                th.style.background = keyColor;
+              }
+            }
+            datagrid.draw();
+          });
+
+      } catch (error) {
+        console.error(`loadData - error: ${error.message}`);
       }
     }
 

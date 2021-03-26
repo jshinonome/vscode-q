@@ -118,16 +118,13 @@
         <script type="text/javascript" charset="utf-8">
             // get api to interact with vscode
             let vscode = acquireVsCodeApi();
-            let isReady = false;
             let message;
             // add vscode message handler
             window.addEventListener('message', event => {
                 message = event.data;
                 console.log(`got a vscode message, type: ${message.type}`);
-                if (isReady) {
-                    loadGrid(message);
-                    drawChart(message);
-                }
+                loadGrid(message);
+                drawChart(message);
             });
 
             // let the grid know which columns and what data to use
@@ -220,11 +217,8 @@
 
             window.onload = (event) => {
                 console.log("Page is fully loaded");
-                isReady = true;
                 try {
                     vscode.postMessage({ cmd: 'ready' });
-                    loadGrid(message);
-                    drawChart(message);
                 }
                 catch (error) {
                     console.error(`Fail to load data - error: ${error.message}`);
