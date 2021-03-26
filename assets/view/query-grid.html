@@ -59,8 +59,6 @@
                     <div class="column column-50 border-right">
                         <div class="row">
                             <div class="column column-66">
-                                <button class="button button-outline button-black" onclick="updateChart()">
-                                    Update Label</button>
                                 <button class="button button-outline button-black" onclick="toggleTheme()">
                                     Toggle Theme</button>
                             </div>
@@ -76,11 +74,11 @@
                         <div class="row">
                             <div class="column column-66">
                                 <label for="title">Chart Title:</label>
-                                <input type="text" id="chart-title" name="title">
+                                <input type="text" id="chart-title" name="title" oninput="updateLabel()">
                             </div>
                             <div class="column">
                                 <label for="yaxes">Y Axes Label:</label>
-                                <input type="text" id="chart-yaxes" name="yaxes">
+                                <input type="text" id="chart-yaxes" name="yaxes" oninput="updateLabel()">
                             </div>
                         </div>
                     </div>
@@ -279,7 +277,7 @@
                 eChartDiv.style.height = "auto";
             };
 
-            function updateChart() {
+            function updateLabel() {
                 chartConf.options.title.text = document.getElementById("chart-title").value;
                 chartConf.options.scales.yAxes[0].scaleLabel.labelString = document.getElementById("chart-yaxes").value;
                 chart.update();

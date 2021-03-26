@@ -37,6 +37,7 @@
     dayjs.extend(window.dayjs_plugin_utc);
     let vscode, saveFileTypeSelector, viewer, msg;
     let keyColor = '{keyColor}';
+    let currentCols = [];
     const dateType = ['timestamp', 'month', 'date', 'datetime', 'timespan', 'minute', 'second', 'time'];
 
     const overridden_types = {
@@ -211,7 +212,6 @@
 
     // load data to table(required for offline) and to viewer
     function loadData(msg) {
-
       try {
         var table;
         switch (msg.type) {
@@ -236,16 +236,19 @@
 
         viewer.load(table)
           .then(_ => {
-            viewer.reset();
-            updateStats();
-            const datagrid = viewer.querySelector('regular-table');
-            for (const th of datagrid.querySelectorAll('th')) {
-              const metadata = datagrid.getMeta(th);
-              if (msg.keys.includes(metadata.value)) {
-                th.style.background = keyColor;
+            if (!schemaEquals(currentCols, msg.cols)) {
+              viewer.reset();
+              updateStats();
+              const datagrid = viewer.querySelector('regular-table');
+              for (const th of datagrid.querySelectorAll('th')) {
+                const metadata = datagrid.getMeta(th);
+                if (msg.keys.includes(metadata.value)) {
+                  th.style.background = keyColor;
+                }
               }
+              datagrid.draw();
             }
-            datagrid.draw();
+            currentCols = msg.cols;
           });
 
       } catch (error) {
@@ -273,6 +276,13 @@
         data: data,
         fileType: filetype
       });
+    }
+
+    function schemaEquals(cols1, cols2) {
+      return Array.isArray(cols1) &&
+        Array.isArray(cols2) &&
+        cols1.length === cols2.length &&
+        cols2.every(col => cols1.includes(col));
     }
 
 // function buyCoffee() {

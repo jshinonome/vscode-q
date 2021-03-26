@@ -1,5 +1,17 @@
 # change log
 
+## 2.1.8
+
+### added
+
+-   query view: keep configuration if same columns(schema)
+-   query grid: update title / y-axes on input
+
+### fixed
+
+-   query view: daylight saving change issue
+-   q syntaxes: semantic highlight for default parameters
+
 ## 2.1.7
 
 ### added

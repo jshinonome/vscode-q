@@ -120,6 +120,7 @@ export class QueryView implements Disposable {
             setTimeout(QueryView.update, 500, result);
         } else {
             const current = QueryView.currentPanel as QueryView;
+            result.cols = result.meta.c;
             // convert temporal types
             [...result.meta.t].forEach((type: string, i: number) => {
                 if ('pmdznuvt'.includes(type)) {

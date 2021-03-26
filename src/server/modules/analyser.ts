@@ -386,9 +386,10 @@ export default class Analyzer {
                 this.uriToSymbol.get(uri)?.push(n.text.trim());
             } else if (TreeSitterUtil.isFunctionBody(n)) {
                 // tokenTypes: ['variable', 'parameter', 'type', 'class']
-                const params = TreeSitterUtil.extractParams(n).filter(param => !this.reservedWord.includes(param));
+                const params = TreeSitterUtil.hasParams(n)
+                    ? TreeSitterUtil.extractParams(n).filter(param => !this.reservedWord.includes(param))
+                    : ['x', 'y', 'z'];
                 const semanticTokensBuilder = this.uriToSemanticTokes.get(uri) ?? new SemanticTokensBuilder();
-
                 TreeSitterUtil.forEachAndSkip(n, 'function_body', node => {
                     if (params.length > 0 && node.type === 'local_identifier') {
                         const param = node.text.trim();

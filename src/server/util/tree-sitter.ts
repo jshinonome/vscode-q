@@ -93,6 +93,10 @@ export function extractParams(n: SyntaxNode): string[] {
     return [];
 }
 
+export function hasParams(n: SyntaxNode): boolean {
+    return n.firstNamedChild?.type === 'formal_parameters';
+}
+
 export function findParent(
     start: SyntaxNode,
     predicate: (n: SyntaxNode) => boolean,
