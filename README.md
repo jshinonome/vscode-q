@@ -2,7 +2,7 @@
 
 [![](https://img.shields.io/visual-studio-marketplace/v/jshinonome.vscode-q?labelColor=651FFF&color=B388FF&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 [![](https://vsmarketplacebadge.apphb.com/downloads/jshinonome.vscode-q.svg?labelColor=651FFF&color=B388FF&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
-[![](https://vsmarketplacebadge.apphb.com/installs/jshinonome.vscode-q.svg?labelColor=651FFF&color=B388FF&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
+[![](https://vsmarketplacebadge.apphb.com/installs/jshinonome.vscode-q.svg?labelColor=651FFF&color=B388FF&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q) [![Join the chat at https://gitter.im/vscode-q/community](https://badges.gitter.im/vscode-q/community.svg)](https://gitter.im/vscode-q/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This extension provides kdb+\q language support:
 
