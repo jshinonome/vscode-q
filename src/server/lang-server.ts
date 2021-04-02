@@ -113,6 +113,7 @@ export default class LangServer {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private onDidChangeContent(change: any) {
         this.analyzer.analyzeDoc(change.document.uri, change.document);
+        this.analyzer.analyzeLoadFiles(change.document.uri);
         const diagnostics = this.validateTextDocument(change.document);
         // Send the computed diagnostics to VSCode.
         this.connection.sendDiagnostics({ uri: change.document.uri, diagnostics });
@@ -137,6 +138,7 @@ export default class LangServer {
                 return;
             try {
                 this.analyzer.analyzeDoc(file, TextDocument.create(file, 'q', 1, fs.readFileSync(filepath, 'utf8')));
+                this.analyzer.analyzeLoadFiles(file);
             } catch (error) {
                 this.connection.console.warn(`Cannot analyze ${file}`);
             }

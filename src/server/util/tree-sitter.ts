@@ -53,6 +53,10 @@ export function isDefinition(n: SyntaxNode): boolean {
     }
 }
 
+export function isLoadingFile(n: SyntaxNode): boolean {
+    return n.type === 'system_statement' && /^\\l\s+(\/[^/ ]*)+\.q$/.test(n.text);
+}
+
 export function isReference(n: SyntaxNode): boolean {
     switch (n.type) {
         case 'local_identifier':

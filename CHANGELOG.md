@@ -1,5 +1,11 @@
 # change log
 
+## 2.1.9
+
+### added
+
+-   lang server: analyze \l file(full path)
+
 ## 2.1.8
 
 ### added

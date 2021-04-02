@@ -64,6 +64,7 @@ export default class Analyzer {
     private uriToCallHierarchy = new Map<string, nameToCallHierarchy>();
     private uriToGlobalId = new Map<string, nameToGlobalId>();
     private workspaceFolder: URI;
+    private uriToLoadFile = new Map<DocumentUri, string[]>();
 
     public constructor(parser: Parser, connection: Connection, workspaceFolder: string) {
         this.parser = parser;
@@ -251,23 +252,30 @@ export default class Analyzer {
                         `Glob found ${qSrcFiles.length} files after ${getTimePassed()}`,
                     );
 
-                    qSrcFiles.forEach((filepath: string) => {
-                        const uri = `file://${filepath}`;
-                        try {
-                            const fileContent = fs.readFileSync(filepath, 'utf8');
-                            this.connection.console.info(`Analyzing ${uri}`);
-                            this.analyzeDoc(uri, TextDocument.create(uri, 'q', 1, fileContent));
-                        } catch (error) {
-                            this.connection.console.warn(`Failed analyzing ${uri}.`);
-                            this.connection.console.warn(`Error: ${error.message}`);
-                        }
-                    });
+                    qSrcFiles.forEach((filepath: string) => this.analyzeFile(filepath));
+                    this.uriToLoadFile.forEach((_, uri) => this.analyzeLoadFiles(uri));
 
                     this.connection.console.info(`Analyzing took ${getTimePassed()}`);
                 });
             this.analyzeServerCache('');
         }
 
+    }
+
+    public analyzeLoadFiles(uri: DocumentUri): void {
+        this.uriToLoadFile.get(uri)?.forEach(f => this.analyzeFile(f));
+    }
+
+    public analyzeFile(filepath: string): void {
+        const uri = `file://${filepath}`;
+        try {
+            const fileContent = fs.readFileSync(filepath, 'utf8');
+            this.connection.console.info(`Analyzing ${uri}`);
+            this.analyzeDoc(uri, TextDocument.create(uri, 'q', 1, fileContent));
+        } catch (error) {
+            this.connection.console.warn(`Failed analyzing ${uri}.`);
+            this.connection.console.warn(`Error: ${error.message}`);
+        }
     }
 
     /**
@@ -289,6 +297,7 @@ export default class Analyzer {
         this.uriToCallHierarchy.set(uri, callHierarchyMap);
         const globalIdMap = new Map<string, string[]>();
         this.uriToGlobalId.set(uri, globalIdMap);
+        this.uriToLoadFile.set(uri, []);
 
         const problems: Diagnostic[] = [];
 
@@ -418,6 +427,11 @@ export default class Analyzer {
                     }
                 });
 
+            } else if (TreeSitterUtil.isLoadingFile(n)) {
+                const matches = n.text.match(/(\/[^/ ]*)+\.q/);
+                if (matches) {
+                    this.uriToLoadFile.get(uri)?.push(matches[0]);
+                }
             }
         });
 
@@ -436,7 +450,6 @@ export default class Analyzer {
         }
 
         findMissingNodes(tree.rootNode);
-
         return problems;
     }
 
