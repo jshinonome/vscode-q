@@ -121,7 +121,7 @@ export class QueryView implements Disposable {
         } else {
             const current = QueryView.currentPanel as QueryView;
             result.cols = result.meta.c;
-            // convert temporal types
+            // convert temporal types, timezone adjustment is handled on web view side
             [...result.meta.t].forEach((type: string, i: number) => {
                 if ('pmdznuvt'.includes(type)) {
                     const column = result.meta.c[i];

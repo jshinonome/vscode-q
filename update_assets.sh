@@ -15,5 +15,4 @@ cp node_modules/dayjs/plugin/utc.js $jsDir/plugin
 cp node_modules/ag-grid-community/dist/ag-grid-community.min.js assets/view/js/
 cp node_modules/ag-grid-community/dist/styles/ag-grid.min.css assets/view/css/
 cp node_modules/ag-grid-community/dist/styles/ag-theme-balham*min.css assets/view/css/
-cp node_modules/chart.js/dist/Chart.min.css assets/view/css
-cp node_modules/chart.js/dist/Chart.min.js assets/view/js
+cp node_modules/chart.js/dist/chart.min.js assets/view/js

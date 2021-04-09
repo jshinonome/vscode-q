@@ -9,7 +9,7 @@ import * as fs from 'fs';
 import { homedir } from 'os';
 import { Event, EventEmitter, MarkdownString, TreeDataProvider, TreeItem, TreeItemCollapsibleState } from 'vscode';
 import path = require('path');
-import moment = require('moment');
+import dayjs = require('dayjs');
 
 const cfgDir = homedir() + '/.vscode/';
 const historyPath = cfgDir + 'q-query-history.json';
@@ -43,7 +43,7 @@ export default class HistoryTreeItem extends TreeItem
     }
 
     private constructor(history: History, parent: TreeItem | null) {
-        super(history.uniqLabel.replace(',', '-') + ' | ' + moment(history.time).format('HH:mm:ss'), TreeItemCollapsibleState.None);
+        super(history.uniqLabel.replace(',', '-') + ' | ' + dayjs(history.time).format('HH:mm:ss'), TreeItemCollapsibleState.None);
         this.uniqLabel = history.uniqLabel;
         this.query = history.query;
         this.time = history.time;
@@ -52,7 +52,7 @@ export default class HistoryTreeItem extends TreeItem
         this.errorMsg = history.errorMsg;
         const mdString = new MarkdownString();
         mdString.appendMarkdown(`- server: ${history.uniqLabel.replace(',', '-')}\n`);
-        mdString.appendMarkdown(`- time: ${moment(history.time).format('YYYY.MM.DD HH:mm:ss.SSS')}\n`);
+        mdString.appendMarkdown(`- time: ${dayjs(history.time).format('YYYY.MM.DD HH:mm:ss.SSS')}\n`);
         mdString.appendMarkdown(`- duration: ${history.duration}\n`);
 
         if (this.errorMsg) {

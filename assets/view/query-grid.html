@@ -11,7 +11,7 @@
     <link href="{assets}/css/view{theme}.css" rel="stylesheet">
     <!-- include the lib -->
     <script src="{assets}/js/ag-grid-community.min.js"></script>
-    <script src="{assets}/js/Chart.min.js"></script>
+    <script src="{assets}/js/chart.min.js"></script>
     <style media="only screen">
         html,
         body {
@@ -74,11 +74,11 @@
                         <div class="row">
                             <div class="column column-66">
                                 <label for="title">Chart Title:</label>
-                                <input type="text" id="chart-title" name="title" oninput="updateLabel()">
+                                <input type="text" id="chart-title" name="title" oninput="updateTitle()">
                             </div>
                             <div class="column">
                                 <label for="yaxes">Y Axes Label:</label>
-                                <input type="text" id="chart-yaxes" name="yaxes" oninput="updateLabel()">
+                                <input type="text" id="chart-yaxes" name="yaxes" oninput="updateTitle()">
                             </div>
                         </div>
                     </div>
@@ -163,37 +163,42 @@
                 type: "line",
                 options: {
                     responsive: true,
-                    animation: {
-                        duration: 0 // general animation time
-                    },
-                    title: {
-                        display: true,
-                        text: ""
-                    },
-                    tooltips: {
-                        mode: "index",
-                        intersect: false,
+                    animation: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: ""
+                        },
+                        tooltip: {
+                            mode: "index",
+                            intersect: false,
+                        },
                     },
                     hover: {
                         mode: "nearest",
-                        animationDuration: 0, // duration of animations when hovering an item
                         intersect: true
                     },
                     scales: {
-                        xAxes: [{
+                        x: {
                             display: true,
-                            scaleLabel: {
+                            title: {
                                 display: true,
-                                labelString: ""
-                            }
-                        }],
-                        yAxes: [{
+                                text: ""
+                            },
+                            ticks: {
+                                major: {
+                                    enabled: true
+                                },
+                            },
+                        },
+                        y: {
                             display: true,
-                            scaleLabel: {
+                            title: {
                                 display: true,
-                                labelString: ""
-                            }
-                        }]
+                                text: ""
+                            },
+                            ticks: {}
+                        }
                     },
                     elements: {
                         line: {
@@ -277,9 +282,9 @@
                 eChartDiv.style.height = "auto";
             };
 
-            function updateLabel() {
-                chartConf.options.title.text = document.getElementById("chart-title").value;
-                chartConf.options.scales.yAxes[0].scaleLabel.labelString = document.getElementById("chart-yaxes").value;
+            function updateTitle() {
+                chartConf.options.plugins.title.text = document.getElementById("chart-title").value;
+                chartConf.options.scales.y.title.text = document.getElementById("chart-yaxes").value;
                 chart.update();
             }
 
@@ -287,7 +292,7 @@
                 const chartType = chartTypeSelector.value;
                 if (chartType) {
                     chartConf.type = chartType;
-                    chartConf.options.scales.xAxes[0].offset = chartType === "bar";
+                    chartConf.options.scales.x.offset = chartType === "bar";
                     chartConf.data = generateData(message);
                     chart.update();
                 }
@@ -298,15 +303,18 @@
                 const numericCols = msg.numericCols.slice(0, 10)
                 switch (chartTypeSelector.value) {
                     case "scatter":
-                        chartConf.options.scales.xAxes[0].type = "linear";
-                        chartConf.options.scales.xAxes[0].scaleLabel.labelString = "";
+                        if (numericCols.length < 2) {
+                            return { datasets: [] }
+                        }
+                        chartConf.options.scales.x.type = "linear";
+                        chartConf.options.scales.x.title.text = "";
                         const datasets = [];
                         for (let i = 0; i * 2 < numericCols.length; i++) {
                             const x = msg.data[numericCols[2 * i]]
                             const y = msg.data[numericCols[1 + 2 * i]]
                             datasets.push(
                                 {
-                                    label: msg.meta.c[2 * i] + "-" + msg.meta.c[1 + 2 * i],
+                                    label: numericCols[2 * i] + "-" + numericCols[1 + 2 * i],
                                     data: x.map((v, i) => { return { x: Number(v), y: Number(y[i]) } }),
                                     backgroundColor: chartColors[i],
                                     borderColor: chartColors[i],
@@ -317,8 +325,8 @@
                         return { datasets: datasets };
                         break;
                     default:
-                        chartConf.options.scales.xAxes[0].type = "category";
-                        chartConf.options.scales.xAxes[0].scaleLabel.labelString = msg.labelCol
+                        chartConf.options.scales.x.type = "category";
+                        chartConf.options.scales.x.title.text = msg.labelCol
                         return {
                             labels: labels,
                             datasets: numericCols.map((col, i) => {
@@ -345,20 +353,20 @@
             }
 
             function toggleTheme() {
-                let globalDefaults = Chart.defaults.global;
                 let options = chartConf.options;
-                let xGridLines = options.scales.xAxes[0].gridLines;
-                let yGridLines = options.scales.yAxes[0].gridLines;
-                let tooltips = options.tooltips;
+                let x = options.scales.x;
+                let y = options.scales.y;
+                let tooltip = options.plugins.tooltip;
 
                 if (!chartThemeIsLight) {
                     // light
                     chartThemeIsLight = true;
-                    xGridLines.color = yGridLines.color = 'rgba(0, 0, 0, 0.1)';
-                    xGridLines.zeroLineColor = yGridLines.zeroLineColor = 'rgba(0, 0, 0, 0.25)';
-                    globalDefaults.defaultFontColor = '#666';
-                    tooltips.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-                    tooltips.titleFontColor = tooltips.bodyFontColor = '#fff';
+                    x.grid.color = y.grid.color = 'rgba(0, 0, 0, 0.3)';
+                    x.ticks.color = y.ticks.color = '#666';
+                    x.title.color = y.title.color = '#666';
+                    Chart.defaults.color = '#666';
+                    tooltip.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                    tooltip.titleColor = tooltip.bodyColor = '#fff';
                     canvas.style.backgroundColor = '#FAFAFA';
                     chartColors = [
                         "rgb(31, 119, 180)",
@@ -375,11 +383,12 @@
                 } else {
                     // dark
                     chartThemeIsLight = false;
-                    xGridLines.color = yGridLines.color = 'rgba(255, 255, 255, 0.2)';
-                    xGridLines.zeroLineColor = yGridLines.zeroLineColor = 'rgba(255, 255, 255, 0.5)';
-                    globalDefaults.defaultFontColor = '#ccc';
-                    tooltips.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-                    tooltips.titleFontColor = tooltips.bodyFontColor = '#000';
+                    x.grid.color = y.grid.color = 'rgba(255, 255, 255, 0.3)';
+                    x.ticks.color = y.ticks.color = '#ccc';
+                    x.title.color = y.title.color = '#ccc';
+                    Chart.defaults.color = '#ccc';
+                    tooltip.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+                    tooltip.titleColor = tooltip.bodyColor = '#000';
                     canvas.style.backgroundColor = '#212121';
                     chartColors = [
                         "rgb(78,  121, 167)",

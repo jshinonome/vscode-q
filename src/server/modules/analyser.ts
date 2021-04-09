@@ -263,7 +263,10 @@ export default class Analyzer {
     }
 
     public analyzeLoadFiles(uri: DocumentUri): void {
-        this.uriToLoadFile.get(uri)?.forEach(f => this.analyzeFile(f));
+        this.uriToLoadFile.get(uri)?.forEach(f => {
+            if (!this.uriToTree.get(`file://${f}`))
+                this.analyzeFile(f);
+        });
     }
 
     public analyzeFile(filepath: string): void {

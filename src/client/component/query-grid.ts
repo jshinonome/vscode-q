@@ -151,6 +151,7 @@ export class QueryGrid implements Disposable {
                     colDef.cellStyle = { 'background-color': current._keyColor };
                 return colDef;
             });
+            // temporal types has been converted to string
             const formatterMap = result.meta.c.reduce((o: any, k: any, i: number) => (
                 {
                     ...o, [k]: kdbTypeMap.get(result.meta.t[i]) ?? ((value) => value)
