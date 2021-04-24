@@ -69,9 +69,11 @@ Create a server and click to connect
 | q-client.queryView.dense           | boolean | `false`                          | q view in dense mode                        |
 | q-client.queryGrid.decimals        | number  | `3`                              | decimals in q grid                          |
 | q-client.term.qBinary              | string  | `q`                              | q executable file or full path              |
-| q-client.term.envPath              | string  | ``                               | environment file relative or absolute path  |
+| q-client.term.envPath              | string  | `''`                             | environment file relative or absolute path  |
 | q-client.expl.prevQueryLimit       | string  | `5`                              | q explorer preview query limit              |
-| q-client.output.autoClear          | boolean | false                            | Auto Clear Output                           |
+| q-client.output.autoClear          | boolean | `false`                          | Auto Clear Output                           |
+| q-client.output.includeQuery       | boolean | `false`                          | Include Query in Output                     |
+| q-client.output.consoleSize        | string  | `'36 180'`                       | Console Size for Output                     |
 
 ## q Language Server(local server, no connection to the internet)
 

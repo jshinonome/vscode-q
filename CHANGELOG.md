@@ -5,6 +5,7 @@
 ### added
 
 -   query console: option to show query
+-   query console: option for console size
 
 ## 2.1.9
 

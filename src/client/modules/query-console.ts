@@ -64,7 +64,7 @@ export class QueryConsole {
         }
         const label = uniqLabel.replace(',', '-');
         const date = new Date();
-        this._console.appendLine(`>>> ${label} @ ${date.toLocaleTimeString()} ---- ${time}(ms) elapsed ----`);
+        this._console.appendLine(`>>> ${label} @ ${date.toLocaleTimeString()} ---- ${time}(ms) elapsed <<<`);
         this.appendQuery(query);
         if (Array.isArray(output)) {
             output.forEach(o => this._console.appendLine(o));
@@ -83,7 +83,7 @@ export class QueryConsole {
         this._console.appendLine(`>>> ${label} @ ${date.toLocaleTimeString()} ---- ${time}(ms) elapsed`);
         this.appendQuery(query);
         this._console.appendLine(`>>> ${msg[0]}: ${msg[1]}`);
-        const explanation = this.errorMsgMap.get(msg[1])
+        const explanation = this.errorMsgMap.get(msg[1]);
         if (explanation) {
             this._console.appendLine(`>>> Explanation: ${explanation}`);
         } else if (/^(\.[a-zA-Z][a-zA-Z\d_]*(?:\.[a-zA-Z\d_]+)*|[a-zA-z][a-zA-Z\d]*)$/gm.test(msg[1])) {

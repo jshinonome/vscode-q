@@ -484,6 +484,12 @@
 					"type": "boolean",
 					"default": false,
 					"description": "Include Query"
+				},
+				"q-client.output.consoleSize": {
+					"scope": "resource",
+					"type": "string",
+					"default": "36 180",
+					"description": "Console Size"
 				}
 			}
 		}
@@ -503,7 +509,7 @@
 		"dayjs": "^1.10.4",
 		"milligram": "^1.4.1",
 		"node-q": "^2.5.0",
-		"ts-loader": "^9.1.0",
+		"ts-loader": "^9.1.1",
 		"typescript": "^4.2.4",
 		"vscode-test": "^1.5.2",
 		"webpack": "^5.35.1",

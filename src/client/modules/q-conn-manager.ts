@@ -32,6 +32,7 @@ export class QConnManager {
     queryWrapper = '';
     isLimited = true;
     pollingId = 0;
+    public static consoleSize = workspace.getConfiguration().get('q-client.output.consoleSize') as string;
     public static queryMode = 'Console';
     public static queryWrapper = '';
     public static consoleMode = true;
@@ -51,7 +52,7 @@ export class QConnManager {
     // when switch a server or toggle query mode, update wrapper
     public updateQueryWrapper(): void {
         const limit = this.isLimited ? '1000 sublist ' : '';
-        const consoleSize = '36 180|system"c"';
+        const consoleSize = 'system"c"';
         const wrapper = QConnManager.consoleMode
             ? `{\`t\`r!(0b;.Q.S[${consoleSize};0j;value x])}`
             : `{res:value x;$[(count res) & .Q.qt res;:\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res;keys res);99h=type res;\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res:{([]k:.Q.s1 each key x;v:.Q.s1 each value x)}res;());:\`t\`r!(0b;.Q.S[${consoleSize};0j;res])]}`;
@@ -121,6 +122,9 @@ export class QConnManager {
                                 QStatusBarManager.updateConnStatus(uniqLabel);
                                 if (query) {
                                     this.sync(query);
+                                }
+                                if (QConnManager.consoleSize.length > 0) {
+                                    conn.k('\\c ' + QConnManager.consoleSize);
                                 }
                             }
                         }
