@@ -31,6 +31,7 @@ export class QueryConsole {
     private _disposables: Disposable[] = [];
     private errorMsgMap = getErrorMsgMap();
     private autoClear = workspace.getConfiguration().get('q-client.output.autoClear') as boolean;
+    private includeQuery = workspace.getConfiguration().get('q-client.output.includeQuery') as boolean;
     public static createOrShow(): void {
         if (QueryConsole.current) {
             QueryConsole.current._console.show(true);
@@ -57,13 +58,14 @@ export class QueryConsole {
         }
     }
 
-    public append(output: string | string[], time = 0, uniqLabel: string): void {
+    public append(output: string | string[], time = 0, uniqLabel: string, query = ''): void {
         if (this.autoClear) {
             this._console.clear();
         }
         const label = uniqLabel.replace(',', '-');
         const date = new Date();
-        this._console.appendLine(`>>> ${label} @ ${date.toLocaleTimeString()} ---- ${time}(ms) elapsed`);
+        this._console.appendLine(`>>> ${label} @ ${date.toLocaleTimeString()} ---- ${time}(ms) elapsed ----`);
+        this.appendQuery(query);
         if (Array.isArray(output)) {
             output.forEach(o => this._console.appendLine(o));
         } else {
@@ -72,13 +74,14 @@ export class QueryConsole {
         this._console.appendLine('<<<\n');
     }
 
-    public appendError(msg: string[], time = 0, uniqLabel: string): void {
+    public appendError(msg: string[], time = 0, uniqLabel: string, query = ''): void {
         if (this.autoClear) {
             this._console.clear();
         }
         const label = uniqLabel.replace(',', '-');
         const date = new Date();
         this._console.appendLine(`>>> ${label} @ ${date.toLocaleTimeString()} ---- ${time}(ms) elapsed`);
+        this.appendQuery(query);
         this._console.appendLine(`>>> ${msg[0]}: ${msg[1]}`);
         const explanation = this.errorMsgMap.get(msg[1])
         if (explanation) {
@@ -96,4 +99,13 @@ export class QueryConsole {
         this._console.appendLine('<<<\n');
     }
 
+    public appendQuery(query: string): void {
+        if (query.length > 0 && this.includeQuery) {
+            this._console.appendLine('<<< query  >>>');
+            this._console.appendLine(query);
+            this._console.appendLine('');
+            this._console.appendLine('<<< result >>>');
+        }
+
+    }
 }

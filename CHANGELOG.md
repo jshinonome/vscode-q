@@ -1,5 +1,11 @@
 # change log
 
+## 2.2.1
+
+### added
+
+-   query console: option to show query
+
 ## 2.1.9
 
 ### added

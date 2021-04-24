@@ -155,17 +155,17 @@ export class QConnManager {
                     QueryConsole.createOrShow();
                     const duration = Date.now() - time;
                     if (err) {
-                        QueryConsole.current?.appendError(['ERROR', err.message], duration, uniqLabel);
+                        QueryConsole.current?.appendError(['ERROR', err.message], duration, uniqLabel, query);
                         HistoryTreeItem.appendHistory(
                             { uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: err.message });
                     }
                     if (res) {
                         if (typeof res.r === 'string' && res.r.startsWith('ERROR')) {
                             const msg: string[] = res.r.split('\n');
-                            QueryConsole.current?.appendError(msg, duration, uniqLabel);
+                            QueryConsole.current?.appendError(msg, duration, uniqLabel, query);
                             HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: res.r });
                         } else if (QConnManager.consoleMode) {
-                            QueryConsole.current?.append(res.r, duration, uniqLabel);
+                            QueryConsole.current?.append(res.r, duration, uniqLabel, query);
                             HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: '' });
                         } else {
                             if (res.t) {
@@ -176,10 +176,10 @@ export class QConnManager {
                                     keys: res.k,
                                     query: query,
                                 });
-                                QueryConsole.current?.append(`> ${res.r[Object.keys(res.r)[0]].length} row(s) returned`, duration, uniqLabel);
+                                QueryConsole.current?.append(`> ${res.r[Object.keys(res.r)[0]].length} row(s) returned`, duration, uniqLabel, query);
                             }
                             else {
-                                QueryConsole.current?.append(res.r, duration, uniqLabel);
+                                QueryConsole.current?.append(res.r, duration, uniqLabel, query);
                             }
                             HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: '' });
                         }
@@ -215,13 +215,13 @@ export class QConnManager {
                     QueryConsole.createOrShow();
                     const duration = Date.now() - time;
                     if (err) {
-                        QueryConsole.current?.appendError(['ERROR', err.message], duration, uniqLabel);
+                        QueryConsole.current?.appendError(['ERROR', err.message], duration, uniqLabel, query);
                         current.stopPolling();
                     }
                     if (res) {
                         if (typeof res.r === 'string' && res.r.startsWith('ERROR')) {
                             const msg: string[] = res.r.split('\n');
-                            QueryConsole.current?.appendError(msg, duration, uniqLabel);
+                            QueryConsole.current?.appendError(msg, duration, uniqLabel, query);
                             current.stopPolling();
                         } else {
                             if (res.t) {
@@ -231,10 +231,10 @@ export class QConnManager {
                                     meta: res.m,
                                     keys: res.k,
                                 });
-                                QueryConsole.current?.append(`> ${res.r[Object.keys(res.r)[0]].length} row(s) returned`, duration, uniqLabel);
+                                QueryConsole.current?.append(`> ${res.r[Object.keys(res.r)[0]].length} row(s) returned`, duration, uniqLabel, query);
                             }
                             else {
-                                QueryConsole.current?.append(res.r, duration, uniqLabel);
+                                QueryConsole.current?.append(res.r, duration, uniqLabel, query);
                             }
                         }
                     }

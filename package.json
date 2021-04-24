@@ -478,6 +478,12 @@
 					"type": "boolean",
 					"default": false,
 					"description": "Auto Clear Output"
+				},
+				"q-client.output.includeQuery": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": false,
+					"description": "Include Query"
 				}
 			}
 		}
