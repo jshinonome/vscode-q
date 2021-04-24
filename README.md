@@ -1,4 +1,4 @@
-# vscode extension for q
+# vscode-q
 
 [![](https://img.shields.io/visual-studio-marketplace/v/jshinonome.vscode-q?labelColor=651FFF&color=B388FF&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 [![](https://vsmarketplacebadge.apphb.com/downloads/jshinonome.vscode-q.svg?labelColor=651FFF&color=B388FF&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)

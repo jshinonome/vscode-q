@@ -3,9 +3,9 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="q view">
-  <title>q view</title>
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>query view</title>
   <link rel="stylesheet" type="text/css" href="{assets}/css/{cssTheme}.css">
   <link rel="stylesheet" type="text/css" href="{assets}/css/q-view.css">
   <script type="text/javascript" src="{assets}/js/dayjs.min.js"></script>
@@ -17,20 +17,6 @@
 </head>
 
 <body>
-  <div id="toolbar">
-    <div id="toolbar-left">
-      <!--<a id="buy-coffee" title="buy me a coffee" href="#" style="color: orangered; font-weight: bold"
-        onclick="buyCoffee()">buy me a coffee</a> -->
-      <select id="save-file-type-selector" title="save data as" onChange="saveData()">
-        <option value="">Save as</option>
-        <option value=".csv">csv</option>
-        <option value=".xlsx">xlsx</option>
-      </select>
-    </div>
-    <div id="toolbar-right">
-      <input id="data-view-stats" type="text" readonly="readonly" title="data stats" />
-    </div>
-  </div>
   <perspective-viewer id="data-viewer" class="perspective-viewer-material{theme}" editable="true"
     style="--select--background-color: var(--vscode-editor-background)"></perspective-viewer>
   <script type="text/javascript" charset="utf-8">
@@ -199,24 +185,13 @@
       }
     });
 
-    // update rows and columns
-    function updateStats() {
-      const numberOfRows = viewer.view ? viewer.view.num_rows() : viewer.table.size();
-      // get rows count and displayed columns info
-      numberOfRows.then(rowCount => {
-        const colCount = viewer['columns'].length;
-        // notify webview for data stats status update
-        document.getElementById('data-view-stats').value = `Row ${rowCount}, Col ${colCount}`;
-      });
-    }
-
     // load data to table(required for offline) and to viewer
-    function loadData(msg) {
+    async function loadData(msg) {
       try {
         var table;
         switch (msg.type) {
           case 'rba':
-            table = worker.table(Uint8Array.from(msg.data).buffer);
+            table = await worker.table(Uint8Array.from(msg.data).buffer);
             break;
           case 'json':
             for (const column in msg.meta) {
@@ -229,28 +204,28 @@
                   });
               }
             };
-            table = worker.table(msg.meta);
+            table = await worker.table(msg.meta);
             table.update(msg.data);
             break;
         }
 
-        viewer.load(table)
-          .then(_ => {
-            if (!schemaEquals(currentCols, msg.cols)) {
-              viewer.reset();
-              updateStats();
-              const datagrid = viewer.querySelector('regular-table');
-              for (const th of datagrid.querySelectorAll('th')) {
-                const metadata = datagrid.getMeta(th);
-                if (msg.keys.includes(metadata.value)) {
-                  th.style.background = keyColor;
-                }
-              }
-              datagrid.draw();
-            }
-            currentCols = msg.cols;
-          });
+        if (!schemaEquals(currentCols, msg.cols)) {
+          viewer.reset();
+          currentCols = msg.cols;
+          viewer.setAttribute('columns', JSON.stringify(msg.cols));
+        }
+        await viewer.load(table);
 
+        const datagrid = viewer.querySelector('regular-table');
+        for (const th of datagrid.querySelectorAll('th')) {
+          const metadata = datagrid.getMeta(th);
+          if (msg.keys.includes(metadata.value)) {
+            th.style.background = keyColor;
+          } else {
+            th.style.background = "";
+          }
+        }
+        datagrid.draw();
       } catch (error) {
         console.error(`loadData - error: ${error.message}`);
       }
@@ -281,17 +256,10 @@
     function schemaEquals(cols1, cols2) {
       return Array.isArray(cols1) &&
         Array.isArray(cols2) &&
-        cols1.length === cols2.length &&
+        (cols1.length === cols2.length) &&
         cols2.every(col => cols1.includes(col));
     }
 
-// function buyCoffee() {
-//     vscode.postMessage({
-//         command: 'buyCoffee',
-//         viewName: 'vscode.open',
-//         uri: 'https://www.buymeacoffee.com/jshinonome'
-//     });
-// }
   </script>
 </body>
 
