@@ -11,7 +11,7 @@
 	"publisher": "jshinonome",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.56.0"
+		"vscode": "^1.57.0"
 	},
 	"categories": [
 		"Programming Languages",
@@ -495,33 +495,33 @@
 		}
 	},
 	"devDependencies": {
-		"@finos/perspective": "^0.8.3",
-		"@finos/perspective-viewer": "^0.8.3",
-		"@finos/perspective-viewer-d3fc": "^0.8.3",
-		"@finos/perspective-viewer-datagrid": "^0.8.3",
+		"@finos/perspective": "^0.9.0",
+		"@finos/perspective-viewer": "^0.9.0",
+		"@finos/perspective-viewer-d3fc": "^0.9.0",
+		"@finos/perspective-viewer-datagrid": "^0.9.0",
 		"@types/long": "^4.0.1",
-		"@types/node": "^15.12.1",
+		"@types/node": "^15.12.4",
 		"@types/request": "^2.48.5",
-		"@types/vscode": "^1.56.0",
-		"@typescript-eslint/parser": "^4.26.0",
+		"@types/vscode": "^1.57.0",
+		"@typescript-eslint/parser": "^4.27.0",
 		"ag-grid-community": "^25.3.0",
 		"chart.js": "^3.3.2",
 		"dayjs": "^1.10.5",
 		"milligram": "^1.4.1",
 		"node-q": "^2.5.0",
-		"ts-loader": "^9.2.2",
-		"typescript": "^4.3.2",
+		"ts-loader": "^9.2.3",
+		"typescript": "^4.3.4",
 		"vscode-test": "^1.5.2",
-		"webpack": "^5.38.1",
-		"webpack-cli": "^4.7.0"
+		"webpack": "^5.39.1",
+		"webpack-cli": "^4.7.2"
 	},
 	"dependencies": {
 		"@types/graceful-fs": "^4.1.5",
 		"@types/klaw": "^3.0.1",
 		"@types/picomatch": "^2.2.4",
-		"@typescript-eslint/eslint-plugin": "^4.26.0",
+		"@typescript-eslint/eslint-plugin": "^4.27.0",
 		"csv-parser": "^3.0.0",
-		"eslint": "^7.28.0",
+		"eslint": "^7.29.0",
 		"fuse.js": "^6.4.6",
 		"graceful-fs": "^4.2.6",
 		"klaw": "^3.0.0",
