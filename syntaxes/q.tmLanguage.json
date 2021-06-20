@@ -184,7 +184,7 @@
         },
         {
           "name": "constant.language.infinity.q",
-          "match": "\\b-?0(W[hijepdnutv]?|wz?)\\b"
+          "match": "-?0(W[hijepdnutv]?|wz?)\\b"
         },
         {
           "name": "constant.other.date",
