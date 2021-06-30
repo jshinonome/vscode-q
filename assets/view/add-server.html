@@ -21,6 +21,10 @@
         <input type="text" placeholder="" id="user">
         <label for="password">Password</label>
         <input type="password" placeholder="******" id="password">
+        <label for="authMethod">Authentication method</label>
+        <select id="authMethod">
+            {authMethods}
+        </select>
         <label for="socketTimeout">Socket Timeout (milliseconds)</label>
         <input type="text" placeholder="" id="socketTimeout" value="0">
         <label for="label">Label</label>
@@ -58,6 +62,7 @@
             const port = document.getElementById('port');
             const user = document.getElementById('user');
             const password = document.getElementById('password');
+            const authMethod = document.getElementById('authMethod');
             const socketTimeout = document.getElementById('socketTimeout');
             const label = document.getElementById('label');
             const tags = document.getElementById('tags');
@@ -106,6 +111,7 @@
                     label: label.value.trim(),
                     tags: tags.value.trim(),
                     uniqLabel: tags.value.trim() + ',' + label.value.trim(),
+                    authMethod: authMethod.value
                 }
             }
 
@@ -119,6 +125,7 @@
                     label.value = cfg.label;
                     tags.value = cfg.tags;
                     socketNoDelay.checked = cfg.socketNoDelay;
+                    authMethod.value = cfg.authMethod;
                 }
             }
 

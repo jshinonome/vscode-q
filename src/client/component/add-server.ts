@@ -8,6 +8,7 @@
 import * as fs from 'fs';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window } from 'vscode';
 import { QCfg, QConnManager } from '../modules/q-conn-manager';
+import { authMethods } from '../modules/q-auth-method';
 import path = require('path');
 
 const templatePath = './assets/view';
@@ -130,8 +131,13 @@ export class AddServer implements Disposable {
         const dirUri = webview.asWebviewUri(dir);
         let template = fs.readFileSync(
             path.join(this._extensionPath, templatePath, 'add-server.html')).toString();
+        let authMethodsHTML = '';
+        for (let auth of authMethods) {
+            authMethodsHTML += '<option value="'+auth.id+'">'+auth.name+'</option>';
+        }
         template = template.replace(/{assets}/g, dirUri.toString())
-            .replace(/{theme}/g, this._theme);
+            .replace(/{theme}/g, this._theme)
+            .replace(/{authMethods}/g, authMethodsHTML);
         return template;
     }
 

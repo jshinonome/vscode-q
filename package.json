@@ -494,6 +494,7 @@
 			}
 		}
 	},
+	"q_auth_modules": [],
 	"devDependencies": {
 		"@finos/perspective": "^0.8.3",
 		"@finos/perspective-viewer": "^0.8.3",

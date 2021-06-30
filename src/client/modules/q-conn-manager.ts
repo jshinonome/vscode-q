@@ -105,30 +105,32 @@ export class QConnManager {
                         this.sync(query);
                     }
                 } else {
-                    q.connect(qConn,
-                        (err, conn) => {
-                            if (err) window.showErrorMessage(err.message);
-                            if (conn) {
-                                conn.addListener('close', _hadError => {
-                                    if (_hadError) {
-                                        console.log('Error happened during closing connection');
+                    qConn.invokeAuth().then((cred)=>{
+                        q.connect(cred,
+                            (err, conn) => {
+                                if (err) window.showErrorMessage(err.message);
+                                if (conn) {
+                                    conn.addListener('close', _hadError => {
+                                        if (_hadError) {
+                                            console.log('Error happened during closing connection');
+                                        }
+                                        this.removeConn(uniqLabel);
+                                    });
+                                    qConn?.setConn(conn);
+                                    this.activeConn = qConn;
+                                    commands.executeCommand('q-client.refreshEntry');
+                                    commands.executeCommand('q-explorer.refreshEntry');
+                                    QStatusBarManager.updateConnStatus(uniqLabel);
+                                    if (query) {
+                                        this.sync(query);
                                     }
-                                    this.removeConn(uniqLabel);
-                                });
-                                qConn?.setConn(conn);
-                                this.activeConn = qConn;
-                                commands.executeCommand('q-client.refreshEntry');
-                                commands.executeCommand('q-explorer.refreshEntry');
-                                QStatusBarManager.updateConnStatus(uniqLabel);
-                                if (query) {
-                                    this.sync(query);
-                                }
-                                if (QConnManager.consoleSize.length > 0) {
-                                    conn.k('\\c ' + QConnManager.consoleSize);
+                                    if (QConnManager.consoleSize.length > 0) {
+                                        conn.k('\\c ' + QConnManager.consoleSize);
+                                    }
                                 }
                             }
-                        }
-                    );
+                        );
+                    }).catch(err => { window.showErrorMessage(err.message); });
                 }
             }
         } catch (error) {
@@ -278,6 +280,7 @@ export class QConnManager {
         if (fs.existsSync(cfgPath)) {
             this.qCfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
             this.qCfg = this.qCfg.map(qcfg => {
+                qcfg.authMethod = qcfg.authMethod ?? 'userPass',
                 qcfg.uniqLabel = `${qcfg.tags},${qcfg.label}`;
                 return qcfg;
             });
@@ -328,7 +331,8 @@ export class QConnManager {
                             socketTimeout: qcfg.socketTimeout ?? 0,
                             label: qcfg.label as string,
                             tags: qcfg.tags ?? '',
-                            uniqLabel: `${qcfg.tags},${qcfg.label}`
+                            uniqLabel: `${qcfg.tags},${qcfg.label}`,
+                            authMethod: qcfg.authMethod ?? 'userPass'
                         };
                     } else {
                         throw new Error('Please make sure to include port and label');
@@ -393,7 +397,8 @@ export class QConnManager {
                 socketTimeout: qcfg.socketTimeout,
                 label: qcfg.label,
                 tags: qcfg.tags,
-                uniqLabel: `${qcfg.tags},${qcfg.label}`
+                uniqLabel: `${qcfg.tags},${qcfg.label}`,
+                authMethod: qcfg.authMethod
             };
         }), null, 4), 'utf8');
     }
@@ -420,4 +425,5 @@ export type QCfg = {
     label: string;
     tags: string;
     uniqLabel: string;
+    authMethod: string;
 }

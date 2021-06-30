@@ -8,6 +8,7 @@
 import * as q from 'node-q';
 import { Command, TreeItem, TreeItemCollapsibleState } from 'vscode';
 import { QCfg, QConnManager } from './q-conn-manager';
+import { authMethods } from '../modules/q-auth-method';
 import path = require('path');
 
 export class QConn extends TreeItem {
@@ -16,6 +17,7 @@ export class QConn extends TreeItem {
     port: number;
     user: string;
     password: string;
+    authMethod: string;
     socketNoDelay: boolean;
     socketTimeout: number;
     conn?: q.Connection;
@@ -40,6 +42,7 @@ export class QConn extends TreeItem {
         this.conn = conn;
         this.tags = cfg.tags ?? '';
         this.uniqLabel = `${cfg.tags},${cfg.label}`;
+        this.authMethod = cfg.authMethod;
         this.command = {
             command: 'q-client.connect',
             title: 'connect to q server',
@@ -105,6 +108,14 @@ export class QConn extends TreeItem {
         }
     }
 
+    invokeAuth(): Promise<q.ConnectionParameters> {
+        for (let auth of authMethods) {
+            if (auth.id == this.authMethod) {
+                return auth.generateCredentials(this);
+            }
+        }
+        throw "unknown auth method: " + this.authMethod;
+    }
 
     contextValue = 'qconn';
 }
