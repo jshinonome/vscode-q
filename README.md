@@ -169,6 +169,11 @@ vsce package
 
 ## Tips
 
+### Enable Auto Scrolling for Output Channel
+
+1. Type <kdb>ctrl</kdb>+<kdb>comma(,)</kdb>, open Settings, disable `Output>Smart Scroll`.
+2. Turn on Auto Scrolling by clicking a small locker icon on the right top of output channel.
+
 ### Disable Word Wrap in q Console of Output
 
 Type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd>, call `Open Setting(Json)`, and add following configuration.
