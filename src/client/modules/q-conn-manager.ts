@@ -31,7 +31,7 @@ export class QConnManager {
     busyConn: QConn | undefined = undefined;
     queryWrapper = '';
     isLimited = true;
-    pollingId = 0;
+    pollingId: NodeJS.Timer | undefined = undefined;
     public static consoleSize = workspace.getConfiguration().get('q-client.output.consoleSize') as string;
     public static queryMode = 'Console';
     public static queryWrapper = '';
@@ -259,7 +259,7 @@ export class QConnManager {
     stopPolling(): void {
         if (this.pollingId) {
             clearInterval(this.pollingId);
-            this.pollingId = 0;
+            this.pollingId = undefined;
         }
     }
 
