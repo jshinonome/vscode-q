@@ -1,5 +1,9 @@
 # change log
 
+## 2.2.6
+
+-   server explorer: list namespace variables only
+
 ## 2.2.1
 
 ### added

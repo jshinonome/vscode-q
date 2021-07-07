@@ -109,7 +109,7 @@ export default class QDictTreeItem extends TreeItem
             v: key \`.;
             r: r upsert (v,'\`.);
             r: r upsert (n,'\`root);
-            r: r upsert (,/) {if[11h=type n:key x;r:(y[x] n), 'x];if[count r;r,:(,/).z.s[;y]each r[;0]];:r}[;f] each n;
+            r: r upsert (,/){if[((::)~first value x)&11h=type n:key x;r:(y[x] n), 'x];if[count r;r,:(,/).z.s[;y]each r[;0]];:r}[;f] each n;
             r: update t:{@[{type value x};x;-255h]} each n from r;
             r: select from r where not t in 101 -255h;
             r: update b: {string value x} each n from r where t within 100 111h;
