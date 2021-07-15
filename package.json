@@ -33,8 +33,7 @@
 	"icon": "icon.png",
 	"main": "./dist/client.js",
 	"activationEvents": [
-		"onView:q-servers",
-		"onLanguage:q"
+		"onStartupFinished"
 	],
 	"scripts": {
 		"clean": "rm -rf dist",

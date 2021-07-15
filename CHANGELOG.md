@@ -1,5 +1,9 @@
 # change log
 
+## 2.2.7
+
+-   add server: add use customized authentication, depends on `jshinonome.vscode-q-auth`
+
 ## 2.2.6
 
 -   server explorer: list namespace variables only

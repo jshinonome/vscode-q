@@ -30,6 +30,8 @@
         <div class="float-right">
             <input type="checkbox" id="socketNoDelay">
             <label class="label-inline" for="socketNoDelay">Socket No Delay</label>
+            <input type="checkbox" id="useCustomizedAuth">
+            <label class="label-inline" for="useCustomizedAuth">Customized Authentication</label>
         </div>
         <input class="button-primary" type="submit" value="Create" onclick="create()">
         <input class="button-primary" type="submit" value="Update" onclick="update()">
@@ -63,6 +65,7 @@
             const tags = document.getElementById('tags');
             const socketNoDelay = document.getElementById('socketNoDelay');
             const alert = document.getElementById('alert');
+            const useCustomizedAuth = document.getElementById('useCustomizedAuth');
             function generateDefaultLabel() {
                 if (label.value === '')
                     label.value = host.value + '-' + port.value;
@@ -106,6 +109,7 @@
                     label: label.value.trim(),
                     tags: tags.value.trim(),
                     uniqLabel: tags.value.trim() + ',' + label.value.trim(),
+                    useCustomizedAuth: useCustomizedAuth.checked
                 }
             }
 
@@ -119,6 +123,7 @@
                     label.value = cfg.label;
                     tags.value = cfg.tags;
                     socketNoDelay.checked = cfg.socketNoDelay;
+                    useCustomizedAuth.checked = cfg.useCustomizedAuth;
                 }
             }
 

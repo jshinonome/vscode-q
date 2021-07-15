@@ -6,9 +6,13 @@
  */
 
 import * as q from 'node-q';
-import { Command, TreeItem, TreeItemCollapsibleState } from 'vscode';
+import { Command, extensions, TreeItem, TreeItemCollapsibleState, window } from 'vscode';
 import { QCfg, QConnManager } from './q-conn-manager';
 import path = require('path');
+
+const customizedAuthExtension = extensions.getExtension('jshinonome.vscode-q-auth');
+let customizedAuth = (qcfg: QCfg) => qcfg.password;
+customizedAuthExtension?.activate().then(customizedAuth = customizedAuthExtension.exports.getToken);
 
 export class QConn extends TreeItem {
     label: string;
@@ -25,6 +29,8 @@ export class QConn extends TreeItem {
     version = 3.0;
     tags: string;
     uniqLabel: string;
+    useCustomizedAuth: boolean;
+
     constructor(cfg: QCfg, conn: q.Connection | undefined = undefined) {
         super(cfg['label'], TreeItemCollapsibleState.None);
         this.host = ('host' in cfg) ? cfg['host'] : 'localhost';
@@ -45,6 +51,7 @@ export class QConn extends TreeItem {
             title: 'connect to q server',
             arguments: [this.uniqLabel]
         };
+        this.useCustomizedAuth = 'useCustomizedAuth' in cfg ? cfg['useCustomizedAuth'] : false;
         if (conn) {
             this.getKdbVersion();
             this.setTimeout();
@@ -75,6 +82,16 @@ export class QConn extends TreeItem {
             if (err)
                 console.log('Fail to set timeout');
         });
+    }
+
+    getToken(): void {
+        if (this.useCustomizedAuth) {
+            if (customizedAuthExtension && customizedAuthExtension.isActive) {
+                this.password = customizedAuth(this);
+            } else {
+                window.showWarningMessage('Customized Auth Plug(jshinonome.vscode-q-auth) is not found or not activated yet');
+            }
+        }
     }
 
     // get description(): string {

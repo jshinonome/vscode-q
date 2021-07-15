@@ -105,6 +105,7 @@ export class QConnManager {
                         this.sync(query);
                     }
                 } else {
+                    qConn.getToken();
                     q.connect(qConn,
                         (err, conn) => {
                             if (err) window.showErrorMessage(err.message);
@@ -328,7 +329,8 @@ export class QConnManager {
                             socketTimeout: qcfg.socketTimeout ?? 0,
                             label: qcfg.label as string,
                             tags: qcfg.tags ?? '',
-                            uniqLabel: `${qcfg.tags},${qcfg.label}`
+                            uniqLabel: `${qcfg.tags},${qcfg.label}`,
+                            useCustomizedAuth: `${qcfg.useCustomizedAuth ?? false}`
                         };
                     } else {
                         throw new Error('Please make sure to include port and label');
@@ -393,7 +395,8 @@ export class QConnManager {
                 socketTimeout: qcfg.socketTimeout,
                 label: qcfg.label,
                 tags: qcfg.tags,
-                uniqLabel: `${qcfg.tags},${qcfg.label}`
+                uniqLabel: `${qcfg.tags},${qcfg.label}`,
+                useCustomizedAuth: `${qcfg.useCustomizedAuth}`
             };
         }), null, 4), 'utf8');
     }
@@ -420,4 +423,5 @@ export type QCfg = {
     label: string;
     tags: string;
     uniqLabel: string;
+    useCustomizedAuth: boolean;
 }
