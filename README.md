@@ -215,6 +215,10 @@ Type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd>, call `Open Setting(Json)`, a
     }
 ```
 
+### Customized Authentication
+
+refer to [vscode-q-auth](https://github.com/jshinonome/vscode-q-auth)
+
 ## Packages
 
 Special thanks to the following packages.
