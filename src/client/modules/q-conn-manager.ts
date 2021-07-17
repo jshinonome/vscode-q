@@ -280,6 +280,7 @@ export class QConnManager {
             this.qCfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
             this.qCfg = this.qCfg.map(qcfg => {
                 qcfg.uniqLabel = `${qcfg.tags},${qcfg.label}`;
+                qcfg.useCustomizedAuth = qcfg.useCustomizedAuth === true ? true : false;
                 return qcfg;
             });
             // reserver current conn
@@ -396,7 +397,7 @@ export class QConnManager {
                 label: qcfg.label,
                 tags: qcfg.tags,
                 uniqLabel: `${qcfg.tags},${qcfg.label}`,
-                useCustomizedAuth: `${qcfg.useCustomizedAuth}`
+                useCustomizedAuth: qcfg.useCustomizedAuth === true
             };
         }), null, 4), 'utf8');
     }
