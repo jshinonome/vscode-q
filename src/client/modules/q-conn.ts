@@ -11,8 +11,8 @@ import { QCfg, QConnManager } from './q-conn-manager';
 import path = require('path');
 
 const customizedAuthExtension = extensions.getExtension('jshinonome.vscode-q-auth');
-let customizedAuth = (qcfg: QCfg) => qcfg.password;
-customizedAuthExtension?.activate().then(customizedAuth = customizedAuthExtension.exports.getToken);
+let customizedAuth = (qcfg: QCfg) => new Promise(resolve => resolve(qcfg));
+customizedAuthExtension?.activate().then(customizedAuth = customizedAuthExtension.exports.auth);
 
 export class QConn extends TreeItem {
     label: string;
@@ -84,13 +84,16 @@ export class QConn extends TreeItem {
         });
     }
 
-    getToken(): void {
+    auth(): Promise<QCfg> {
         if (this.useCustomizedAuth) {
             if (customizedAuthExtension && customizedAuthExtension.isActive) {
-                this.password = customizedAuth(this);
+                return customizedAuth(this) as Promise<QCfg>;
             } else {
-                window.showWarningMessage('Customized Auth Plug(jshinonome.vscode-q-auth) is not found or not activated yet');
+                window.showWarningMessage('Customized Auth Plug-in(jshinonome.vscode-q-auth) is not found or not activated yet');
+                return Promise.reject(new Error('Customized Auth Plug-in(jshinonome.vscode-q-auth) Not Found'));
             }
+        } else {
+            return Promise.resolve(this);
         }
     }
 

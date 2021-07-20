@@ -105,31 +105,33 @@ export class QConnManager {
                         this.sync(query);
                     }
                 } else {
-                    qConn.getToken();
-                    q.connect(qConn,
-                        (err, conn) => {
-                            if (err) window.showErrorMessage(err.message);
-                            if (conn) {
-                                conn.addListener('close', _hadError => {
-                                    if (_hadError) {
-                                        console.log('Error happened during closing connection');
+                    qConn.auth().then(qcfg => {
+                        q.connect(qcfg,
+                            (err, conn) => {
+                                if (err) window.showErrorMessage(err.message);
+                                if (conn) {
+                                    conn.addListener('close', _hadError => {
+                                        if (_hadError) {
+                                            console.log('Error happened during closing connection');
+                                        }
+                                        this.removeConn(uniqLabel);
+                                    });
+                                    qConn?.setConn(conn);
+                                    this.activeConn = qConn;
+                                    commands.executeCommand('q-client.refreshEntry');
+                                    commands.executeCommand('q-explorer.refreshEntry');
+                                    QStatusBarManager.updateConnStatus(uniqLabel);
+                                    if (query) {
+                                        this.sync(query);
                                     }
-                                    this.removeConn(uniqLabel);
-                                });
-                                qConn?.setConn(conn);
-                                this.activeConn = qConn;
-                                commands.executeCommand('q-client.refreshEntry');
-                                commands.executeCommand('q-explorer.refreshEntry');
-                                QStatusBarManager.updateConnStatus(uniqLabel);
-                                if (query) {
-                                    this.sync(query);
-                                }
-                                if (QConnManager.consoleSize.length > 0) {
-                                    conn.k('\\c ' + QConnManager.consoleSize);
+                                    if (QConnManager.consoleSize.length > 0) {
+                                        conn.k('\\c ' + QConnManager.consoleSize);
+                                    }
                                 }
                             }
-                        }
-                    );
+                        );
+                    }).catch(reason => console.log(reason));
+
                 }
             }
         } catch (error) {
