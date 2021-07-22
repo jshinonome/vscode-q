@@ -7,6 +7,7 @@
 
 import * as fs from 'fs';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window } from 'vscode';
+import { QConn } from '../modules/q-conn';
 import { QCfg, QConnManager } from '../modules/q-conn-manager';
 import path = require('path');
 
@@ -130,8 +131,10 @@ export class AddServer implements Disposable {
         const dirUri = webview.asWebviewUri(dir);
         let template = fs.readFileSync(
             path.join(this._extensionPath, templatePath, 'add-server.html')).toString();
+        const customizedAuthInstalled = QConn.customizedAuthInstalled ? 'checked' : 'disabled';
         template = template.replace(/{assets}/g, dirUri.toString())
-            .replace(/{theme}/g, this._theme);
+            .replace(/{theme}/g, this._theme)
+            .replace(/{customizedAuthInstalled}/g, customizedAuthInstalled);
         return template;
     }
 

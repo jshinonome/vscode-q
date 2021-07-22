@@ -12,7 +12,11 @@ import path = require('path');
 
 const customizedAuthExtension = extensions.getExtension('jshinonome.vscode-q-auth');
 let customizedAuth = (qcfg: QCfg) => new Promise(resolve => resolve(qcfg));
-customizedAuthExtension?.activate().then(customizedAuth = customizedAuthExtension.exports.auth);
+
+customizedAuthExtension?.activate().then(_ => {
+    customizedAuth = customizedAuthExtension.exports.auth;
+    QConn.customizedAuthInstalled = true;
+});
 
 export class QConn extends TreeItem {
     label: string;
@@ -30,6 +34,7 @@ export class QConn extends TreeItem {
     tags: string;
     uniqLabel: string;
     useCustomizedAuth: boolean;
+    public static customizedAuthInstalled = false;
 
     constructor(cfg: QCfg, conn: q.Connection | undefined = undefined) {
         super(cfg['label'], TreeItemCollapsibleState.None);
@@ -85,7 +90,7 @@ export class QConn extends TreeItem {
     }
 
     auth(): Promise<QCfg> {
-        if (this.useCustomizedAuth) {
+        if (this.useCustomizedAuth && QConn.customizedAuthInstalled) {
             if (customizedAuthExtension && customizedAuthExtension.isActive) {
                 return customizedAuth(this) as Promise<QCfg>;
             } else {

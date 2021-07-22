@@ -30,8 +30,9 @@
         <div class="float-right">
             <input type="checkbox" id="socketNoDelay">
             <label class="label-inline" for="socketNoDelay">Socket No Delay</label>
-            <input type="checkbox" id="useCustomizedAuth">
-            <label class="label-inline" for="useCustomizedAuth">Customized Authentication</label>
+            <input type="checkbox" id="useCustomizedAuth" {customizedAuthInstalled}>
+            <label class="label-inline" for="useCustomizedAuth">
+                <span title="requires vscode-q-auth extension">Customized Authentication</span></label>
         </div>
         <input class="button-primary" type="submit" value="Create" onclick="create()">
         <input class="button-primary" type="submit" value="Update" onclick="update()">
