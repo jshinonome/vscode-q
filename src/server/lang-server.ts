@@ -29,6 +29,7 @@ export default class LangServer {
     documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
     buildInFsRef: CompletionItem[] = [];
+    hoverMap = new Map<string, string>();
 
     private analyzer: Analyzer;
     private callHierarchyProvider: CallHierarchyProvider;
@@ -40,7 +41,6 @@ export default class LangServer {
         // Make the text document manager listen on the connection
         // for open, change and close text document events
         this.documents.listen(this.connection);
-
         this.documents.onDidChangeContent(this.onDidChangeContent.bind(this));
         this.connection.onHover(this.onHover.bind(this));
         this.connection.onDefinition(this.onDefinition.bind(this));
@@ -56,6 +56,7 @@ export default class LangServer {
         this.connection.onSignatureHelp(this.onSignatureHelp.bind(this));
         this.connection.onNotification('$/analyze-server-cache', (code => this.analyzer.analyzeServerCache(code)));
         this.connection.onNotification('$/analyze-source-code', (cfg => this.analyzer.analyzeWorkspace(cfg)));
+        this.connection.onNotification('$/prepare-on-hover', (hoverItems => this.generateHoverMap(hoverItems)));
 
         this.callHierarchyProvider = new CallHierarchyProvider(analyzer);
         this.connection.languages.callHierarchy.onPrepare(this.callHierarchyProvider.onPrepare.bind(this));
@@ -332,6 +333,13 @@ export default class LangServer {
             return { contents: content };
         }
 
+        if (this.hoverMap.has(word.text)) {
+            const content = {
+                language: 'q',
+                value: this.hoverMap.get(word.text) ?? ''
+            };
+            return { contents: content };
+        }
         // let symbols: SymbolInformation[] = [];
         // symbols = this.analyzer.findSymbolsForFile(currentUri);
         // symbols = symbols.filter(
@@ -383,6 +391,13 @@ export default class LangServer {
             }
         }
         return undefined;
+    }
+
+    private generateHoverMap(hoverItems: string[][]): void {
+        this.hoverMap = new Map<string, string>();
+        hoverItems.forEach(item => {
+            this.hoverMap.set(item[0], item[1]);
+        });
     }
 
     private logRequest(

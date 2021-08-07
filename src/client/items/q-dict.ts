@@ -5,6 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
+import * as fs from 'fs';
 import { commands, Event, EventEmitter, TextDocumentContentChangeEvent, TreeDataProvider, TreeItem, TreeItemCollapsibleState, window } from 'vscode';
 import { QConnManager } from '../modules/q-conn-manager';
 import QFunctionTreeItem from './q-function';
@@ -102,21 +103,7 @@ export default class QDictTreeItem extends TreeItem
             return;
         }
         const conn = QConnManager.current?.activeConn?.conn;
-        const query = `{
-            r: flip \`n\`p!"SS"$\\:();
-            f: {sv[\`]each x,'y};
-            n: f[\`] (key \`)except\`q\`Q\`h\`j\`o;
-            v: key \`.;
-            r: r upsert (v,'\`.);
-            r: r upsert (n,'\`root);
-            r: r upsert (,/){if[((::)~first value x)&11h=type n:key x;r:(y[x] n), 'x];if[count r;r,:(,/).z.s[;y]each r[;0]];:r}[;f] each n;
-            r: update t:{@[{type value x};x;-255h]} each n from r;
-            r: select from r where not t in 101 -255h;
-            r: update b: {string value x} each n from r where t within 100 111h;
-            r: update t: {$[.Q.qt value x;98h;99h]} each n from r where t in 98 99h;
-            r: update m: {@[0!meta@;x;{x}]} each n from r where t=98h;
-            (\`n xasc select from r where p=\`root) uj \`p\`n xasc select from r where p<>\`root
-         }[]`;
+        const query = fs.readFileSync(path.join(__filename, '../../assets/source/query-server-variables.q'), 'utf8');
         if (conn) {
             conn.k(query, (err, res) => {
                 if (err) {
@@ -126,6 +113,8 @@ export default class QDictTreeItem extends TreeItem
                     // name, type, body, parent, cols
                     this._children = [];
                     const itemMap = new Map<string, TreeItem>();
+                    // name -> content
+                    const hoverItems: string[][] = [];
                     itemMap.set('root', this);
                     itemMap.set('.', new QDictTreeItem('.', this));
                     const code: string[] = [];
@@ -162,10 +151,12 @@ export default class QDictTreeItem extends TreeItem
                                 new QVarTreeItem(name, parent, qTypeMap.get(res.t[i]) ?? `unknown:${res.t[i]}`);
                                 code.push(`${res.n[i]}:${qTypeMap.get(res.t[i])};`);
                         }
+                        hoverItems.push([res.n[i], `/ type: ${res.t[i]}h \n` + res.b[i]]);
                     });
                     this._onDidChangeTreeData.fire(undefined);
                     // send server cache to language server
                     commands.executeCommand('q-client.sendServerCache', code.join('\n'));
+                    commands.executeCommand('q-client.sendOnHover', hoverItems);
                 }
             });
         }

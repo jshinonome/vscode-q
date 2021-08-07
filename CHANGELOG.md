@@ -1,5 +1,9 @@
 # change log
 
+## 2.3.1
+
+-   lang server: add hover for server variables
+
 ## 2.2.7
 
 -   add server: add use customized authentication, depends on `jshinonome.vscode-q-auth`

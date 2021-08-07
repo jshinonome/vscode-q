@@ -370,6 +370,12 @@ export function activate(context: ExtensionContext): void {
         })
     );
 
+    context.subscriptions.push(
+        commands.registerCommand('q-client.sendOnHover', hoverItems => {
+            client.sendNotification('$/prepare-on-hover', hoverItems);
+        })
+    );
+
     client.onReady().then(() => {
         const cfg = workspace.getConfiguration('q-server.sourceFiles');
         client.sendNotification('$/analyze-source-code', { globsPattern: cfg.get('globsPattern'), ignorePattern: cfg.get('ignorePattern') });
