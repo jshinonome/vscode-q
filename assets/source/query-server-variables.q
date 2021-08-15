@@ -11,6 +11,6 @@
     r: update b: {string value x} each n from r where t within 100 111h;
     r: update t: {$[.Q.qt value x;98h;99h]} each n from r where t in 98 99h;
     r: update m: {@[0!meta@;x;{x}]} each n from r where t=98h;
-    r: update b: {-3!value x} each n from r where not t within 100 111h;
+    r: update b: {.Q.s value x} each n from r where not t within 100 111h;
     (`n xasc select from r where p=`root) uj `p`n xasc select from r where p<>`root
  }[]

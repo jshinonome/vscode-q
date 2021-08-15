@@ -243,19 +243,20 @@ export default class Analyzer {
                 .on('data', item => { if (includeMatch(item.path)) qSrcFiles.push(item.path); })
                 .on('end', () => {
                     if (qSrcFiles.length == 0) {
-                        this.connection.window.showWarningMessage(
+                        this.connection.console.warn(
                             `Failed to find any source files using the glob "${globsPattern}". Some feature will not be available.`,
                         );
+                    } else {
+                        this.connection.console.info(
+                            `Glob found ${qSrcFiles.length} files after ${getTimePassed()}`,
+                        );
+
+                        qSrcFiles.forEach((filepath: string) => this.analyzeFile(filepath));
+                        this.uriToLoadFile.forEach((_, uri) => this.analyzeLoadFiles(uri));
+
+                        this.connection.console.info(`Analyzing took ${getTimePassed()}`);
                     }
 
-                    this.connection.console.info(
-                        `Glob found ${qSrcFiles.length} files after ${getTimePassed()}`,
-                    );
-
-                    qSrcFiles.forEach((filepath: string) => this.analyzeFile(filepath));
-                    this.uriToLoadFile.forEach((_, uri) => this.analyzeLoadFiles(uri));
-
-                    this.connection.console.info(`Analyzing took ${getTimePassed()}`);
                 });
             this.analyzeServerCache('');
         }
