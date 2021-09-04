@@ -5,7 +5,6 @@
  * https://opensource.org/licenses/MIT
  */
 
-// import * as fs from 'fs';
 import Fuse from 'fuse.js';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import {
@@ -277,8 +276,9 @@ export default class Analyzer {
             this.connection.console.info(`Analyzing ${uri}`);
             this.analyzeDoc(uri, TextDocument.create(uri, 'q', 1, fileContent));
         } catch (error) {
+            const { message } = error as Error;
             this.connection.console.warn(`Failed analyzing ${uri}.`);
-            this.connection.console.warn(`Error: ${error.message}`);
+            this.connection.console.warn(`Error: ${message}`);
         }
     }
 

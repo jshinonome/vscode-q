@@ -342,7 +342,8 @@ export class QConnManager {
                 this.dumpCfg();
                 commands.executeCommand('q-client.refreshEntry');
             } catch (error) {
-                window.showErrorMessage(error.message);
+                const { message } = error as Error;
+                window.showErrorMessage(message);
             }
         }
     }
