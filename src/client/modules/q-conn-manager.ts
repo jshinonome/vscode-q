@@ -125,7 +125,10 @@ export class QConnManager {
                                         this.sync(query);
                                     }
                                     if (QConnManager.consoleSize.length > 0) {
-                                        conn.k('\\c ' + QConnManager.consoleSize);
+                                        conn.k('\\c ' + QConnManager.consoleSize, (err, _res) => {
+                                            if (err)
+                                                console.log('Fail to set console size');
+                                        });
                                     }
                                 }
                             }

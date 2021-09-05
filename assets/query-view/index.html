@@ -18,7 +18,7 @@
 
 <body>
   <perspective-viewer id="data-viewer" class="perspective-viewer-material{theme}" editable="true"
-    style="--select--background-color: var(--vscode-editor-background)"></perspective-viewer>
+    style="--select--background-color: var(--vscode-editor-background)" throttle="1000"></perspective-viewer>
   <script type="text/javascript" charset="utf-8">
     dayjs.extend(window.dayjs_plugin_utc);
     let vscode, saveFileTypeSelector, viewer, msg;
@@ -159,7 +159,7 @@
     // add vscode message handler
     window.addEventListener('message', event => {
       const message = event.data;
-      console.log(`got a vscode message, type: ${message.type}`);
+      console.log(`got a vscode message, type: ${message.type}, columns: ${message.cols}`);
       switch (message.type) {
         // raw byte array
         case 'rba':
@@ -210,12 +210,24 @@
         }
 
         if (!schemaEquals(currentCols, msg.cols)) {
+          console.log('reset viewer');
+
+          // console.debug('start');
+          // await viewer.delete();
+          // viewer.setAttribute('columns', JSON.stringify(msg.cols));
+          // viewer.setAttribute('aggregates', JSON.stringify({}));
+          // console.log(viewer.columns);
+          // viewer.reset();
+          // console.log(viewer.columns);
+          // console.debug('end');
+
+          await viewer.load(table);
           viewer.reset();
           currentCols = msg.cols;
-          viewer.setAttribute('columns', JSON.stringify(msg.cols));
+        } else {
+          console.log('same schema detected');
+          await viewer.load(table);
         }
-        await viewer.load(table);
-
         const datagrid = viewer.querySelector('regular-table');
         for (const th of datagrid.querySelectorAll('th')) {
           const metadata = datagrid.getMeta(th);
