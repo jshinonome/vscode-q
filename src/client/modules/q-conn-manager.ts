@@ -33,6 +33,7 @@ export class QConnManager {
     isLimited = true;
     pollingId: NodeJS.Timer | undefined = undefined;
     public static consoleSize = workspace.getConfiguration().get('q-client.output.consoleSize') as string;
+    public static autoRefreshExplorer = workspace.getConfiguration().get('q-client.expl.autoRefresh') as boolean;
     public static queryMode = 'Console';
     public static queryWrapper = '';
     public static consoleMode = true;
@@ -195,6 +196,9 @@ export class QConnManager {
                         }
                     }
                     QStatusBarManager.toggleQueryStatus(this.isBusy);
+                    if (QConnManager.autoRefreshExplorer) {
+                        commands.executeCommand('q-explorer.refreshEntry');
+                    }
                 }
             );
         } else {

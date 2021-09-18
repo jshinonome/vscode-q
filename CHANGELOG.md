@@ -1,14 +1,26 @@
 # change log
 
+## 2.3.4
+
+### added
+
+-   server explorer: auto refresh configuration and button
+
 ## 2.3.1
 
--   lang server: add hover for server variables
+### added
+
+-   lang server: hover for server variables
 
 ## 2.2.7
 
--   add server: add use customized authentication, depends on `jshinonome.vscode-q-auth`
+### changed
+
+-   add server: use customized authentication, depends on `jshinonome.vscode-q-auth`
 
 ## 2.2.6
+
+### changed
 
 -   server explorer: list namespace variables only
 

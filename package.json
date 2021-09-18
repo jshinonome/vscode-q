@@ -247,6 +247,15 @@
 				}
 			},
 			{
+				"command": "q-explorer.toggleAutoRefresh",
+				"title": "Toggle Auto Refresh",
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/sync.svg",
+					"dark": "assets/svg/dark/sync.svg"
+				}
+			},
+			{
 				"command": "q-explorer.preview",
 				"title": "Preview Table",
 				"category": "kdb+/q ext",
@@ -314,6 +323,11 @@
 				},
 				{
 					"command": "q-explorer.refreshEntry",
+					"when": "view == q-explorer",
+					"group": "navigation"
+				},
+				{
+					"command": "q-explorer.toggleAutoRefresh",
 					"when": "view == q-explorer",
 					"group": "navigation"
 				}
@@ -477,6 +491,12 @@
 					"type": "boolean",
 					"default": false,
 					"description": "Auto Clear Output"
+				},
+				"q-client.expl.autoRefresh": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": false,
+					"description": "Auto Refresh Server Explorer"
 				},
 				"q-client.output.includeQuery": {
 					"scope": "resource",

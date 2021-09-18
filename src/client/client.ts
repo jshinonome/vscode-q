@@ -104,6 +104,12 @@ export function activate(context: ExtensionContext): void {
     commands.registerCommand(
         'q-client.refreshEntry', () => qServers.refresh());
 
+    commands.registerCommand(
+        'q-explorer.toggleAutoRefresh', () => {
+            QConnManager.autoRefreshExplorer = !QConnManager.autoRefreshExplorer;
+            window.showInformationMessage(`Auto Refresh Explorer ${QConnManager.autoRefreshExplorer ? 'On' : 'Off'}`);
+        });
+
     // q cfg input
     commands.registerCommand(
         'q-client.addEntry',
