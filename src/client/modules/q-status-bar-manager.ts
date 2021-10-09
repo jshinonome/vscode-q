@@ -28,7 +28,7 @@ export class QStatusBarManager {
         context.subscriptions.push(this.queryModeStatusBar);
         this.queryModeStatusBar.color = this.isLightTheme ? '#512DA8' : '#B39DDB';
         this.queryModeStatusBar.command = 'q-client.switchMode';
-        this.queryModeStatusBar.text = QConnManager.queryMode;
+        this.queryModeStatusBar.text = '<q ' + QConnManager.queryMode;
         this.queryModeStatusBar.show();
 
         this.connStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 98);
@@ -53,11 +53,11 @@ export class QStatusBarManager {
 
     public static updateConnStatus(label: string | undefined): void {
         const text = (label ?? 'no connection').replace(',', '-');
-        this.current!.connStatusBar.text = text;
+        this.current!.connStatusBar.text = text + ' >';
     }
 
     public static updateQueryModeStatus(): void {
-        this.current!.queryModeStatusBar.text = QConnManager.queryMode;
+        this.current!.queryModeStatusBar.text = '<q ' + QConnManager.queryMode;
     }
 
     public static toggleQueryStatus(show: boolean): void {
