@@ -205,25 +205,20 @@
               }
             };
             table = await worker.table(msg.meta);
-            table.update(msg.data);
+            table.replace(msg.data);
             break;
         }
 
         if (!schemaEquals(currentCols, msg.cols)) {
           console.log('reset viewer');
-
-          // console.debug('start');
-          // await viewer.delete();
-          // viewer.setAttribute('columns', JSON.stringify(msg.cols));
-          // viewer.setAttribute('aggregates', JSON.stringify({}));
-          // console.log(viewer.columns);
-          // viewer.reset();
-          // console.log(viewer.columns);
-          // console.debug('end');
-
-          await viewer.load(table);
-          viewer.reset();
           currentCols = msg.cols;
+          try {
+            await viewer.load(table);
+          } catch (error) {
+            console.error(`load data to viewer - error: ${error.message}`);
+            console.error(error);
+            await viewer.reset();
+          }
         } else {
           console.log('same schema detected');
           await viewer.load(table);
