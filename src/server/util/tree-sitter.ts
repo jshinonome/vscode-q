@@ -131,3 +131,13 @@ export function findParentNotInTypes(
     }
     return null;
 }
+
+export function findParentInRoot(start: SyntaxNode): SyntaxNode {
+    let node = start;
+    if (node?.parent) {
+        while (node.parent !== null && node.parent.type !== 'script') {
+            node = node.parent;
+        }
+    }
+    return node ?? start.children[0];
+}

@@ -10,11 +10,8 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 import {
     CompletionItem, CompletionItemKind, Connection, Diagnostic, DiagnosticSeverity,
     DidChangeWatchedFilesParams, DocumentHighlight, DocumentSymbolParams, FileChangeType, Hover,
-    InitializeParams, Location, PrepareRenameParams, Range,
-    ReferenceParams, RenameParams,
-    SemanticTokens, SemanticTokensParams, ServerCapabilities, SignatureHelp,
-    SignatureHelpParams, SymbolInformation, SymbolKind, TextDocumentPositionParams, TextDocuments,
-    TextDocumentSyncKind, TextEdit, WorkspaceEdit, WorkspaceSymbolParams
+    InitializeParams, Location, PrepareRenameParams, Range, ReferenceParams, RenameParams,
+    SemanticTokens, SemanticTokensParams, ServerCapabilities, SignatureHelp, SignatureHelpParams, SymbolInformation, SymbolKind, TextDocumentPositionParams, TextDocuments, TextDocumentSyncKind, TextEdit, WorkspaceEdit, WorkspaceSymbolParams
 } from 'vscode-languageserver/node';
 import { URI } from 'vscode-uri';
 import Analyzer, { word } from './modules/analyser';
@@ -57,6 +54,7 @@ export default class LangServer {
         this.connection.onNotification('$/analyze-server-cache', (code => this.analyzer.analyzeServerCache(code)));
         this.connection.onNotification('$/analyze-source-code', (cfg => this.analyzer.analyzeWorkspace(cfg)));
         this.connection.onNotification('$/prepare-on-hover', (hoverItems => this.generateHoverMap(hoverItems)));
+        this.connection.onRequest('$/on-query-block', (params => this.onQueryBlock(params)));
 
         this.callHierarchyProvider = new CallHierarchyProvider(analyzer);
         this.connection.languages.callHierarchy.onPrepare(this.callHierarchyProvider.onPrepare.bind(this));
@@ -372,7 +370,7 @@ export default class LangServer {
     private getSigHelpAtPoint(
         params: ReferenceParams | TextDocumentPositionParams,
     ): SignatureHelp | undefined {
-        const node = this.analyzer.getNodeAtPoint(
+        const node = this.analyzer.getNonNullNodeAtPoint(
             params.textDocument.uri,
             params.position.line,
             params.position.character,
@@ -391,6 +389,21 @@ export default class LangServer {
             }
         }
         return undefined;
+    }
+
+    private onQueryBlock(params: TextDocumentPositionParams): { query: string, n: number } {
+        const node = this.analyzer.getNodeAtPoint(
+            params.textDocument.uri,
+            params.position.line,
+            params.position.character,
+        );
+
+        if (node) {
+            const blockNode = this.analyzer.getLv1Node(node);
+            return { query: blockNode.text, n: blockNode.endPosition.row + 1 };
+        } else {
+            return { query: '', n: 0 };
+        }
     }
 
     private generateHoverMap(hoverItems: string[][]): void {

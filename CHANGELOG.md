@@ -1,5 +1,10 @@
 # change log
 
+## 2.3.6
+
+-   shortcut: query current block
+-   shortcut: send current block to terminal
+
 ## 2.3.4
 
 ### added

@@ -188,6 +188,26 @@
 				"category": "kdb+/q ext"
 			},
 			{
+				"command": "q-client.queryBlock",
+				"title": "Query Current Block",
+				"category": "kdb+/q ext"
+			},
+			{
+				"command": "q-term.sendCurrentLine",
+				"title": "Send Current Line to Terminal",
+				"category": "kdb+/q ext"
+			},
+			{
+				"command": "q-term.sendSelection",
+				"title": "Send Current Selection to Terminal",
+				"category": "kdb+/q ext"
+			},
+			{
+				"command": "q-client.sendBlock",
+				"title": "Send Current Block to Terminal",
+				"category": "kdb+/q ext"
+			},
+			{
 				"command": "q-client.abortQuery",
 				"title": "Abort Current Query",
 				"category": "kdb+/q ext"
@@ -263,16 +283,6 @@
 					"light": "assets/svg/light/preview.svg",
 					"dark": "assets/svg/dark/preview.svg"
 				}
-			},
-			{
-				"command": "q-term.sendCurrentLine",
-				"title": "Send Current Line to Terminal",
-				"category": "kdb+/q ext"
-			},
-			{
-				"command": "q-term.sendSelection",
-				"title": "Send Current Selection to Terminal",
-				"category": "kdb+/q ext"
 			},
 			{
 				"command": "q-client.terminal.run",
@@ -399,12 +409,20 @@
 				"key": "ctrl+r"
 			},
 			{
+				"command": "q-client.queryBlock",
+				"key": "ctrl+e"
+			},
+			{
 				"command": "q-term.sendCurrentLine",
 				"key": "ctrl+shift+q"
 			},
 			{
 				"command": "q-term.sendSelection",
 				"key": "ctrl+shift+r"
+			},
+			{
+				"command": "q-term.sendBlock",
+				"key": "ctrl+shift+e"
 			}
 		],
 		"configuration": {

@@ -581,19 +581,23 @@ export default class Analyzer {
         return call;
     }
 
+    public getLv1Node(n: Parser.SyntaxNode): Parser.SyntaxNode {
+        return TreeSitterUtil.findParentInRoot(n);
+    }
+
     public getNodeAtPoint(uri: string, line: number, column: number): Parser.SyntaxNode | null {
         const document = this.uriToTree.get(uri);
-
         if (!document?.rootNode) {
             return null;
         }
+        return document.rootNode.descendantForPosition({ row: line, column });
+    }
 
-        const node = document.rootNode.descendantForPosition({ row: line, column });
-
+    public getNonNullNodeAtPoint(uri: string, line: number, column: number): Parser.SyntaxNode | null {
+        const node = this.getNodeAtPoint(uri, line, column);
         if (!node || node.childCount > 0 || node.text.trim() === '') {
             return null;
         }
-
         return node;
     }
 

@@ -6,9 +6,7 @@
  */
 
 import {
-    commands, env, ExtensionContext, IndentAction, languages,
-    Range, TextDocument, TextEdit, TreeItem, Uri, WebviewPanel,
-    window, workspace
+    commands, env, ExtensionContext, IndentAction, languages, Range, Selection, TextDocument, TextEdit, TreeItem, Uri, WebviewPanel, window, workspace
 } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 import { AddServer } from './component/add-server';
@@ -256,49 +254,99 @@ export function activate(context: ExtensionContext): void {
         })
     );
 
-    context.subscriptions.push(
-        commands.registerCommand('q-client.queryCurrentLine', async () => {
-            if (window.activeTextEditor) {
-                const n = window.activeTextEditor.selection.active.line;
-                const query = window.activeTextEditor.document.lineAt(n).text;
-                if (query) {
-                    QConnManager.current?.sync(query);
+    enum QueryCodeType {
+        Line,
+        Selection,
+        Block
+    }
+
+    enum QueryTarget {
+        Process,
+        Terminal
+    }
+
+    async function queryCode(code: QueryCodeType, target: QueryTarget): Promise<void> {
+        const editor = window.activeTextEditor;
+        if (editor) {
+            let n = 0;
+            let query = '';
+            const params = {
+                textDocument: {
+                    uri: editor.document.uri.toString(),
+                },
+                position: editor.selection.active,
+            };
+            switch (code) {
+                case QueryCodeType.Line:
+                    n = editor.selection.active.line;
+                    query = editor.document.lineAt(n).text;
+                    n = 0;
+                    break;
+                case QueryCodeType.Selection:
+                    query = editor?.document.getText(
+                        new Range(editor.selection.start, editor.selection.end)
+                    );
+                    break;
+                case QueryCodeType.Block:
+                    ({ query, n } = await client.sendRequest('$/on-query-block', params));
+                    break;
+            }
+            if (query) {
+                switch (target) {
+                    case QueryTarget.Process:
+                        QConnManager.current?.sync(query);
+                        break;
+                    case QueryTarget.Terminal:
+                        sendToCurrentTerm(query.replace(/(\r\n|\n|\r)/gm, ''));
+                        break;
                 }
             }
+            if (n > 0) {
+                let line = editor.document.lineAt(n).text;
+                while (n < editor.document.lineCount && (line === '' || line.startsWith('/'))) {
+                    n++;
+                    line = editor.document.lineAt(n).text;
+                }
+                const range = editor.document.lineAt(n).range;
+                editor.selection = new Selection(range.start, range.start);
+                editor.revealRange(new Range(range.start, range.start));
+            }
+        }
+    }
+
+    context.subscriptions.push(
+        commands.registerCommand('q-client.queryCurrentLine', async () => {
+            queryCode(QueryCodeType.Line, QueryTarget.Process);
         })
     );
 
     context.subscriptions.push(
         commands.registerCommand('q-client.querySelection', () => {
-            const query = window.activeTextEditor?.document.getText(
-                new Range(window.activeTextEditor.selection.start, window.activeTextEditor.selection.end)
-            );
-            if (query) {
-                QConnManager.current?.sync(query);
-            }
+            queryCode(QueryCodeType.Selection, QueryTarget.Process);
+        })
+    );
+
+    context.subscriptions.push(
+        commands.registerCommand('q-client.queryBlock', () => {
+            queryCode(QueryCodeType.Block, QueryTarget.Process);
         })
     );
 
     context.subscriptions.push(
         commands.registerCommand('q-term.sendCurrentLine', () => {
-            if (window.activeTextEditor) {
-                const n = window.activeTextEditor.selection.active.line;
-                const query = window.activeTextEditor.document.lineAt(n).text;
-                if (query) {
-                    sendToCurrentTerm(query);
-                }
-            }
+            queryCode(QueryCodeType.Line, QueryTarget.Terminal);
         })
     );
 
     context.subscriptions.push(
         commands.registerCommand('q-term.sendSelection', () => {
-            const query = window.activeTextEditor?.document.getText(
-                new Range(window.activeTextEditor.selection.start, window.activeTextEditor.selection.end)
-            );
-            if (query) {
-                sendToCurrentTerm(query.replace(/(\r\n|\n|\r)/gm, ''));
-            }
+            queryCode(QueryCodeType.Selection, QueryTarget.Terminal);
+        })
+    );
+
+    context.subscriptions.push(
+        commands.registerCommand('q-term.sendBlock', () => {
+            queryCode(QueryCodeType.Block, QueryTarget.Terminal);
         })
     );
 

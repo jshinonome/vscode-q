@@ -130,8 +130,10 @@ Append space to `},],)` by formatting the file. Turn on `Editor: Format On Save`
 
 -   <kbd>ctrl</kbd>+<kbd>q</kbd>: query current line
 -   <kbd>ctrl</kbd>+<kbd>r</kbd>: query selection
+-   <kbd>ctrl</kbd>+<kbd>e</kbd>: query block
 -   <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>q</kbd>: send current line to terminal
 -   <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>r</kbd>: send selection to terminal
+-   <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>e</kbd>: send block to terminal
 
 To change shortcuts
 
