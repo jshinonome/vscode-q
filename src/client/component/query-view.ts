@@ -28,7 +28,7 @@ export class QueryView implements Disposable {
 
     private _cssTheme = 'material.dark';
     private _theme = '';
-    private _dataViewBg = '#2f3136;'
+    private _dataViewBg = '#2f3136;';
     private _keyColor = '#6A1B9A';
     public static isReady = false;
 
@@ -41,9 +41,8 @@ export class QueryView implements Disposable {
             window.showWarningMessage('Failed to Create Query View');
         }
         const extensionPath = QueryView.extensionPath;
-        // const column = window.activeTextEditor ? window.activeTextEditor.viewColumn : undefined;
+
         if (QueryView.currentPanel) {
-            QueryView.currentPanel._panel.reveal();
             return QueryView.currentPanel;
         }
 

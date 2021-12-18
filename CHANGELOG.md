@@ -1,9 +1,18 @@
 # change log
 
+## 2.3.7
+
+-   query view: fix an overwrite issue
+-   query grid: fix an overwrite issue
+
 ## 2.3.6
 
--   shortcut: query current block
--   shortcut: send current block to terminal
+### added
+
+-   commend: query current block
+-   commend: send current block to terminal
+-   shortcut: query current block (ctrl+e)
+-   shortcut: send current block to terminal (ctrl+shift+e)
 
 ## 2.3.4
 

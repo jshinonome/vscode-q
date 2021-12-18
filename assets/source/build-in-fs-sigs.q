@@ -156,7 +156,7 @@ ljf:{[table;keyedTable]};
 load:{[fileOrDir]};
 log:{[numbers]};
 lower:{[symsOrStrings]};
-lsq:{[matrixes;matrixes]};
+lsq:{[yMatrixes;xMatrixes]};
 ltime:{[ts]};
 ltrim:{[str]};
 mavg:{[int;numbers]};

@@ -6,12 +6,12 @@
 		"email": "jshinonome@gmail.com"
 	},
 	"description": "q language support for Visual Studio Code",
-	"version": "2.3.6",
+	"version": "2.3.8",
 	"homepage": "https://github.com/jshinonome/vscode-q",
 	"publisher": "jshinonome",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.62.0"
+		"vscode": "^1.63.0"
 	},
 	"categories": [
 		"Programming Languages",
@@ -19,7 +19,7 @@
 		"Formatters"
 	],
 	"maintainers": [
-		"Jo Shinonome <jshinonome@gmail.com>"
+		"Jo Shinonome <jo.shinonome@gmail.com>"
 	],
 	"repository": {
 		"type": "git",
@@ -537,28 +537,28 @@
 		"@finos/perspective-viewer-d3fc": "0.10.0",
 		"@finos/perspective-viewer-datagrid": "0.10.0",
 		"@types/long": "^4.0.1",
-		"@types/node": "^16.11.6",
+		"@types/node": "^17.0.0",
 		"@types/request": "^2.48.7",
-		"@types/vscode": "^1.62.0",
-		"@typescript-eslint/parser": "^5.3.0",
-		"ag-grid-community": "^26.1.0",
-		"chart.js": "^3.6.0",
+		"@types/vscode": "^1.63.0",
+		"@typescript-eslint/parser": "^5.7.0",
+		"ag-grid-community": "^26.2.0",
+		"chart.js": "^3.6.2",
 		"dayjs": "^1.10.7",
 		"milligram": "^1.4.1",
 		"node-q": "^2.6.0",
 		"ts-loader": "^9.2.6",
-		"typescript": "^4.4.4",
+		"typescript": "^4.5.4",
 		"vscode-test": "^1.6.1",
-		"webpack": "^5.62.1",
+		"webpack": "^5.65.0",
 		"webpack-cli": "^4.9.1"
 	},
 	"dependencies": {
 		"@types/graceful-fs": "^4.1.5",
 		"@types/klaw": "^3.0.3",
 		"@types/picomatch": "^2.3.0",
-		"@typescript-eslint/eslint-plugin": "^5.3.0",
+		"@typescript-eslint/eslint-plugin": "^5.7.0",
 		"csv-parser": "^3.0.0",
-		"eslint": "^8.2.0",
+		"eslint": "^8.4.1",
 		"fuse.js": "^6.4.6",
 		"graceful-fs": "^4.2.8",
 		"klaw": "^4.0.1",
@@ -566,9 +566,9 @@
 		"picomatch": "^2.3.0",
 		"vscode-languageclient": "^7.0.0",
 		"vscode-languageserver": "^7.0.0",
-		"vscode-languageserver-textdocument": "^1.0.2",
+		"vscode-languageserver-textdocument": "^1.0.3",
 		"vscode-uri": "^3.0.2",
 		"web-tree-sitter": "^0.19.4",
-		"xlsx": "^0.17.3"
+		"xlsx": "^0.17.4"
 	}
 }

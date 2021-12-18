@@ -57,9 +57,8 @@ export class QueryGrid implements Disposable {
             window.showWarningMessage('Failed to Create Query Grid');
         }
         const extensionPath = QueryGrid.extensionPath;
-        // const column = window.activeTextEditor ? window.activeTextEditor.viewColumn : undefined;
+
         if (QueryGrid.currentPanel) {
-            QueryGrid.currentPanel._panel.reveal();
             return QueryGrid.currentPanel;
         }
 
