@@ -516,6 +516,21 @@
 					"default": false,
 					"description": "Auto Refresh Server Explorer"
 				},
+				"q-client.expl.excludedNamespaces": {
+					"scope": "resource",
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"default": [
+						"q",
+						"Q",
+						"h",
+						"j",
+						"o"
+					],
+					"description": "Excluded Namespaces"
+				},
 				"q-client.output.includeQuery": {
 					"scope": "resource",
 					"type": "boolean",

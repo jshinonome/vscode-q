@@ -1,7 +1,7 @@
-{
+{[excludedNamespaces]
     r: flip `n`p!"SS"$\:();
     f: {sv[`]each x,'y};
-    n: f[`] (key `)except`q`Q`h`j`o;
+    n: f[`] (key `)except excludedNamespaces;
     v: key `.;
     r: r upsert (v,'`.);
     r: r upsert (n,'`root);
@@ -13,4 +13,4 @@
     r: update m: {@[0!meta@;x;{x}]} each n from r where t=98h;
     r: update b: {.Q.s value x} each n from r where not t within 100 111h;
     (`n xasc select from r where p=`root) uj `p`n xasc select from r where p<>`root
- }[]
+ }

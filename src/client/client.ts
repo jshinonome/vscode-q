@@ -6,7 +6,7 @@
  */
 
 import {
-    commands, env, ExtensionContext, IndentAction, languages, Range, Selection, TextDocument, TextEdit, TreeItem, Uri, WebviewPanel, window, workspace
+    commands, env, ExtensionContext, IndentAction, languages, QuickPickItem, Range, Selection, TextDocument, TextEdit, TreeItem, Uri, WebviewPanel, window, workspace
 } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 import { AddServer } from './component/add-server';
@@ -162,12 +162,28 @@ export function activate(context: ExtensionContext): void {
     commands.registerCommand(
         'q-client.connectEntry',
         async () => {
-            const option = await window.showQuickPick(
-                QConnManager.current?.qCfg.map(qcfg => qcfg.uniqLabel) ?? [],
-                { placeHolder: 'Contribute to vscode-q by' });
-            if (option)
-                commands.executeCommand('q-client.connect', option);
-            return option;
+            const connManager = QConnManager.current;
+            if (connManager) {
+                const quickPickItems: QuickPickItem[] = connManager.qCfg.map(qcfg => {
+                    return {
+                        label: qcfg.uniqLabel,
+                        description: `\`:${qcfg.host}:${qcfg.port}`
+                    };
+                });
+                const recentlyUsedItems: QuickPickItem[] = Array.from(connManager.qConnPool.values())
+                    .filter(qConn => !(qConn.conn == undefined))
+                    .map(qConn => {
+                        return {
+                            label: qConn.uniqLabel,
+                            description: 'connected'
+                        };
+                    });
+                const item = await window.showQuickPick(
+                    recentlyUsedItems.concat(quickPickItems),
+                    { placeHolder: 'Connect to a q process' });
+                if (item)
+                    commands.executeCommand('q-client.connect', item.label);
+            }
         });
 
     commands.registerCommand(

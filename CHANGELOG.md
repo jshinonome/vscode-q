@@ -1,6 +1,15 @@
 # change log
 
+## 2.3.8
+
+### added
+
+-   server list: show socket for quick pickup
+-   server explorer: configure to exclude namespaces
+
 ## 2.3.7
+
+### fixed
 
 -   query view: fix an overwrite issue
 -   query grid: fix an overwrite issue
