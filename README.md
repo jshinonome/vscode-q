@@ -72,6 +72,7 @@ Create a server and click to connect
 | q-client.term.envPath              | string  | `''`                             | environment file relative or absolute path  |
 | q-client.expl.prevQueryLimit       | string  | `5`                              | q explorer preview query limit              |
 | q-client.expl.autoRefresh          | boolean | `false`                          | q explorer auto refresh                     |
+| q-client.expl.excludedNamespaces   | array   | `["q","Q","j","o","h"]`          | namespaced to be excluded from q explorer   |
 | q-client.output.autoClear          | boolean | `false`                          | Auto Clear Output                           |
 | q-client.output.includeQuery       | boolean | `false`                          | Include Query in Output                     |
 | q-client.output.consoleSize        | string  | `'36 180'`                       | Console Size for Output                     |
