@@ -10,7 +10,7 @@
   <link rel="stylesheet" type="text/css" href="{assets}/css/q-view.css">
   <script type="text/javascript" src="{assets}/js/dayjs.min.js"></script>
   <script type="text/javascript" src="{assets}/js/plugin/utc.js"></script>
-  <script type="text/javascript" src="{assets}/js/perspective.inline.js"></script>
+  <script type="text/javascript" src="{assets}/js/perspective.js"></script>
   <script type="text/javascript" src="{assets}/js/perspective-viewer.js"></script>
   <script type="text/javascript" src="{assets}/js/perspective-viewer-datagrid.js"></script>
   <script type="text/javascript" src="{assets}/js/perspective-viewer-d3fc.js"></script>
@@ -25,133 +25,18 @@
     let keyColor = '{keyColor}';
     let currentCols = [];
     const dateType = ['timestamp', 'month', 'date', 'datetime', 'timespan', 'minute', 'second', 'time'];
+    const dateMap = {
+      'timestamp': 'datetime',
+      'month': 'date',
+      'date': 'date',
+      'datetime': 'datetime',
+      'timespan': 'datetime',
+      'minute': 'datetime',
+      'second': 'datetime',
+      'time': 'datetime',
+    }
 
-    const overridden_types = {
-      types: {
-        float: {
-          filter_operator: '==',
-          aggregate: 'sum',
-          format: {
-            style: 'decimal',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 7
-          }
-        },
-        string: {
-          filter_operator: '==',
-          aggregate: 'count'
-        },
-        integer: {
-          filter_operator: '==',
-          aggregate: 'sum',
-          format: {}
-        },
-        boolean: {
-          filter_operator: '==',
-          aggregate: 'count'
-        },
-        datetime: {
-          filter_operator: '==',
-          aggregate: 'count',
-          format: {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            fractionalSecondDigits: 3,
-            hourCycle: 'h23',
-          },
-        },
-        timestamp: {
-          filter_operator: '==',
-          aggregate: 'count',
-          type: 'datetime',
-          format: {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            fractionalSecondDigits: 3,
-            hourCycle: 'h23',
-          },
-        },
-        time: {
-          filter_operator: '==',
-          aggregate: 'count',
-          type: 'datetime',
-          format: {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            fractionalSecondDigits: 3,
-            hourCycle: 'h23',
-          },
-          null_value: -1
-        },
-        timespan: {
-          filter_operator: '==',
-          aggregate: 'count',
-          type: 'datetime',
-          format: {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            fractionalSecondDigits: 3,
-            hourCycle: 'h23',
-          },
-          null_value: -1
-        },
-        minute: {
-          filter_operator: '==',
-          aggregate: 'count',
-          type: 'datetime',
-          format: {
-            hour: '2-digit',
-            minute: '2-digit',
-            hourCycle: 'h23',
-          },
-          null_value: -1
-        },
-        second: {
-          filter_operator: '==',
-          aggregate: 'count',
-          type: 'datetime',
-          format: {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hourCycle: 'h23',
-          },
-          null_value: -1
-        },
-        date: {
-          filter_operator: '==',
-          aggregate: 'count',
-          format: {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          },
-          null_value: -1
-        },
-        month: {
-          filter_operator: '==',
-          aggregate: 'count',
-          type: 'date',
-          format: {
-            year: 'numeric',
-            month: '2-digit',
-          },
-          null_value: -1
-        }
-      }
-    };
-
-    const worker = perspective.worker(overridden_types);
+    const worker = perspective.worker();
 
     // get api to interact with vscode
     vscode = acquireVsCodeApi();
@@ -202,6 +87,7 @@
                     const d = new Date(date);
                     return dayjs(d).utcOffset(d.getTimezoneOffset()).format('YYYY-MM-DD[T]HH:mm:ss.SSS')
                   });
+                msg.meta[column] = dateMap[type];
               }
             };
             table = await worker.table(msg.meta);
