@@ -11,7 +11,7 @@
 	"publisher": "jshinonome",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.63.0"
+		"vscode": "^1.63.1"
 	},
 	"categories": [
 		"Programming Languages",
