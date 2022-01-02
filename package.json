@@ -6,7 +6,7 @@
 		"email": "jshinonome@gmail.com"
 	},
 	"description": "q language support for Visual Studio Code",
-	"version": "2.3.9",
+	"version": "2.4.0",
 	"homepage": "https://github.com/jshinonome/vscode-q",
 	"publisher": "jshinonome",
 	"license": "MIT",
