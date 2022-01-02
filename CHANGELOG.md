@@ -1,6 +1,10 @@
 # change log
 
-## 2.3.8
+## 2.4.0
+
+-   query view: use plugin for formatting k temporal type
+
+## 2.3.9
 
 ### added
 

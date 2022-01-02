@@ -24,6 +24,7 @@
     let vscode, saveFileTypeSelector, viewer, msg;
     let keyColor = '{keyColor}';
     let currentCols = [];
+    let kMeta = {};
     const dateType = ['timestamp', 'month', 'date', 'datetime', 'timespan', 'minute', 'second', 'time'];
     const dateMap = {
       'timestamp': 'datetime',
@@ -35,6 +36,58 @@
       'second': 'datetime',
       'time': 'datetime',
     }
+
+    class KDatagrid extends customElements.get(
+      "perspective-viewer-datagrid"
+    ) {
+      get name() {
+        return "K Datagrid";
+      }
+
+      style_temporal_types(...args) {
+        for (const td of this.querySelectorAll("td")) {
+          const meta = this._datagrid.getMeta(td);
+          const col_name = meta.column_header[0];
+          console.log(kMeta[col_name]);
+          td.textContent = this.formatters[kMeta[col_name]](meta.user);
+        }
+      }
+
+      async activate(...args) {
+        await super.activate(...args);
+        const view = await this.parentElement.getView();
+        if (!this._datagrid) {
+          this._datagrid = this.querySelector("regular-table");
+          this._datagrid.addStyleListener(
+            this.style_temporal_types.bind(this)
+          );
+
+          this.formatters = {
+            datetime: (value) => dayjs(value).format('YYYY-MM-DD[T]HH:mm:ss.SSS'),
+            timestamp: (value) => dayjs(value).format('YYYY-MM-DD[T]HH:mm:ss.SSS'),
+            time: (value) => dayjs(value).format('HH:mm:ss.SSS'),
+            timespan: (value) => dayjs(value).format('HH:mm:ss.SSS'),
+            minute: (value) => dayjs(value).format('HH:mm'),
+            second: (value) => dayjs(value).format('HH:mm:ss'),
+            date: (value) => dayjs(value).format('YYYY-MM-DD'),
+            month: (value) => dayjs(value).format('YYYY-MM'),
+            string: (value) => value,
+            integer: Intl.NumberFormat("en-us").format,
+            float: new Intl.NumberFormat("en-us", {
+              style: "decimal",
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 7,
+            }).format,
+            boolean: (val) => (val ? "check" : "close"),
+          };
+        }
+      }
+    }
+
+    customElements.define("k-datagrid", KDatagrid);
+    customElements
+      .get("perspective-viewer")
+      .registerPlugin("k-datagrid");
 
     const worker = perspective.worker();
 
@@ -79,6 +132,7 @@
             table = await worker.table(Uint8Array.from(msg.data).buffer);
             break;
           case 'json':
+            kMeta = { ...msg.meta };
             for (const column in msg.meta) {
               const type = msg.meta[column];
               if (dateType.includes(type)) {
@@ -109,6 +163,11 @@
           console.log('same schema detected');
           await viewer.load(table);
         }
+        await viewer.restore({
+          settings: true,
+          plugin: "K Datagrid",
+          columns: currentCols,
+        });
         const datagrid = viewer.querySelector('regular-table');
         for (const th of datagrid.querySelectorAll('th')) {
           const metadata = datagrid.getMeta(th);

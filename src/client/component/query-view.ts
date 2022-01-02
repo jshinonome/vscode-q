@@ -126,6 +126,9 @@ export class QueryView implements Disposable {
                     const column = result.meta.c[i];
                     result.data[column] = result.data[column].map(
                         (date: Date) => date.toISOString());
+                } else if (type === ' ') {
+                    const column = result.meta.c[i];
+                    result.data[column] = result.data[column].map(JSON.stringify);
                 }
             });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -181,8 +181,10 @@ export function activate(context: ExtensionContext): void {
                 const item = await window.showQuickPick(
                     recentlyUsedItems.concat(quickPickItems),
                     { placeHolder: 'Connect to a q process' });
-                if (item)
+                if (item) {
                     commands.executeCommand('q-client.connect', item.label);
+                    return item.label;
+                }
             }
         });
 
