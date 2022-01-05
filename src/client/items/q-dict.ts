@@ -141,9 +141,9 @@ export default class QDictTreeItem extends TreeItem
                                     window.showWarningMessage('sym file is not loaded');
                                     break;
                                 }
-                                new QTableTreeItem(name, parent, res.m[i]);
-                                code.push(`${res.n[i]}:([]${res.m[i].c.join(';')});`);
-                                res.m[i].c.forEach((col: string) => code.push(`${col}:\`${col};`));
+                                new QTableTreeItem(name, parent);
+                                code.push(`${res.n[i]}:([]${res.m[i].join(';')});`);
+                                res.m[i].forEach((col: string) => code.push(`${col}:\`${col};`));
                                 break;
                             case (type >= 20 && type <= 76):
                                 new QVarTreeItem(name, parent, 'enums');

@@ -1,5 +1,11 @@
 # change log
 
+## 2.4.1
+
+### fixed
+
+-   server explorer: only load columns info for table and skip loading partitioned table preview
+
 ## 2.4.0
 
 -   query view: use plugin for formatting k temporal type
