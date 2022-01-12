@@ -310,13 +310,18 @@ export function activate(context: ExtensionContext): void {
                     break;
             }
             if (query) {
-                switch (target) {
-                    case QueryTarget.Process:
-                        QConnManager.current?.sync(query);
-                        break;
-                    case QueryTarget.Terminal:
-                        sendToCurrentTerm(query.replace(/(\r\n|\n|\r)/gm, ''));
-                        break;
+                if (code === QueryCodeType.Line && query.startsWith('/<=>')) {
+                    const uniqLabel = query.substring(4).trim();
+                    commands.executeCommand('q-client.connect', uniqLabel);
+                } else {
+                    switch (target) {
+                        case QueryTarget.Process:
+                            QConnManager.current?.sync(query);
+                            break;
+                        case QueryTarget.Terminal:
+                            sendToCurrentTerm(query.replace(/(\r\n|\n|\r)/gm, ''));
+                            break;
+                    }
                 }
             }
             if (n > 0) {
@@ -376,6 +381,16 @@ export function activate(context: ExtensionContext): void {
         })
     );
 
+    context.subscriptions.push(
+        commands.registerCommand('q-client.insertActiveConnLabel', () => {
+            const editor = window.activeTextEditor;
+            if (editor) {
+                editor.edit(editBuilder => {
+                    editBuilder.insert(editor.selection.active, QConnManager.current?.activeConn?.uniqLabel ?? '');
+                });
+            }
+        })
+    );
 
     if (window.registerWebviewPanelSerializer) {
         // Make sure we register a serializer in activation event

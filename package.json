@@ -292,6 +292,11 @@
 					"light": "assets/svg/light/debug-start.svg",
 					"dark": "assets/svg/dark/debug-start.svg"
 				}
+			},
+			{
+				"command": "q-client.insertActiveConnLabel",
+				"title": "Insert Active Connection Label",
+				"category": "kdb+/q ext"
 			}
 		],
 		"menus": {

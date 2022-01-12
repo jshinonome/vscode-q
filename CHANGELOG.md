@@ -1,5 +1,9 @@
 # change log
 
+## 2.4.2
+
+-   comment: run comment start with `/<=> process` will connect to the process
+
 ## 2.4.1
 
 ### fixed

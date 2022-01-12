@@ -137,6 +137,8 @@ export class QConnManager {
                     }).catch(reason => console.log(reason));
 
                 }
+            } else {
+                window.showWarningMessage(`process - ${uniqLabel} -  not found`);
             }
         } catch (error) {
             window.showErrorMessage(`Failed to connect to '${uniqLabel}', please check q-server-cfg.json`);
