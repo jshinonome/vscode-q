@@ -221,7 +221,7 @@ Type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd>, call `Open Setting(Json)`, a
 
 ### Special Comment
 
-Query comment line `/<=> quant,prod,local-1800`, will connect to the process `quant,prod,local-1800`.
+Querying comment line `/<=> quant,prod,local-1800` will connect to `quant,prod,local-1800`.
 Type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd>, call `kdb+/q ext Insert Active Connection Label` to insert active connection label.
 
 ### Customized Authentication
