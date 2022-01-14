@@ -431,7 +431,7 @@ all notable changes to the "vscode-q" extension will be documented in this file.
 
 ### added
 
--   virtualization!!!
+-   visualization!!!
 -   configuration
 
 ### changed

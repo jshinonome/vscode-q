@@ -474,7 +474,7 @@
 					"enum": [
 						"Console",
 						"Grid",
-						"Virtualization"
+						"Visualization"
 					],
 					"default": "Console",
 					"description": "Query Mode"

@@ -11,7 +11,7 @@ This extension provides kdb+\q language support:
 -   server list group by tags
 -   server explorer
 -   query grid powered by [ag-grid-community](https://www.ag-grid.com/) & [chart.js](https://www.chartjs.org/)
--   query virtualization powered by [perspective](https://perspective.finos.org/)
+-   query visualization powered by [perspective](https://perspective.finos.org/)
 -   language server powered by [tree-sitter](https://tree-sitter.github.io/tree-sitter/)
     -   rename symbol (F2)
     -   go to definition (F12)
@@ -61,21 +61,21 @@ Create a server and click to connect
 -   To configure globally, type <kbd>ctrl</kbd>+<kbd>,</kbd> to open Settings and change the following values.
 -   To configure for workspace, type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd>, call `Preferences: Open Workspace Settings` and change the following values.
 
-| configuration                      | type    | default value                    | description                                 |
-| ---------------------------------- | ------- | -------------------------------- | ------------------------------------------- |
-| q-server.sourceFiles.globsPattern  | array   | `["**/src/**/*.q"]`              | source folder to be included                |
-| q-server.sourceFiles.ignorePattern | array   | `["**/build","**/node_modules"]` | folder to be excluded                       |
-| q-client.queryMode                 | string  | `Console`                        | query mode, Console, Grid or Virtualization |
-| q-client.queryView.dense           | boolean | `false`                          | q view in dense mode                        |
-| q-client.queryGrid.decimals        | number  | `3`                              | decimals in q grid                          |
-| q-client.term.qBinary              | string  | `q`                              | q executable file or full path              |
-| q-client.term.envPath              | string  | `''`                             | environment file relative or absolute path  |
-| q-client.expl.prevQueryLimit       | string  | `5`                              | q explorer preview query limit              |
-| q-client.expl.autoRefresh          | boolean | `false`                          | q explorer auto refresh                     |
-| q-client.expl.excludedNamespaces   | array   | `["q","Q","j","o","h"]`          | namespaced to be excluded from q explorer   |
-| q-client.output.autoClear          | boolean | `false`                          | Auto Clear Output                           |
-| q-client.output.includeQuery       | boolean | `false`                          | Include Query in Output                     |
-| q-client.output.consoleSize        | string  | `'36 180'`                       | Console Size for Output                     |
+| configuration                      | type    | default value                    | description                                |
+| ---------------------------------- | ------- | -------------------------------- | ------------------------------------------ |
+| q-server.sourceFiles.globsPattern  | array   | `["**/src/**/*.q"]`              | source folder to be included               |
+| q-server.sourceFiles.ignorePattern | array   | `["**/build","**/node_modules"]` | folder to be excluded                      |
+| q-client.queryMode                 | string  | `Console`                        | query mode, Console, Grid or Visualization |
+| q-client.queryView.dense           | boolean | `false`                          | q view in dense mode                       |
+| q-client.queryGrid.decimals        | number  | `3`                              | decimals in q grid                         |
+| q-client.term.qBinary              | string  | `q`                              | q executable file or full path             |
+| q-client.term.envPath              | string  | `''`                             | environment file relative or absolute path |
+| q-client.expl.prevQueryLimit       | string  | `5`                              | q explorer preview query limit             |
+| q-client.expl.autoRefresh          | boolean | `false`                          | q explorer auto refresh                    |
+| q-client.expl.excludedNamespaces   | array   | `["q","Q","j","o","h"]`          | namespaced to be excluded from q explorer  |
+| q-client.output.autoClear          | boolean | `false`                          | Auto Clear Output                          |
+| q-client.output.includeQuery       | boolean | `false`                          | Include Query in Output                    |
+| q-client.output.consoleSize        | string  | `'36 180'`                       | Console Size for Output                    |
 
 ## q Language Server(local server, no connection to the internet)
 

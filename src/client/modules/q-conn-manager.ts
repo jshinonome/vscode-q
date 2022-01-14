@@ -79,7 +79,7 @@ export class QConnManager {
         } else if (mode === 'Grid') {
             QueryView.currentPanel?.dispose();
             QConnManager.consoleMode = false;
-        } else if (mode === 'Virtualization') {
+        } else if (mode === 'Visualization') {
             QueryGrid.currentPanel?.dispose();
             QConnManager.consoleMode = false;
         }

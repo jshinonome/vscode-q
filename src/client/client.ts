@@ -206,7 +206,7 @@ export function activate(context: ExtensionContext): void {
     commands.registerCommand(
         'q-client.switchMode',
         async () => {
-            const mode = await window.showQuickPick(['Console', 'Grid', 'Virtualization'],
+            const mode = await window.showQuickPick(['Console', 'Grid', 'Visualization'],
                 { placeHolder: 'Please choose a query mode from the list below' });
             if (mode) {
                 window.showInformationMessage(`Switch to Query ${mode} Mode`);
@@ -386,7 +386,9 @@ export function activate(context: ExtensionContext): void {
             const editor = window.activeTextEditor;
             if (editor) {
                 editor.edit(editBuilder => {
-                    editBuilder.insert(editor.selection.active, QConnManager.current?.activeConn?.uniqLabel ?? '');
+                    if (QConnManager.current?.activeConn?.uniqLabel) {
+                        editBuilder.insert(editor.selection.active, '/<=>' + QConnManager.current?.activeConn?.uniqLabel);
+                    }
                 });
             }
         })
