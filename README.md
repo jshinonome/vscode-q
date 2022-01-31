@@ -32,7 +32,7 @@ See the [change log](https://github.com/jshinonome/vscode-q/blob/master/CHANGELO
 
 ## Demo
 
-[![Introduction to vscode-q](http://img.youtube.com/vi/-k6lx5ePo70/0.jpg)](https://www.youtube.com/watch?v=-k6lx5ePo70)
+[![Introduction to vscode-q](https://img.youtube.com/vi/-k6lx5ePo70/0.jpg)](https://www.youtube.com/watch?v=-k6lx5ePo70)
 
 [Introduction to vscode-q](https://www.youtube.com/watch?v=-k6lx5ePo70)
 
