@@ -432,7 +432,7 @@
 		],
 		"configuration": {
 			"type": "object",
-			"title": "q Ext Configuration",
+			"title": "kdb+/q Ext Configuration",
 			"properties": {
 				"q-server.sourceFiles.globsPattern": {
 					"scope": "resource",

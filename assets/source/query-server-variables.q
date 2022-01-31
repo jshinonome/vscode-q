@@ -12,5 +12,6 @@
     r: update t: {$[.Q.qt value x;98h;99h]} each n from r where t in 98 99h;
     r: update m: {@[cols;x;{x}]} each n from r where t=98h;
     r: update b: {.Q.s value x} each n from r where not t within 100 111h, not n in .Q.pt;
+    r: update pt: n in .Q.pt from r;
     (`n xasc select from r where p=`root) uj `p`n xasc select from r where p<>`root
  }

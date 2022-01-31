@@ -1,5 +1,11 @@
 # change log
 
+## 2.4.4
+
+### changed
+
+-   server explorer: use a different icon for partitioned tables
+
 ## 2.4.2
 
 -   comment: run comment start with `/<=> process` will connect to the process

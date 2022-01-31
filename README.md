@@ -32,29 +32,9 @@ See the [change log](https://github.com/jshinonome/vscode-q/blob/master/CHANGELO
 
 ## Demo
 
-### Connect to a Server
+[![Introduction to vscode-q](http://img.youtube.com/vi/-k6lx5ePo70/0.jpg)](https://www.youtube.com/watch?v=-k6lx5ePo70)
 
-Create a server and click to connect
-
-![connect-to-a-server](assets/demo/1-connect-to-a-server.gif)
-
-### Query a Table
-
-![query-a-table](assets/demo/2-query-a-table.gif)
-
-### Define a Function
-
--   Highlight `@[tag] [parameter name] [type]` in comments
--   Highlight parameters for functions. Some themes may not support this feature.
-
-![define-a-function](assets/demo/3-define-a-function.gif)
-
-### Call a Function
-
--   Autocomplete for defined identifiers and server identifiers.
--   Signature help for defined functions and server functions(type:100, 104).
-
-![call-a-function](assets/demo/4-call-a-function.gif)
+[Introduction to vscode-q](https://www.youtube.com/watch?v=-k6lx5ePo70)
 
 ## Configuration
 
@@ -91,7 +71,7 @@ Special tag color:
 -   blue: uat
 -   red: prd, prod.
 
-![server-list](assets/demo/5-server-list.png)
+![server-list](assets/demo/server-list.png)
 
 ## Server Explorer
 

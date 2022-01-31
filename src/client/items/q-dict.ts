@@ -112,7 +112,7 @@ export default class QDictTreeItem extends TreeItem
                     window.showErrorMessage(`Unable to fetch variables from ${QConnManager.current?.activeConn?.label}`);
                 }
                 if (res) {
-                    // name, type, body, parent, cols
+                    // name, type, body, parent, cols, isPartitionedTable
                     this._children = [];
                     const itemMap = new Map<string, TreeItem>();
                     // name -> content
@@ -141,7 +141,7 @@ export default class QDictTreeItem extends TreeItem
                                     window.showWarningMessage('sym file is not loaded');
                                     break;
                                 }
-                                new QTableTreeItem(name, parent);
+                                new QTableTreeItem(name, parent, res.pt[i]);
                                 code.push(`${res.n[i]}:([]${res.m[i].join(';')});`);
                                 res.m[i].forEach((col: string) => code.push(`${col}:\`${col};`));
                                 break;
