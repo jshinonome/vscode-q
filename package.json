@@ -407,27 +407,33 @@
 		"keybindings": [
 			{
 				"command": "q-client.queryCurrentLine",
-				"key": "ctrl+q"
+				"key": "ctrl+q",
+				"when": "editorLangId == q"
 			},
 			{
 				"command": "q-client.querySelection",
-				"key": "ctrl+r"
+				"key": "ctrl+r",
+				"when": "editorLangId == q"
 			},
 			{
 				"command": "q-client.queryBlock",
-				"key": "ctrl+e"
+				"key": "ctrl+e",
+				"when": "editorLangId == q"
 			},
 			{
 				"command": "q-term.sendCurrentLine",
-				"key": "ctrl+shift+q"
+				"key": "ctrl+shift+q",
+				"when": "editorLangId == q"
 			},
 			{
 				"command": "q-term.sendSelection",
-				"key": "ctrl+shift+r"
+				"key": "ctrl+shift+r",
+				"when": "editorLangId == q"
 			},
 			{
 				"command": "q-term.sendBlock",
-				"key": "ctrl+shift+e"
+				"key": "ctrl+shift+e",
+				"when": "editorLangId == q"
 			}
 		],
 		"configuration": {
