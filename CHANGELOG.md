@@ -1,5 +1,16 @@
 # change log
 
+## 2.4.5
+
+### added
+
+-   command: separator for connecting to a q process
+-   server explorer: abort button
+
+### changed
+
+-   command: limit query commands to q files
+
 ## 2.4.4
 
 ### changed

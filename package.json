@@ -11,7 +11,7 @@
 	"publisher": "jshinonome",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.63.1"
+		"vscode": "^1.64.0"
 	},
 	"categories": [
 		"Programming Languages",
@@ -58,7 +58,11 @@
 				"extensions": [
 					".q"
 				],
-				"configuration": "./language-configuration.json"
+				"configuration": "./language-configuration.json",
+				"icon": {
+					"light": "./assets/icon/q.png",
+					"dark": "./assets/icon/q.png"
+				}
 			},
 			{
 				"id": "q-output",
@@ -210,7 +214,11 @@
 			{
 				"command": "q-client.abortQuery",
 				"title": "Abort Current Query",
-				"category": "kdb+/q ext"
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/stop-circle.svg",
+					"dark": "assets/svg/dark/stop-circle.svg"
+				}
 			},
 			{
 				"command": "q-client.switchMode",
@@ -277,7 +285,7 @@
 			},
 			{
 				"command": "q-explorer.preview",
-				"title": "Preview Table",
+				"title": "Preview",
 				"category": "kdb+/q ext",
 				"icon": {
 					"light": "assets/svg/light/preview.svg",
@@ -337,14 +345,19 @@
 					"group": "navigation@6"
 				},
 				{
+					"command": "q-client.abortQuery",
+					"when": "view == q-explorer",
+					"group": "navigation@0"
+				},
+				{
 					"command": "q-explorer.refreshEntry",
 					"when": "view == q-explorer",
-					"group": "navigation"
+					"group": "navigation@1"
 				},
 				{
 					"command": "q-explorer.toggleAutoRefresh",
 					"when": "view == q-explorer",
-					"group": "navigation"
+					"group": "navigation@2"
 				}
 			],
 			"view/item/context": [
@@ -558,15 +571,15 @@
 		}
 	},
 	"devDependencies": {
-		"@finos/perspective": "1.1.1",
-		"@finos/perspective-viewer": "1.1.1",
-		"@finos/perspective-viewer-d3fc": "1.1.1",
-		"@finos/perspective-viewer-datagrid": "1.1.1",
+		"@finos/perspective": "1.2.0",
+		"@finos/perspective-viewer": "1.2.0",
+		"@finos/perspective-viewer-d3fc": "1.2.0",
+		"@finos/perspective-viewer-datagrid": "1.2.0",
 		"@types/long": "^4.0.1",
-		"@types/node": "^17.0.13",
+		"@types/node": "^17.0.15",
 		"@types/request": "^2.48.8",
-		"@types/vscode": "^1.63.1",
-		"@typescript-eslint/parser": "^5.10.1",
+		"@types/vscode": "^1.64.0",
+		"@typescript-eslint/parser": "^5.10.2",
 		"ag-grid-community": "^26.2.1",
 		"chart.js": "^3.7.0",
 		"dayjs": "^1.10.7",
@@ -575,14 +588,14 @@
 		"ts-loader": "^9.2.6",
 		"typescript": "^4.5.5",
 		"vscode-test": "^1.6.1",
-		"webpack": "^5.67.0",
+		"webpack": "^5.68.0",
 		"webpack-cli": "^4.9.2"
 	},
 	"dependencies": {
 		"@types/graceful-fs": "^4.1.5",
 		"@types/klaw": "^3.0.3",
 		"@types/picomatch": "^2.3.0",
-		"@typescript-eslint/eslint-plugin": "^5.10.1",
+		"@typescript-eslint/eslint-plugin": "^5.10.2",
 		"csv-parser": "^3.0.0",
 		"eslint": "^8.8.0",
 		"fuse.js": "^6.5.3",
@@ -592,9 +605,9 @@
 		"picomatch": "^2.3.1",
 		"vscode-languageclient": "^7.0.0",
 		"vscode-languageserver": "^7.0.0",
-		"vscode-languageserver-textdocument": "^1.0.3",
+		"vscode-languageserver-textdocument": "^1.0.4",
 		"vscode-uri": "^3.0.3",
 		"web-tree-sitter": "^0.20.3",
-		"xlsx": "^0.17.5"
+		"xlsx": "^0.18.0"
 	}
 }

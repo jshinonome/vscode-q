@@ -6,7 +6,7 @@
  */
 
 import {
-    commands, env, ExtensionContext, IndentAction, languages, QuickPickItem, Range, Selection, TextDocument, TextEdit, TreeItem, Uri, WebviewPanel, window, workspace
+    commands, env, ExtensionContext, IndentAction, languages, QuickPickItem, QuickPickItemKind, Range, Selection, TextDocument, TextEdit, TreeItem, Uri, WebviewPanel, window, workspace
 } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 import { AddServer } from './component/add-server';
@@ -175,11 +175,23 @@ export function activate(context: ExtensionContext): void {
                     .map(qConn => {
                         return {
                             label: qConn.uniqLabel,
-                            description: 'connected'
+                            description: `\`:${qConn.host}:${qConn.port}`
                         };
                     });
+                const allItems: QuickPickItem[] = [
+                    {
+                        label: 'Connected',
+                        kind: QuickPickItemKind.Separator
+                    },
+                    ...recentlyUsedItems,
+                    {
+                        label: 'Process',
+                        kind: QuickPickItemKind.Separator
+                    },
+                    ...quickPickItems
+                ];
                 const item = await window.showQuickPick(
-                    recentlyUsedItems.concat(quickPickItems),
+                    allItems,
                     { placeHolder: 'Connect to a q process' });
                 if (item) {
                     commands.executeCommand('q-client.connect', item.label);
@@ -406,7 +418,7 @@ export function activate(context: ExtensionContext): void {
 
     workspace.onDidChangeConfiguration(e => {
         if (e.affectsConfiguration('q-client') && !e.affectsConfiguration('q-client.term')) {
-            window.showInformationMessage('Reload/Restart vscode to Making the Configuration Take Effect.');
+            window.showInformationMessage('Reload/Restart vscode to Make the Configuration Take Effect.');
         } else if (e.affectsConfiguration('q-server')) {
             const cfg = workspace.getConfiguration('q-server.sourceFiles');
             client.sendNotification('$/analyze-source-code', { globsPattern: cfg.get('globsPattern'), ignorePattern: cfg.get('ignorePattern') });
