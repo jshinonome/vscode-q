@@ -25,7 +25,7 @@ import path = require('path');
 
 
 
-export function activate(context: ExtensionContext): void {
+export async function activate(context: ExtensionContext): Promise<void> {
 
     // extra language configurations
     languages.setLanguageConfiguration('q', {
@@ -83,10 +83,10 @@ export function activate(context: ExtensionContext): void {
     const qRoot = new QDictTreeItem('root', null);
     const qHistory = HistoryTreeItem.createHistoryTree();
     window.registerTreeDataProvider('q-servers', qServers);
-    qServers.refresh();
+    await qServers.refresh();
     window.registerTreeDataProvider('q-explorer', qRoot);
     window.registerTreeDataProvider('q-history', qHistory);
-    qHistory.refresh();
+    await qHistory.refresh();
     QueryConsole.createOrShow();
     QueryView.setExtensionPath(context.extensionPath);
     QueryGrid.setExtensionPath(context.extensionPath);
@@ -117,8 +117,8 @@ export function activate(context: ExtensionContext): void {
 
     commands.registerCommand(
         'q-client.editEntry',
-        (qConn: QConn) => {
-            AddServer.createOrShow();
+        async (qConn: QConn) => {
+            await AddServer.createOrShow();
             AddServer.update(qConn);
         });
 
@@ -241,11 +241,11 @@ export function activate(context: ExtensionContext): void {
 
 
     commands.registerCommand(
-        'q-explorer.refreshEntry', () => qRoot.refresh());
+        'q-explorer.refreshEntry', async () => await qRoot.refresh());
 
     const previewQueryLimit = workspace.getConfiguration().get('q-client.expl.prevQueryLimit');
 
-    commands.registerCommand('q-explorer.preview', (item: TreeItem) => {
+    commands.registerCommand('q-explorer.preview', async (item: TreeItem) => {
         switch (item.contextValue) {
             case 'qtable':
                 QConnManager.current?.sync(`{[t;l]$[t in .Q.pt;select from t where date=last date, i<l;select from t where i<l]}[\`${item.label};${previewQueryLimit}]`);
@@ -399,7 +399,7 @@ export function activate(context: ExtensionContext): void {
         window.registerWebviewPanelSerializer(QueryView.viewType, {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             async deserializeWebviewPanel(webviewPanel: WebviewPanel) {
-                QueryView.revive(webviewPanel, context.extensionPath);
+                await QueryView.revive(webviewPanel, context.extensionPath);
             }
         });
     }

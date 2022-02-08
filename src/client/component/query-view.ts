@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
 import * as xlsx from 'xlsx';
 import { QueryResult } from '../models/query-result';
@@ -36,7 +36,7 @@ export class QueryView implements Disposable {
         QueryView.extensionPath = extensionPath;
     }
 
-    public static createOrShow(): QueryView {
+    public static async createOrShow(): Promise<QueryView> {
         if (QueryView.extensionPath === '') {
             window.showWarningMessage('Failed to Create Query View');
         }
@@ -61,13 +61,15 @@ export class QueryView implements Disposable {
                 localResourceRoots: [Uri.file(path.join(extensionPath, 'assets'))]
             }
         );
-        QueryView.currentPanel = new QueryView(panel, extensionPath);
+        QueryView.currentPanel = await this.revive(panel, extensionPath);
         QueryView.isReady = false;
         return QueryView.currentPanel;
     }
 
-    public static revive(panel: WebviewPanel, extensionPath: string): void {
+    public static async revive(panel: WebviewPanel, extensionPath: string) {
         QueryView.currentPanel = new QueryView(panel, extensionPath);
+        QueryView.currentPanel._panel.webview.html = await QueryView.currentPanel._getHtmlForWebview();
+        return QueryView.currentPanel;
     }
 
     private constructor(panel: WebviewPanel, extensionPath: string) {
@@ -85,7 +87,6 @@ export class QueryView implements Disposable {
                     break;
             }
         });
-        this._panel.webview.html = this._getHtmlForWebview();
         this._panel.title = 'Query View';
         this._panel.iconPath = Uri.file(path.join(extensionPath, 'icon.png'));
     }
@@ -152,7 +153,7 @@ export class QueryView implements Disposable {
 
         if (fileUri) {
             if (fileType === '.csv') {
-                fs.writeFile(fileUri.fsPath, data, err => console.log(err));
+                await fs.writeFile(fileUri.fsPath, data);
             }
             else if (fileType === '.xlsx') {
                 const workbook = xlsx.utils.book_new();
@@ -163,7 +164,7 @@ export class QueryView implements Disposable {
                     compression: true,
                     bookType: 'xlsx'
                 });
-                fs.writeFile(filePath, fileData, err => console.log(err));
+                await fs.writeFile(filePath, fileData);
 
             } else {
                 console.log('unsupported file type');
@@ -171,22 +172,18 @@ export class QueryView implements Disposable {
         }
     }
 
-    private _getHtmlForWebview() {
+    private async _getHtmlForWebview() {
         // Local path to javascript run in the webview
         const dir = Uri.file(path.join(this._extensionPath, templatePath));
         const webview = this._panel.webview;
         // And the uri we use to load this script in the webview
         const dirUri = webview.asWebviewUri(dir);
-        let template = fs.readFileSync(
-            path.join(this._extensionPath, templatePath, 'index.html')).toString();
-        template = template.replace(/{assets}/g, dirUri.toString())
+        const template = await fs.readFile(
+            path.join(this._extensionPath, templatePath, 'index.html'));
+        return template.toString().replace(/{assets}/g, dirUri.toString())
             .replace(/{theme}/g, this._theme)
             .replace(/{cssTheme}/g, this._cssTheme)
             .replace(/{keyColor}/g, this._keyColor);
-
-        return template;
     }
 
 }
-
-

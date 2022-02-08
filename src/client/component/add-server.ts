@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window } from 'vscode';
 import { QConn } from '../modules/q-conn';
 import { QCfg, QConnManager } from '../modules/q-conn-manager';
@@ -29,7 +29,7 @@ export class AddServer implements Disposable {
         AddServer.extensionPath = extensionPath;
     }
 
-    public static createOrShow(): AddServer {
+    public static async createOrShow(): Promise<AddServer> {
         if (AddServer.extensionPath === '') {
             window.showWarningMessage('Failed to Open Add Server View');
         }
@@ -55,13 +55,15 @@ export class AddServer implements Disposable {
                 localResourceRoots: [Uri.file(path.join(extensionPath, 'assets'))]
             }
         );
-        AddServer.currentPanel = new AddServer(panel, extensionPath);
+        AddServer.currentPanel = await AddServer.revive(panel, extensionPath);
         AddServer.isReady = false;
         return AddServer.currentPanel;
     }
 
-    public static revive(panel: WebviewPanel, extensionPath: string): void {
+    public static async revive(panel: WebviewPanel, extensionPath: string) {
         AddServer.currentPanel = new AddServer(panel, extensionPath);
+        AddServer.currentPanel._panel.webview.html = await AddServer.currentPanel._getHtmlForWebview();
+        return AddServer.currentPanel;
     }
 
     private constructor(panel: WebviewPanel, extensionPath: string) {
@@ -70,7 +72,6 @@ export class AddServer implements Disposable {
         this._currentQCfg = null;
         this.configure();
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
-        this._panel.webview.html = this._getHtmlForWebview();
         this._panel.webview.onDidReceiveMessage(message => {
             switch (message.cmd) {
                 case 'ready':
@@ -110,7 +111,6 @@ export class AddServer implements Disposable {
             const current = AddServer.currentPanel as AddServer;
             current._currentQCfg = qcfg;
             current._panel.webview.postMessage(qcfg);
-
         }
     }
 
@@ -123,19 +123,19 @@ export class AddServer implements Disposable {
         this.dispose();
     }
 
-    private _getHtmlForWebview() {
+    private async _getHtmlForWebview() {
         // Local path to javascript run in the webview
         const dir = Uri.file(path.join(this._extensionPath, templatePath));
         const webview = this._panel.webview;
         // And the uri we use to load this script in the webview
         const dirUri = webview.asWebviewUri(dir);
-        let template = fs.readFileSync(
-            path.join(this._extensionPath, templatePath, 'add-server.html')).toString();
+        const template = await fs.readFile(
+            path.join(this._extensionPath, templatePath, 'add-server.html'));
         const customizedAuthInstalled = QConn.customizedAuthInstalled ? 'checked' : 'disabled';
-        template = template.replace(/{assets}/g, dirUri.toString())
+        return template.toString()
+            .replace(/{assets}/g, dirUri.toString())
             .replace(/{theme}/g, this._theme)
             .replace(/{customizedAuthInstalled}/g, customizedAuthInstalled);
-        return template;
     }
 
 }

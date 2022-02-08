@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import * as q from 'node-q';
 import { homedir } from 'os';
 import { commands, Uri, window, workspace } from 'vscode';
@@ -17,6 +17,7 @@ import { QueryConsole } from './query-console';
 import { QueryGrid } from '../component/query-grid';
 import { QueryView } from '../component/query-view';
 import path = require('path');
+import { fileExists } from '../util/fs-utils';
 
 const cfgDir = homedir() + '/.vscode/';
 const cfgPath = cfgDir + 'q-server-cfg.json';
@@ -38,17 +39,17 @@ export class QConnManager {
     public static queryWrapper = '';
     public static consoleMode = true;
 
-    public static create(): QConnManager {
-        if (!this.current) {
-            this.current = new QConnManager();
+    public static async create(): Promise<QConnManager> {
+        if (!QConnManager.current) {
+            QConnManager.current = new QConnManager();
+            await QConnManager.current.loadCfg();
+            QConnManager.current.updateQueryWrapper();
         }
-        return this.current;
+        return QConnManager.current;
     }
 
-    private constructor() {
-        this.loadCfg();
-        this.updateQueryWrapper();
-    }
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    private constructor() {}
 
     // when switch a server or toggle query mode, update wrapper
     public updateQueryWrapper(): void {
@@ -210,7 +211,7 @@ export class QConnManager {
         }
     }
 
-    static polling(query: string): void {
+    private static polling(query: string): void {
         const current = QConnManager.current;
         if (current && !current.isBusy && current.activeConn) {
             if (query.slice(-1) === ';') {
@@ -275,20 +276,20 @@ export class QConnManager {
         }
     }
 
-    update(result: QueryResult): void {
+    async update(result: QueryResult) {
         if (QConnManager.queryMode === 'Grid') {
-            QueryGrid.createOrShow();
+            await QueryGrid.createOrShow();
             QueryGrid.update(result);
         } else {
-            QueryView.createOrShow();
+            await QueryView.createOrShow();
             QueryView.update(result);
         }
     }
 
-    loadCfg(): void {
+    async loadCfg(): Promise<void> {
         // read the q server configuration file from home dir
-        if (fs.existsSync(cfgPath)) {
-            this.qCfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
+        if (await fileExists(cfgPath)) {
+            this.qCfg = JSON.parse(await fs.readFile(cfgPath, 'utf8'));
             this.qCfg = this.qCfg.map(qcfg => {
                 qcfg.uniqLabel = `${qcfg.tags},${qcfg.label}`;
                 qcfg.useCustomizedAuth = qcfg.useCustomizedAuth === true ? true : false;
@@ -303,10 +304,10 @@ export class QConnManager {
                 }
             });
         } else {
-            if (!fs.existsSync(cfgDir)) {
-                fs.mkdirSync(cfgDir);
+            if (!await fileExists(cfgDir)) {
+                await fs.mkdir(cfgDir);
             }
-            fs.writeFileSync(cfgPath, '[]', 'utf8');
+            await fs.writeFile(cfgPath, '[]', 'utf8');
         }
     }
 
@@ -324,9 +325,9 @@ export class QConnManager {
         if (paths && paths.length > 0) {
             path = paths[0].fsPath;
         }
-        if (fs.existsSync(path)) {
+        if (await fileExists(path)) {
             try {
-                const qCfg = JSON.parse(fs.readFileSync(path, 'utf8'));
+                const qCfg = JSON.parse(await fs.readFile(path, 'utf8'));
                 this.qCfg = qCfg.map((qcfg: QCfg) => {
                     if (qcfg.port && qcfg.label) {
                         if (!parseInt(qcfg.port as unknown as string)) {
@@ -348,7 +349,7 @@ export class QConnManager {
                         throw new Error('Please make sure to include port and label');
                     }
                 });
-                this.dumpCfg();
+                await this.dumpCfg();
                 commands.executeCommand('q-client.refreshEntry');
             } catch (error) {
                 const { message } = error as Error;
@@ -358,8 +359,8 @@ export class QConnManager {
     }
 
     async exportCfg(): Promise<void> {
-        if (fs.existsSync(cfgPath)) {
-            const cfg = fs.readFileSync(cfgPath, 'utf8');
+        if (await fileExists(cfgPath)) {
+            const cfg = await fs.readFile(cfgPath, 'utf8');
             if (!workspace.workspaceFolders) {
                 window.showErrorMessage('No opened workspace folder');
                 return;
@@ -370,7 +371,11 @@ export class QConnManager {
                 defaultUri: Uri.parse(filePath).with({ scheme: 'file' })
             });
             if (fileUri) {
-                fs.writeFile(fileUri.fsPath, cfg, err => window.showErrorMessage(err?.message ?? ''));
+                try {
+                    await fs.writeFile(fileUri.fsPath, cfg);
+                } catch (e) {
+                    window.showErrorMessage((e as Error)?.message ?? '');
+                }
             }
         }
     }
@@ -382,23 +387,23 @@ export class QConnManager {
         QStatusBarManager.toggleQueryStatus(this.isBusy);
     }
 
-    addCfg(qcfg: QCfg): void {
+    async addCfg(qcfg: QCfg) {
         const uniqLabel = qcfg.uniqLabel;
         this.qCfg = this.qCfg.filter(qcfg => qcfg.uniqLabel !== uniqLabel);
         this.qCfg.push(qcfg);
         this.qCfg.sort((q1, q2) => q1.uniqLabel.localeCompare(q2.uniqLabel));
-        this.dumpCfg();
+        await this.dumpCfg();
         commands.executeCommand('q-client.refreshEntry');
     }
 
-    removeCfg(uniqLabel: string): void {
+    async removeCfg(uniqLabel: string) {
         this.qCfg = this.qCfg.filter(qcfg => qcfg.uniqLabel !== uniqLabel);
-        this.dumpCfg();
+        await this.dumpCfg();
         commands.executeCommand('q-client.refreshEntry');
     }
 
-    dumpCfg(): void {
-        fs.writeFileSync(cfgPath, JSON.stringify(this.qCfg.map(qcfg => {
+    async dumpCfg(): Promise<void> {
+        await fs.writeFile(cfgPath, JSON.stringify(this.qCfg.map(qcfg => {
             return {
                 host: qcfg.host,
                 port: qcfg.port,

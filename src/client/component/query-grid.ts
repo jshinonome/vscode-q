@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
 import { QueryResult } from '../models/query-result';
 import { QConnManager } from '../modules/q-conn-manager';
@@ -52,7 +52,7 @@ export class QueryGrid implements Disposable {
         QueryGrid.extensionPath = extensionPath;
     }
 
-    public static createOrShow(): QueryGrid {
+    public static async createOrShow(): Promise<QueryGrid> {
         if (QueryGrid.extensionPath === '') {
             window.showWarningMessage('Failed to Create Query Grid');
         }
@@ -77,13 +77,15 @@ export class QueryGrid implements Disposable {
                 localResourceRoots: [Uri.file(path.join(extensionPath, 'assets'))]
             }
         );
-        QueryGrid.currentPanel = new QueryGrid(panel, extensionPath);
+        QueryGrid.currentPanel = await this.revive(panel, extensionPath);
         QueryGrid.isReady = false;
         return QueryGrid.currentPanel;
     }
 
-    public static revive(panel: WebviewPanel, extensionPath: string): void {
+    public static async revive(panel: WebviewPanel, extensionPath: string) {
         QueryGrid.currentPanel = new QueryGrid(panel, extensionPath);
+        QueryGrid.currentPanel._panel.webview.html = await QueryGrid.currentPanel._getHtmlForWebview();
+        return QueryGrid.currentPanel;
     }
 
     private constructor(panel: WebviewPanel, extensionPath: string) {
@@ -91,7 +93,6 @@ export class QueryGrid implements Disposable {
         this._extensionPath = extensionPath;
         this.configure();
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
-        this._panel.webview.html = this._getHtmlForWebview();
         this._panel.webview.onDidReceiveMessage(message => {
             switch (message.cmd) {
                 case 'ready':
@@ -173,19 +174,17 @@ export class QueryGrid implements Disposable {
         }
     }
 
-    private _getHtmlForWebview() {
+    private async _getHtmlForWebview() {
         // Local path to javascript run in the webview
         const dir = Uri.file(path.join(this._extensionPath, templatePath));
         const webview = this._panel.webview;
         // And the uri we use to load this script in the webview
         const dirUri = webview.asWebviewUri(dir);
-        let template = fs.readFileSync(
-            path.join(this._extensionPath, templatePath, 'query-grid.html')).toString();
-        template = template.replace(/{assets}/g, dirUri.toString())
+        const template = await fs.readFile(
+            path.join(this._extensionPath, templatePath, 'query-grid.html'));
+        return template.toString()
+            .replace(/{assets}/g, dirUri.toString())
             .replace(/{theme}/g, this._theme);
-        return template;
     }
 
 }
-
-

@@ -16,12 +16,13 @@ import {
 } from 'vscode-languageserver/node';
 import { URI } from 'vscode-uri';
 import * as Parser from 'web-tree-sitter';
-import { buildInFs, buildInFsSigs } from '../util/build-in-fs';
+import { getBuildInFs, getBuildInFsSigs } from '../util/build-in-fs';
 import * as TreeSitterUtil from '../util/tree-sitter';
+import * as fs from 'fs/promises';
 
 import klaw = require('klaw');
-import fs = require('graceful-fs');
 import picomatch = require('picomatch');
+import { constants } from 'fs';
 
 type nameToSymbolInfo = Map<string, SymbolInformation[]>;
 type nameToCallHierarchy = Map<string, CallHierarchyItem[]>;
@@ -47,10 +48,13 @@ export default class Analyzer {
         workspaceFolder: string,
         parser: Parser
     ): Promise<Analyzer> {
-        return new Analyzer(parser, connection, workspaceFolder);
+        const analyzer = new Analyzer(parser, connection, workspaceFolder);
+        analyzer.reservedWord = (await getBuildInFs()).map(item => item.label);
+        analyzer.buildInFsSigSrc = await getBuildInFsSigs();
+        return analyzer;
     }
 
-    private parser: Parser
+    private parser: Parser;
     private uriToTextDocument = new Map<string, TextDocument>();
     private uriToTree = new Map<DocumentUri, Parser.Tree>();
     private uriToFileContent = new Map<DocumentUri, string>();
@@ -65,13 +69,13 @@ export default class Analyzer {
     private workspaceFolder: URI;
     private uriToLoadFile = new Map<DocumentUri, string[]>();
 
-    public constructor(parser: Parser, connection: Connection, workspaceFolder: string) {
+    private constructor(parser: Parser, connection: Connection, workspaceFolder: string) {
         this.parser = parser;
         this.connection = connection;
         this.workspaceFolder = URI.parse(workspaceFolder);
         this.rootPath = this.workspaceFolder.path;
-        this.reservedWord = buildInFs.map(item => item.label);
-        this.buildInFsSigSrc = buildInFsSigs;
+        this.reservedWord = [];
+        this.buildInFsSigSrc = '';
     }
 
     /**
@@ -210,9 +214,13 @@ export default class Analyzer {
         return symbols;
     }
 
-    public analyzeWorkspace(cfg: { globsPattern: string[]; ignorePattern: string[] }): void {
-        if (this.rootPath && fs.existsSync(this.rootPath)) {
-
+    public async analyzeWorkspace(cfg: { globsPattern: string[]; ignorePattern: string[] }) {
+        if (this.rootPath) {
+            try {
+                await fs.access(this.rootPath, constants.F_OK);
+            } catch {
+                return;
+            }
             this.uriToTextDocument = new Map<string, TextDocument>();
             this.uriToTree = new Map<DocumentUri, Parser.Tree>();
             this.uriToFileContent = new Map<DocumentUri, string>();
@@ -262,17 +270,20 @@ export default class Analyzer {
 
     }
 
-    public analyzeLoadFiles(uri: DocumentUri): void {
-        this.uriToLoadFile.get(uri)?.forEach(f => {
+    public async analyzeLoadFiles(uri: DocumentUri) {
+        const files = this.uriToLoadFile.get(uri);
+        if (!files)
+            return;
+        for (const f of files) {
             if (!this.uriToTree.get(`file://${f}`))
-                this.analyzeFile(f);
-        });
+                await this.analyzeFile(f);
+        }
     }
 
-    public analyzeFile(filepath: string): void {
+    public async analyzeFile(filepath: string) {
         const uri = `file://${filepath}`;
         try {
-            const fileContent = fs.readFileSync(filepath, 'utf8');
+            const fileContent = await fs.readFile(filepath, 'utf8');
             this.connection.console.info(`Analyzing ${uri}`);
             this.analyzeDoc(uri, TextDocument.create(uri, 'q', 1, fileContent));
         } catch (error) {

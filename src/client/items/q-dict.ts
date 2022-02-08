@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import { commands, Event, EventEmitter, TextDocumentContentChangeEvent, TreeDataProvider, TreeItem, TreeItemCollapsibleState, window, workspace } from 'vscode';
 import { QConnManager } from '../modules/q-conn-manager';
 import QFunctionTreeItem from './q-function';
@@ -98,12 +98,12 @@ export default class QDictTreeItem extends TreeItem
         };
     }
 
-    refresh(): void {
+    async refresh() {
         if (this._parent) {
             return;
         }
         const conn = QConnManager.current?.activeConn?.conn;
-        const func = fs.readFileSync(path.join(__filename, '../../assets/source/query-server-variables.q'), 'utf8');
+        const func = await fs.readFile(path.join(__filename, '../../assets/source/query-server-variables.q'), 'utf8');
         const excludedNamespaces = workspace.getConfiguration('q-client.expl').get('excludedNamespaces') as string[];
         const query = func.concat(excludedNamespaces.map(namespace => '`' + namespace).join(''));
         if (conn) {

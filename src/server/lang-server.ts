@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import {
     CompletionItem, CompletionItemKind, Connection, Diagnostic, DiagnosticSeverity,
@@ -16,7 +16,7 @@ import {
 import { URI } from 'vscode-uri';
 import Analyzer, { word } from './modules/analyser';
 import CallHierarchyProvider from './modules/call-hierarchy-provider';
-import { buildInFs } from './util/build-in-fs';
+import { getBuildInFs } from './util/build-in-fs';
 import { initializeParser } from './util/parser';
 
 export default class LangServer {
@@ -25,7 +25,6 @@ export default class LangServer {
     // supports full document sync only
     documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
-    buildInFsRef: CompletionItem[] = [];
     hoverMap = new Map<string, string>();
 
     private analyzer: Analyzer;
@@ -34,7 +33,6 @@ export default class LangServer {
     private constructor(connection: Connection, analyzer: Analyzer) {
         this.connection = connection;
         this.analyzer = analyzer;
-        this.buildInFsRef = buildInFs;
         // Make the text document manager listen on the connection
         // for open, change and close text document events
         this.documents.listen(this.connection);
@@ -72,9 +70,8 @@ export default class LangServer {
         connection.console.info(`Initializing q Lang Server at ${workspaceFolder}`);
         console.info(`Initializing q Lang Server at ${workspaceFolder}`);
         const parser = await initializeParser();
-        return Analyzer.fromRoot(connection, workspaceFolder, parser).then(
-            analyzer => { return new LangServer(connection, analyzer); }
-        );
+        const analyzer = await Analyzer.fromRoot(connection, workspaceFolder, parser);
+        return new LangServer(connection, analyzer);
     }
 
 
@@ -110,7 +107,7 @@ export default class LangServer {
 
     // todo - when add more rules, extract to a package
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private onDidChangeContent(change: any) {
+    private async onDidChangeContent(change: any) {
         this.analyzer.analyzeDoc(change.document.uri, change.document);
         this.analyzer.analyzeLoadFiles(change.document.uri);
         const diagnostics = this.validateTextDocument(change.document);
@@ -131,20 +128,20 @@ export default class LangServer {
                     changedFiles.push(event.uri);
             }
         });
-        changedFiles.forEach(file => {
+        for (const file of changedFiles) {
             const filepath = URI.parse(file).path;
             if (!Analyzer.matchFile(filepath))
                 return;
             try {
-                this.analyzer.analyzeDoc(file, TextDocument.create(file, 'q', 1, fs.readFileSync(filepath, 'utf8')));
+                this.analyzer.analyzeDoc(file, TextDocument.create(file, 'q', 1, await fs.readFile(filepath, 'utf8')));
                 this.analyzer.analyzeLoadFiles(file);
             } catch (error) {
                 this.connection.console.warn(`Cannot analyze ${file}`);
             }
-        });
+        }
     }
 
-    private onCompletion(params: TextDocumentPositionParams): CompletionItem[] {
+    private async onCompletion(params: TextDocumentPositionParams): Promise<CompletionItem[]> {
         const word = this.getWordAtPoint({
             ...params,
             position: {
@@ -161,7 +158,7 @@ export default class LangServer {
         // console.log(word?.text)
 
         if (word?.text.startsWith('.')) {
-            completionItem = this.buildInFsRef.filter(item => item.label.startsWith('.'));
+            completionItem = (await getBuildInFs()).filter(item => item.label.startsWith('.'));
             globalId = this.analyzer.getServerIds().concat(
                 this.analyzer.getAllSymbols()
                     .filter(sym => sym.name.startsWith('.'))
@@ -181,7 +178,7 @@ export default class LangServer {
                 completionItem.push({ label: symbol, kind: CompletionItemKind.Enum });
             });
         } else {
-            completionItem = this.buildInFsRef.filter(item => !item.label.startsWith('.'));
+            completionItem = (await getBuildInFs()).filter(item => !item.label.startsWith('.'));
             localId = this.analyzer.getServerIds().filter(id => !id.label.startsWith('.')).concat(
                 this.analyzer.getLocalIds(params.textDocument.uri, word?.containerName ?? '')
                     .map(sym => {
@@ -321,7 +318,7 @@ export default class LangServer {
             return null;
         }
 
-        const ref = this.buildInFsRef.filter(item => item.label === word.text)[0];
+        const ref = (await getBuildInFs()).filter(item => item.label === word.text)[0];
 
         if (ref) {
             const content = {

@@ -5,11 +5,12 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import { homedir } from 'os';
 import { Event, EventEmitter, MarkdownString, TreeDataProvider, TreeItem, TreeItemCollapsibleState } from 'vscode';
 import path = require('path');
 import dayjs = require('dayjs');
+import { fileExists } from '../util/fs-utils';
 
 const cfgDir = homedir() + '/.vscode/';
 const historyPath = cfgDir + 'q-query-history.json';
@@ -65,7 +66,7 @@ export default class HistoryTreeItem extends TreeItem
         this.tooltip = mdString;
     }
 
-    refresh(): void {
+    async refresh(): Promise<void> {
         if (this._parent) {
             return;
         }
@@ -74,20 +75,16 @@ export default class HistoryTreeItem extends TreeItem
             return;
         }
         // read the q query history file from home dir
-        if (fs.existsSync(historyPath)) {
-            const histories: History[] = JSON.parse(fs.readFileSync(historyPath, 'utf8'));
+        if (await fileExists(historyPath)) {
+            const histories: History[] = JSON.parse(await fs.readFile(historyPath, 'utf8'));
             this._children = histories.map(h => new HistoryTreeItem(h, HistoryTreeItem.currentHistoryTree));
             this._onDidChangeTreeData.fire(undefined);
         } else {
-            if (!fs.existsSync(cfgDir)) {
-                fs.mkdirSync(cfgDir);
+            if (!await fileExists(cfgDir)) {
+                await fs.mkdir(cfgDir);
             }
-            fs.writeFileSync(historyPath, '[]', 'utf8');
+            await fs.writeFile(historyPath, '[]', 'utf8');
         }
-    }
-
-    public static dumpHistory(): void {
-        fs.writeFileSync(historyPath, JSON.stringify(HistoryTreeItem.currentHistoryTree._children, null, 4), 'utf8');
     }
 
     getParent(): TreeItem | null {
@@ -108,7 +105,7 @@ export default class HistoryTreeItem extends TreeItem
         }
     }
 
-    public static appendHistory(history: History): void {
+    public static appendHistory(history: History) {
         HistoryTreeItem.currentHistoryTree._children.unshift(new HistoryTreeItem(history, HistoryTreeItem.currentHistoryTree));
         HistoryTreeItem.currentHistoryTree.refresh();
     }

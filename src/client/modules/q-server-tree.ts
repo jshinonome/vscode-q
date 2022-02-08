@@ -10,8 +10,6 @@ import { QConn } from './q-conn';
 import { QConnManager } from './q-conn-manager';
 import path = require('path');
 
-const qConnManager = QConnManager.create();
-
 export class QServerTree extends TreeItem implements TreeDataProvider<TreeItem> {
     private _onDidChangeTreeData: EventEmitter<QConn | undefined> = new EventEmitter<QConn | undefined>();
     readonly onDidChangeTreeData: Event<QConn | undefined> = this._onDidChangeTreeData.event;
@@ -24,11 +22,12 @@ export class QServerTree extends TreeItem implements TreeDataProvider<TreeItem> 
         this._parent = parent;
     }
 
-    refresh(): void {
+    async refresh(): Promise<void> {
         if (this._parent) {
             return;
         }
-        qConnManager.loadCfg();
+        const qConnManager = await QConnManager.create();
+        await qConnManager.loadCfg();
         this._children = [];
         const itemMap = new Map<string, QServerTree>();
         qConnManager.qConnPool.forEach(qconn => {
