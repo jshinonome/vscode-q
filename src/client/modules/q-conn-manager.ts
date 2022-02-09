@@ -5,6 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
+import * as envpaths from 'env-paths';
 import * as fs from 'fs';
 import * as q from 'node-q';
 import { homedir } from 'os';
@@ -18,8 +19,8 @@ import { QueryGrid } from '../component/query-grid';
 import { QueryView } from '../component/query-view';
 import path = require('path');
 
-const cfgDir = homedir() + '/.vscode/';
-const cfgPath = cfgDir + 'q-server-cfg.json';
+const oldCfgPath = path.join(homedir(), '.vscode', 'q-server-cfg.json');
+const cfgPath = path.join(envpaths.default('vscode-q').config, 'q-server-cfg.json');
 
 export class QConnManager {
     public static current: QConnManager | undefined;
@@ -287,27 +288,29 @@ export class QConnManager {
 
     loadCfg(): void {
         // read the q server configuration file from home dir
-        if (fs.existsSync(cfgPath)) {
-            this.qCfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
-            this.qCfg = this.qCfg.map(qcfg => {
-                qcfg.uniqLabel = `${qcfg.tags},${qcfg.label}`;
-                qcfg.useCustomizedAuth = qcfg.useCustomizedAuth === true ? true : false;
-                return qcfg;
-            });
-            // reserver current conn
-            const currentQconnPool = new Map(this.qConnPool);
-            this.qConnPool.clear();
-            this.qCfg.forEach((qcfg: QCfg) => {
-                if (!this.qConnPool.get(qcfg.uniqLabel)) {
-                    this.qConnPool.set(qcfg.uniqLabel, new QConn(qcfg, currentQconnPool.get(qcfg.uniqLabel)?.conn));
-                }
-            });
-        } else {
-            if (!fs.existsSync(cfgDir)) {
-                fs.mkdirSync(cfgDir);
+        if (!fs.existsSync(cfgPath)) {
+            fs.mkdirSync(path.dirname(cfgPath), { recursive: true });
+            if (fs.existsSync(oldCfgPath)) {
+                fs.copyFileSync(oldCfgPath, cfgPath);
+                fs.unlinkSync(oldCfgPath);
+            } else {
+                fs.writeFileSync(cfgPath, '[]', 'utf8');
             }
-            fs.writeFileSync(cfgPath, '[]', 'utf8');
         }
+        this.qCfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
+        this.qCfg = this.qCfg.map(qcfg => {
+            qcfg.uniqLabel = `${qcfg.tags},${qcfg.label}`;
+            qcfg.useCustomizedAuth = qcfg.useCustomizedAuth === true ? true : false;
+            return qcfg;
+        });
+        // reserver current conn
+        const currentQconnPool = new Map(this.qConnPool);
+        this.qConnPool.clear();
+        this.qCfg.forEach((qcfg: QCfg) => {
+            if (!this.qConnPool.get(qcfg.uniqLabel)) {
+                this.qConnPool.set(qcfg.uniqLabel, new QConn(qcfg, currentQconnPool.get(qcfg.uniqLabel)?.conn));
+            }
+        });
     }
 
     async importCfg(): Promise<void> {

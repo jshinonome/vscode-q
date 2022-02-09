@@ -578,6 +578,7 @@
 		"@types/picomatch": "^2.3.0",
 		"@typescript-eslint/eslint-plugin": "^5.10.1",
 		"csv-parser": "^3.0.0",
+		"env-paths": "^2.2.1",
 		"eslint": "^8.8.0",
 		"fuse.js": "^6.5.3",
 		"graceful-fs": "^4.2.9",
