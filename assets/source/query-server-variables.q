@@ -11,7 +11,11 @@
     r: update b: {string value x} each n from r where t within 100 111h;
     r: update t: {$[.Q.qt value x;98h;99h]} each n from r where t in 98 99h;
     r: update m: {@[cols;x;{x}]} each n from r where t=98h;
-    r: update b: {.Q.s value x} each n from r where not t within 100 111h, not n in .Q.pt;
-    r: update pt: n in .Q.pt from r;
+    r: update skip:1b from r where t within 100 111h;
+    r: update skip:{(::)~first value x} each n from r where t=99h;
+    r: update skip:0b, pt:0b from r where t=98h;
+    if[`pt in key `.Q; r: update skip:1b, pt:1b from r where n in .Q.pt];
+    r: update b: {.Q.s value x} each n from r where not skip;
+    r: delete skip from r;
     (`n xasc select from r where p=`root) uj `p`n xasc select from r where p<>`root
  }

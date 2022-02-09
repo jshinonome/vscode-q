@@ -260,7 +260,8 @@ export function activate(context: ExtensionContext): void {
     commands.registerCommand('q-explorer.preview', (item: TreeItem) => {
         switch (item.contextValue) {
             case 'qtable':
-                QConnManager.current?.sync(`{[t;l]$[t in .Q.pt;select from t where date=last date, i<l;select from t where i<l]}[\`${item.label};${previewQueryLimit}]`);
+                QConnManager.current?.sync(
+                    `{[t;l]$[@[{x in value \`.Q.pt};t;{'"preview feature requires v3.5+ kdb"}];select from t where date=last date, i<l;select from t where i<l]}[\`${item.label};${previewQueryLimit}]`);
                 break;
             case 'qfunction':
                 QueryConsole.current?.append((item as QFunctionTreeItem).getBody(), 0, 'cached');

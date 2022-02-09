@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as envpaths from 'env-paths';
+import envPaths from 'env-paths';
 import * as fs from 'fs';
 import { homedir } from 'os';
 import { Event, EventEmitter, MarkdownString, TreeDataProvider, TreeItem, TreeItemCollapsibleState } from 'vscode';
@@ -13,7 +13,7 @@ import path = require('path');
 import dayjs = require('dayjs');
 
 const oldHistoryPath = path.join(homedir(), '.vscode', 'q-query-history.json');
-const historyPath = path.join(envpaths.default('vscode-q').cache, 'q-query-history.json');
+const historyPath = path.join(envPaths('vscode-q').cache, 'q-query-history.json');
 
 type History = {
     uniqLabel: string,

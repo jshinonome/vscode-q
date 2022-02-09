@@ -1,5 +1,15 @@
 # change log
 
+## 2.4.6
+
+### fixed
+
+-   server explorer: fail to load variables because of .Q.pt
+
+### changed
+
+-   q-server-cfg.json: use [env-paths](https://www.npmjs.com/package/env-paths)
+
 ## 2.4.5
 
 ### added

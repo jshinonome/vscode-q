@@ -5,22 +5,22 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as envpaths from 'env-paths';
+import envPaths from 'env-paths';
 import * as fs from 'fs';
 import * as q from 'node-q';
 import { homedir } from 'os';
 import { commands, Uri, window, workspace } from 'vscode';
+import { QueryGrid } from '../component/query-grid';
+import { QueryView } from '../component/query-view';
 import HistoryTreeItem from '../items/history';
 import { QueryResult } from '../models/query-result';
 import { QConn } from './q-conn';
 import { QStatusBarManager } from './q-status-bar-manager';
 import { QueryConsole } from './query-console';
-import { QueryGrid } from '../component/query-grid';
-import { QueryView } from '../component/query-view';
 import path = require('path');
 
 const oldCfgPath = path.join(homedir(), '.vscode', 'q-server-cfg.json');
-const cfgPath = path.join(envpaths.default('vscode-q').config, 'q-server-cfg.json');
+const cfgPath = path.join(envPaths('vscode-q').config, 'q-server-cfg.json');
 
 export class QConnManager {
     public static current: QConnManager | undefined;
