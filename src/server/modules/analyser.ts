@@ -50,7 +50,7 @@ export default class Analyzer {
         return new Analyzer(parser, connection, workspaceFolder);
     }
 
-    private parser: Parser
+    private parser: Parser;
     private uriToTextDocument = new Map<string, TextDocument>();
     private uriToTree = new Map<DocumentUri, Parser.Tree>();
     private uriToFileContent = new Map<DocumentUri, string>();

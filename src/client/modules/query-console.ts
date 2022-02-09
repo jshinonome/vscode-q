@@ -32,14 +32,12 @@ export class QueryConsole {
     private errorMsgMap = getErrorMsgMap();
     private autoClear = workspace.getConfiguration().get('q-client.output.autoClear') as boolean;
     private includeQuery = workspace.getConfiguration().get('q-client.output.includeQuery') as boolean;
-    public static createOrShow(): void {
-        if (QueryConsole.current) {
-            QueryConsole.current._console.show(true);
-        } else {
-            const _console = window.createOutputChannel('q Console');
-            _console.show(true);
-            QueryConsole.current = new QueryConsole(_console);
+    public static get(): QueryConsole {
+        if (!QueryConsole.current) {
+            const channel = window.createOutputChannel('q Console');
+            QueryConsole.current = new QueryConsole(channel);
         }
+        return QueryConsole.current;
     }
     private constructor(console: OutputChannel) {
         this._console = console;
@@ -56,6 +54,10 @@ export class QueryConsole {
                 x.dispose();
             }
         }
+    }
+
+    public show() {
+        this._console?.show(true);
     }
 
     public append(output: string | string[], time = 0, uniqLabel: string, query = ''): void {
@@ -97,6 +99,7 @@ export class QueryConsole {
             msg.forEach(o => this._console.appendLine(o));
         }
         this._console.appendLine('<<<\n');
+        this.show();
     }
 
     public appendQuery(query: string): void {
