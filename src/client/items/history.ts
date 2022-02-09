@@ -5,14 +5,15 @@
  * https://opensource.org/licenses/MIT
  */
 
+import * as envpaths from 'env-paths';
 import * as fs from 'fs';
 import { homedir } from 'os';
 import { Event, EventEmitter, MarkdownString, TreeDataProvider, TreeItem, TreeItemCollapsibleState } from 'vscode';
 import path = require('path');
 import dayjs = require('dayjs');
 
-const cfgDir = homedir() + '/.vscode/';
-const historyPath = cfgDir + 'q-query-history.json';
+const oldHistoryPath = path.join(homedir(), '.vscode', 'q-query-history.json');
+const historyPath = path.join(envpaths.default('vscode-q').cache, 'q-query-history.json');
 
 type History = {
     uniqLabel: string,
@@ -73,17 +74,20 @@ export default class HistoryTreeItem extends TreeItem
             this._onDidChangeTreeData.fire(undefined);
             return;
         }
+
         // read the q query history file from home dir
-        if (fs.existsSync(historyPath)) {
-            const histories: History[] = JSON.parse(fs.readFileSync(historyPath, 'utf8'));
-            this._children = histories.map(h => new HistoryTreeItem(h, HistoryTreeItem.currentHistoryTree));
-            this._onDidChangeTreeData.fire(undefined);
-        } else {
-            if (!fs.existsSync(cfgDir)) {
-                fs.mkdirSync(cfgDir);
+        if (!fs.existsSync(historyPath)) {
+            fs.mkdirSync(path.dirname(historyPath), { recursive: true });
+            if (fs.existsSync(oldHistoryPath)) {
+                fs.copyFileSync(oldHistoryPath, historyPath);
+                fs.unlinkSync(oldHistoryPath);
+            } else {
+                fs.writeFileSync(historyPath, '[]', 'utf8');
             }
-            fs.writeFileSync(historyPath, '[]', 'utf8');
         }
+        const histories: History[] = JSON.parse(fs.readFileSync(historyPath, 'utf8'));
+        this._children = histories.map(h => new HistoryTreeItem(h, HistoryTreeItem.currentHistoryTree));
+        this._onDidChangeTreeData.fire(undefined);
     }
 
     public static dumpHistory(): void {
