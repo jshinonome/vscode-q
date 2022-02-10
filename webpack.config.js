@@ -22,10 +22,13 @@ const clientConf = {
     },
     devtool: 'source-map',
     externals: {
-        vscode: 'commonjs vscode'
+        vscode: 'commonjs vscode',
+        'node:path': 'path',
+        'node:os': 'os',
+        'node:process': 'process',
     },
     resolve: {
-        extensions: ['.ts', '.js']
+        extensions: ['.ts', '.js'],
     },
     module: {
         rules: [
@@ -37,13 +40,13 @@ const clientConf = {
                         loader: 'ts-loader',
                         options: {
                             compilerOptions: {
-                                'sourceMap': true,
-                            }
-                        }
-                    }
-                ]
-            }
-        ]
+                                sourceMap: true,
+                            },
+                        },
+                    },
+                ],
+            },
+        ],
     },
 };
 
@@ -67,10 +70,10 @@ const serverConf = {
 
     devtool: 'source-map',
     externals: {
-        vscode: 'commonjs vscode'
+        vscode: 'commonjs vscode',
     },
     resolve: {
-        extensions: ['.ts', '.js']
+        extensions: ['.ts', '.js'],
     },
     module: {
         rules: [
@@ -82,14 +85,14 @@ const serverConf = {
                         loader: 'ts-loader',
                         options: {
                             compilerOptions: {
-                                'sourceMap': true,
-                            }
-                        }
-                    }
-                ]
-            }
-        ]
-    }
+                                sourceMap: true,
+                            },
+                        },
+                    },
+                ],
+            },
+        ],
+    },
 };
 
 module.exports = [clientConf, serverConf];
