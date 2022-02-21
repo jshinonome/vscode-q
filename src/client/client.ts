@@ -10,6 +10,7 @@ import {
 } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 import { AddServer } from './component/add-server';
+import { ChartView } from './component/chart-viewer';
 import { QueryGrid } from './component/query-grid';
 import { QueryView } from './component/query-view';
 import HistoryTreeItem from './items/history';
@@ -91,6 +92,7 @@ export function activate(context: ExtensionContext): void {
     QueryView.setExtensionPath(context.extensionPath);
     QueryGrid.setExtensionPath(context.extensionPath);
     AddServer.setExtensionPath(context.extensionPath);
+    ChartView.setExtensionPath(context.extensionPath);
     // --> init
 
 

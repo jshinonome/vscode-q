@@ -1,5 +1,11 @@
 # change log
 
+## 2.4.7
+
+### added
+
+-   chart view: base64 PNG chart for the result has the output key and bytes in the output key
+
 ## 2.4.6
 
 ### fixed

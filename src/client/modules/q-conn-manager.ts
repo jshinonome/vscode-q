@@ -10,6 +10,7 @@ import * as fs from 'fs';
 import * as q from 'node-q';
 import { homedir } from 'os';
 import { commands, Uri, window, workspace } from 'vscode';
+import { ChartView } from '../component/chart-viewer';
 import { QueryGrid } from '../component/query-grid';
 import { QueryView } from '../component/query-view';
 import HistoryTreeItem from '../items/history';
@@ -57,7 +58,11 @@ export class QConnManager {
         const consoleSize = 'system"c"';
         const wrapper = QConnManager.consoleMode
             ? `{\`t\`r!(0b;.Q.S[${consoleSize};0j;value x])}`
-            : `{res:value x;$[(count res) & .Q.qt res;:\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res;keys res);99h=type res;\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res:{([]k:.Q.s1 each key x;v:.Q.s1 each value x)}res;());:\`t\`r!(0b;.Q.S[${consoleSize};0j;res])]}`;
+            : `{res:value x;
+                $[(count res) & .Q.qt res;:\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res;keys res);
+                (99h=type res) & (\`output in key res) & all \`bytes\`w\`h in key res\`output;\`t\`r!(0b;res[\`output]);
+                99h=type res;\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res:{([]k:.Q.s1 each key x;v:.Q.s1 each value x)}res;());
+                :\`t\`r!(0b;.Q.S[${consoleSize};0j;res])]}`;
         if (this.activeConn && this.activeConn.version < 3.5)
             this.queryWrapper = wrapper;
         else
@@ -181,6 +186,8 @@ export class QConnManager {
                         } else if (QConnManager.consoleMode) {
                             QueryConsole.current?.append(res.r, duration, uniqLabel, query);
                             HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: '' });
+                        } else if ('w' in res.r && 'h' in res.r && 'bytes' in res.r) {
+                            ChartView.Create(res.r.bytes);
                         } else {
                             if (res.t) {
                                 this.update({
