@@ -15,7 +15,7 @@ const templatePath = './assets/view';
 
 export class AddServer implements Disposable {
     public static currentPanel: AddServer | undefined;
-    public static readonly viewType = 'qResultGrid';
+    public static readonly viewType = 'AddServer';
     public static extensionPath = '';
     private _currentQCfg: QCfg | null = null;
     private readonly _panel: WebviewPanel;

@@ -60,9 +60,13 @@ export class QConnManager {
             ? `{\`t\`r!(0b;.Q.S[${consoleSize};0j;value x])}`
             : `{res:value x;
                 $[(count res) & .Q.qt res;:\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res;keys res);
-                (99h=type res) & (\`output in key res) & all \`bytes\`w\`h in key res\`output;\`t\`r!(0b;res[\`output]);
-                99h=type res;\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res:{([]k:.Q.s1 each key x;v:.Q.s1 each value x)}res;());
-                :\`t\`r!(0b;.Q.S[${consoleSize};0j;res])]}`;
+                not 99h=type res;:\`t\`r!(0b;.Q.S[${consoleSize};0j;res]);
+                not (\`output in key res);;
+                not 99h=type res\`output;;
+                all \`bytes\`w\`h in key res\`output;:\`t\`r!(0b;res[\`output]);
+                ];
+                :\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res:{([]k:.Q.s1 each key x;v:.Q.s1 each value x)}res;())
+                }`;
         if (this.activeConn && this.activeConn.version < 3.5)
             this.queryWrapper = wrapper;
         else

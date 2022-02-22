@@ -12,36 +12,35 @@ import path = require('path');
 const templatePath = './assets/view';
 
 export class ChartView implements Disposable {
-    public static currentPanel: ChartView | undefined;
-    public static readonly viewType = 'qResultGrid';
+    public static readonly viewType = 'ChartView';
     public static extensionPath = '';
+    public static current: ChartView;
     private readonly _panel: WebviewPanel;
     private readonly _extensionPath: string;
     private _disposables: Disposable[] = [];
 
     private _theme = '-dark';
-    public static isReady = false;
 
     public static setExtensionPath(extensionPath: string): void {
         ChartView.extensionPath = extensionPath;
     }
 
-    public static Create(bytes: number[]): ChartView {
+    public static Create(bytes: number[]): void {
         if (ChartView.extensionPath === '') {
             window.showWarningMessage('Failed to Open Chart View');
         }
-        const extensionPath = ChartView.extensionPath;
-        // const column = window.activeTextEditor ? window.activeTextEditor.viewColumn : undefined;
-        if (ChartView.currentPanel) {
-            ChartView.currentPanel._panel.reveal();
-            return ChartView.currentPanel;
+
+        if (ChartView.current) {
+            ChartView.current.dispose();
         }
+
+        const extensionPath = ChartView.extensionPath;
 
         const panel = window.createWebviewPanel(
             ChartView.viewType,
             'Chart View',
             {
-                viewColumn: ViewColumn.One,
+                viewColumn: ViewColumn.Two,
                 preserveFocus: true,
             },
             {
@@ -55,9 +54,8 @@ export class ChartView implements Disposable {
 
         const buff = Buffer.from(bytes);
         const base64png = buff.toString('base64');
-        ChartView.currentPanel = new ChartView(panel, extensionPath, base64png);
-        ChartView.isReady = false;
-        return ChartView.currentPanel;
+
+        ChartView.current = new ChartView(panel, extensionPath, base64png);
     }
 
     private constructor(panel: WebviewPanel, extensionPath: string, base64png: string) {
@@ -66,7 +64,7 @@ export class ChartView implements Disposable {
         this.configure();
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
         this._panel.webview.html = this._getHtmlForWebview(base64png);
-        this._panel.title = 'Chart Viewer';
+        this._panel.title = 'Chart View';
         this._panel.iconPath = Uri.file(path.join(extensionPath, 'icon.png'));
     }
 
@@ -77,7 +75,6 @@ export class ChartView implements Disposable {
     }
 
     public dispose(): void {
-        ChartView.currentPanel = undefined;
         // Clean up our assets
         this._panel.dispose();
         while (this._disposables.length) {
