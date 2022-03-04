@@ -32,7 +32,8 @@ export class QueryConsole {
     private errorMsgMap = getErrorMsgMap();
     private autoClear = workspace.getConfiguration().get('q-client.output.autoClear') as boolean;
     private includeQuery = workspace.getConfiguration().get('q-client.output.includeQuery') as boolean;
-    public static createOrShow(): void {
+
+    public static createOrGet(): QueryConsole {
         if (QueryConsole.current) {
             QueryConsole.current._console.show(true);
         } else {
@@ -40,6 +41,7 @@ export class QueryConsole {
             _console.show(true);
             QueryConsole.current = new QueryConsole(_console);
         }
+        return QueryConsole.current;
     }
     private constructor(console: OutputChannel) {
         this._console = console;

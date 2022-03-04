@@ -88,7 +88,7 @@ export function activate(context: ExtensionContext): void {
     window.registerTreeDataProvider('q-explorer', qRoot);
     window.registerTreeDataProvider('q-history', qHistory);
     qHistory.refresh();
-    QueryConsole.createOrShow();
+    QueryConsole.createOrGet();
     QueryView.setExtensionPath(context.extensionPath);
     QueryGrid.setExtensionPath(context.extensionPath);
     AddServer.setExtensionPath(context.extensionPath);

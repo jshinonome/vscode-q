@@ -2,22 +2,9 @@
     border-color: #ea80fc;
 }
 
-.button.button-outline {
-    color: #ea80fc;
-}
-
-.button-black {
-    background-color: white;
-    border-color: white;
-}
-
-.button-black.button-clear,
-.button-black.button-outline {
-    background-color: transparent;
+.button.button-clear {
     color: white;
-}
-.button-black.button-clear {
-    border-color: transparent;
+    border: 0px;
 }
 
 select {
@@ -44,4 +31,9 @@ input {
 
 .border-right {
     border-right: 0.1rem solid #ea80fc;
+}
+
+#buttons {
+    display: flex;
+    justify-content: space-between;
 }

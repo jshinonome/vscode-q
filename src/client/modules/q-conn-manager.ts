@@ -175,20 +175,20 @@ export class QConnManager {
                 (err, res) => {
                     this.isBusy = false;
                     this.busyConn = undefined;
-                    QueryConsole.createOrShow();
+                    const console = QueryConsole.createOrGet();
                     const duration = Date.now() - time;
                     if (err) {
-                        QueryConsole.current?.appendError(['ERROR', err.message], duration, uniqLabel, query);
+                        console.appendError(['ERROR', err.message], duration, uniqLabel, query);
                         HistoryTreeItem.appendHistory(
                             { uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: err.message });
                     }
                     if (res) {
                         if (typeof res.r === 'string' && res.r.startsWith('ERROR')) {
                             const msg: string[] = res.r.split('\n');
-                            QueryConsole.current?.appendError(msg, duration, uniqLabel, query);
+                            console.appendError(msg, duration, uniqLabel, query);
                             HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: res.r });
                         } else if (QConnManager.consoleMode) {
-                            QueryConsole.current?.append(res.r, duration, uniqLabel, query);
+                            console.append(res.r, duration, uniqLabel, query);
                             HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: '' });
                         } else if ('w' in res.r && 'h' in res.r && 'bytes' in res.r) {
                             ChartView.Create(res.r.bytes);
@@ -201,10 +201,8 @@ export class QConnManager {
                                     keys: res.k,
                                     query: query,
                                 });
-                                QueryConsole.current?.append(`> ${res.r[Object.keys(res.r)[0]].length} row(s) returned`, duration, uniqLabel, query);
-                            }
-                            else {
-                                QueryConsole.current?.append(res.r, duration, uniqLabel, query);
+                            } else {
+                                console.append(res.r, duration, uniqLabel, query);
                             }
                             HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: '' });
                         }
@@ -240,16 +238,16 @@ export class QConnManager {
                 (err, res) => {
                     current.isBusy = false;
                     current.busyConn = undefined;
-                    QueryConsole.createOrShow();
+                    const console = QueryConsole.createOrGet();
                     const duration = Date.now() - time;
                     if (err) {
-                        QueryConsole.current?.appendError(['ERROR', err.message], duration, uniqLabel, query);
+                        console.appendError(['ERROR', err.message], duration, uniqLabel, query);
                         current.stopPolling();
                     }
                     if (res) {
                         if (typeof res.r === 'string' && res.r.startsWith('ERROR')) {
                             const msg: string[] = res.r.split('\n');
-                            QueryConsole.current?.appendError(msg, duration, uniqLabel, query);
+                            console.appendError(msg, duration, uniqLabel, query);
                             current.stopPolling();
                         } else {
                             if (res.t) {
@@ -259,10 +257,10 @@ export class QConnManager {
                                     meta: res.m,
                                     keys: res.k,
                                 });
-                                QueryConsole.current?.append(`> ${res.r[Object.keys(res.r)[0]].length} row(s) returned`, duration, uniqLabel, query);
+                                console.append(`> ${res.r[Object.keys(res.r)[0]].length} row(s) returned`, duration, uniqLabel, query);
                             }
                             else {
-                                QueryConsole.current?.append(res.r, duration, uniqLabel, query);
+                                console.append(res.r, duration, uniqLabel, query);
                             }
                         }
                     }

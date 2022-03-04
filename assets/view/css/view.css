@@ -1,15 +1,6 @@
-.button-black {
-    background-color: black;
-    border-color: black;
-}
-
-.button-black.button-clear,
-.button-black.button-outline {
-    background-color: transparent;
+.button.button-clear {
     color: black;
-}
-.button-black.button-clear {
-    border-color: transparent;
+    border: 0px;
 }
 
 select {
@@ -29,4 +20,9 @@ label {
 
 .border-right {
     border-right: 0.1rem solid #9b4dca;
+}
+
+#buttons {
+    display: flex;
+    justify-content: space-between;
 }
