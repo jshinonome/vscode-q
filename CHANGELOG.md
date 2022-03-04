@@ -1,5 +1,15 @@
 # change log
 
+## 2.4.8
+
+### added
+
+-   query view: rows count in the webview
+
+### removed
+
+-   query grid|visualization: q console output for rows count
+
 ## 2.4.7
 
 ### added
