@@ -184,17 +184,29 @@
 			{
 				"command": "q-client.queryCurrentLine",
 				"title": "Query Current Line",
-				"category": "kdb+/q ext"
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/query-current-line.svg",
+					"dark": "assets/svg/dark/query-current-line.svg"
+				}
 			},
 			{
 				"command": "q-client.querySelection",
 				"title": "Query Current Selection",
-				"category": "kdb+/q ext"
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/query-selection.svg",
+					"dark": "assets/svg/dark/query-selection.svg"
+				}
 			},
 			{
 				"command": "q-client.queryBlock",
 				"title": "Query Current Block",
-				"category": "kdb+/q ext"
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/query-block.svg",
+					"dark": "assets/svg/dark/query-block.svg"
+				}
 			},
 			{
 				"command": "q-term.sendCurrentLine",
@@ -358,6 +370,21 @@
 					"command": "q-explorer.toggleAutoRefresh",
 					"when": "view == q-explorer",
 					"group": "navigation@2"
+				},
+				{
+					"command": "q-client.queryBlock",
+					"when": "view == q-explorer",
+					"group": "navigation@3"
+				},
+				{
+					"command": "q-client.querySelection",
+					"when": "view == q-explorer",
+					"group": "navigation@4"
+				},
+				{
+					"command": "q-client.queryCurrentLine",
+					"when": "view == q-explorer",
+					"group": "navigation@5"
 				}
 			],
 			"view/item/context": [

@@ -1,5 +1,11 @@
 # change log
 
+## 2.5.0
+
+### added
+
+-   server explorer: query buttons
+
 ## 2.4.8
 
 ### added

@@ -34,11 +34,8 @@ export class QueryConsole {
     private includeQuery = workspace.getConfiguration().get('q-client.output.includeQuery') as boolean;
 
     public static createOrGet(): QueryConsole {
-        if (QueryConsole.current) {
-            QueryConsole.current._console.show(true);
-        } else {
+        if (!QueryConsole.current) {
             const _console = window.createOutputChannel('q Console');
-            _console.show(true);
             QueryConsole.current = new QueryConsole(_console);
         }
         return QueryConsole.current;
@@ -61,6 +58,7 @@ export class QueryConsole {
     }
 
     public append(output: string | string[], time = 0, uniqLabel: string, query = ''): void {
+        this._console.show(true);
         if (this.autoClear) {
             this._console.clear();
         }
@@ -77,6 +75,7 @@ export class QueryConsole {
     }
 
     public appendError(msg: string[], time = 0, uniqLabel: string, query = ''): void {
+        this._console.show(true);
         if (this.autoClear) {
             this._console.clear();
         }
