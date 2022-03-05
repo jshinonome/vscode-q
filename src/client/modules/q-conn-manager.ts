@@ -257,7 +257,6 @@ export class QConnManager {
                                     meta: res.m,
                                     keys: res.k,
                                 });
-                                console.append(`> ${res.r[Object.keys(res.r)[0]].length} row(s) returned`, duration, uniqLabel, query);
                             }
                             else {
                                 console.append(res.r, duration, uniqLabel, query);
