@@ -30,6 +30,8 @@
         <div class="float-right">
             <input type="checkbox" id="socketNoDelay">
             <label class="label-inline" for="socketNoDelay">Socket No Delay</label>
+            <input type="checkbox" id="useTLS">
+            <label class="label-inline" for="useTLS">Enable TLS</label>
             <input type="checkbox" id="useCustomizedAuth" {customizedAuthInstalled}>
             <label class="label-inline" for="useCustomizedAuth">
                 <span title="requires vscode-q-auth extension">Customized Authentication</span></label>
@@ -67,6 +69,7 @@
             const socketNoDelay = document.getElementById('socketNoDelay');
             const alert = document.getElementById('alert');
             const useCustomizedAuth = document.getElementById('useCustomizedAuth');
+            const useTLS = document.getElementById('useTLS');
             function generateDefaultLabel() {
                 if (label.value === '')
                     label.value = host.value + '-' + port.value;
@@ -110,7 +113,8 @@
                     label: label.value.trim(),
                     tags: tags.value.trim(),
                     uniqLabel: tags.value.trim() + ',' + label.value.trim(),
-                    useCustomizedAuth: useCustomizedAuth.checked
+                    useCustomizedAuth: useCustomizedAuth.checked,
+                    useTLS: useTLS.checked,
                 }
             }
 
@@ -125,6 +129,7 @@
                     tags.value = cfg.tags;
                     socketNoDelay.checked = cfg.socketNoDelay;
                     useCustomizedAuth.checked = cfg.useCustomizedAuth;
+                    useTLS.checked = cfg.useTLS;
                 }
             }
 

@@ -416,6 +416,7 @@ export class QConnManager {
                 user: qcfg.user,
                 password: qcfg.password,
                 socketNoDelay: qcfg.socketNoDelay,
+                useTLS: qcfg.useTLS === true,
                 socketTimeout: qcfg.socketTimeout,
                 label: qcfg.label,
                 tags: qcfg.tags,
@@ -448,4 +449,5 @@ export type QCfg = {
     tags: string;
     uniqLabel: string;
     useCustomizedAuth: boolean;
+    useTLS: boolean;
 }

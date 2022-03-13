@@ -25,6 +25,7 @@ export class QConn extends TreeItem {
     user: string;
     password: string;
     socketNoDelay: boolean;
+    useTLS: boolean;
     socketTimeout: number;
     conn?: q.Connection;
     command?: Command;
@@ -47,6 +48,7 @@ export class QConn extends TreeItem {
         this.user = ('user' in cfg) ? cfg['user'] : '';
         this.password = ('password' in cfg) ? cfg['password'] : '';
         this.socketNoDelay = ('socketNoDelay' in cfg) ? cfg['socketNoDelay'] : false;
+        this.useTLS = ('useTLS' in cfg) ? cfg['useTLS'] : false;
         this.socketTimeout = ('socketTimeout' in cfg) ? cfg['socketTimeout'] : 0;
         this.conn = conn;
         this.tags = cfg.tags ?? '';

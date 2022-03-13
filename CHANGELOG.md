@@ -1,5 +1,11 @@
 # change log
 
+## 2.5.1
+
+### added
+
+-   add server: TLS option
+
 ## 2.5.0
 
 ### added
