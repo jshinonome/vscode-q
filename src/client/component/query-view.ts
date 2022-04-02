@@ -7,7 +7,6 @@
 
 import * as fs from 'fs';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
-import * as xlsx from 'xlsx';
 import { QueryResult } from '../models/query-result';
 import { kTypeMap } from '../util/k-map';
 import path = require('path');
@@ -80,9 +79,6 @@ export class QueryView implements Disposable {
                 case 'ready':
                     QueryView.isReady = true;
                     break;
-                case 'saveData':
-                    this.saveData(message.data, message.fileType);
-                    break;
             }
         });
         this._panel.webview.html = this._getHtmlForWebview();
@@ -138,39 +134,6 @@ export class QueryView implements Disposable {
         }
     }
 
-    public async saveData(data: any, fileType: string): Promise<void> {
-        console.log('save data called');
-        const fileName = `query-view-${dayjs().format('YYYYMMDD')}${fileType}`;
-        if (!workspace.workspaceFolders) {
-            return;
-        }
-        const workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
-        const filePath = path.join(workspaceFolder, fileName);
-        const fileUri = await window.showSaveDialog({
-            defaultUri: Uri.parse(filePath).with({ scheme: 'file' })
-        });
-
-        if (fileUri) {
-            if (fileType === '.csv') {
-                fs.writeFile(fileUri.fsPath, data, err => console.log(err));
-            }
-            else if (fileType === '.xlsx') {
-                const workbook = xlsx.utils.book_new();
-                const worksheet = xlsx.utils.json_to_sheet(data);
-                xlsx.utils.book_append_sheet(workbook, worksheet, 'q-ext');
-                const fileData = xlsx.write(workbook, {
-                    type: 'buffer',
-                    compression: true,
-                    bookType: 'xlsx'
-                });
-                fs.writeFile(filePath, fileData, err => console.log(err));
-
-            } else {
-                console.log('unsupported file type');
-            }
-        }
-    }
-
     private _getHtmlForWebview() {
         // Local path to javascript run in the webview
         const dir = Uri.file(path.join(this._extensionPath, templatePath));
@@ -188,5 +151,3 @@ export class QueryView implements Disposable {
     }
 
 }
-
-
