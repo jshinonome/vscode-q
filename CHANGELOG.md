@@ -1,5 +1,11 @@
 # change log
 
+## 2.5.4
+
+### fixed
+
+-   syntaxes: make string token limit to the line
+
 ## 2.5.3
 
 ### fixed
