@@ -321,7 +321,7 @@ export function activate(context: ExtensionContext): void {
                     );
                     break;
                 case QueryCodeType.Block:
-                    ({ query, n } = await client.sendRequest('$/on-query-block', params));
+                    ({ query, n } = await client.sendRequest('onQueryBlock', params));
                     break;
             }
             if (query) {
@@ -424,7 +424,7 @@ export function activate(context: ExtensionContext): void {
             window.showInformationMessage('Reload/Restart vscode to Make the Configuration Take Effect.');
         } else if (e.affectsConfiguration('q-server')) {
             const cfg = workspace.getConfiguration('q-server.sourceFiles');
-            client.sendNotification('$/analyze-source-code', { globsPattern: cfg.get('globsPattern'), ignorePattern: cfg.get('ignorePattern') });
+            client.sendNotification('analyzeSourceCode', { globsPattern: cfg.get('globsPattern'), ignorePattern: cfg.get('ignorePattern') });
         }
     });
 
@@ -470,19 +470,19 @@ export function activate(context: ExtensionContext): void {
 
     context.subscriptions.push(
         commands.registerCommand('q-client.sendServerCache', code => {
-            client.sendNotification('$/analyze-server-cache', code);
+            client.sendNotification('analyzeServerCache', code);
         })
     );
 
     context.subscriptions.push(
         commands.registerCommand('q-client.sendOnHover', hoverItems => {
-            client.sendNotification('$/prepare-on-hover', hoverItems);
+            client.sendNotification('prepareOnHover', hoverItems);
         })
     );
 
     client.onReady().then(() => {
         const cfg = workspace.getConfiguration('q-server.sourceFiles');
-        client.sendNotification('$/analyze-source-code', { globsPattern: cfg.get('globsPattern'), ignorePattern: cfg.get('ignorePattern') });
+        client.sendNotification('analyzeSourceCode', { globsPattern: cfg.get('globsPattern'), ignorePattern: cfg.get('ignorePattern') });
     });
 }
 

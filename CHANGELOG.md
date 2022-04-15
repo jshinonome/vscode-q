@@ -1,5 +1,11 @@
 # change log
 
+## 2.5.3
+
+### fixed
+
+-   lang server: path issue in windows os
+
 ## 2.5.1
 
 ### added

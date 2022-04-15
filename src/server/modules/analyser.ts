@@ -50,7 +50,7 @@ export default class Analyzer {
         return new Analyzer(parser, connection, workspaceFolder);
     }
 
-    private parser: Parser
+    private parser: Parser;
     private uriToTextDocument = new Map<string, TextDocument>();
     private uriToTree = new Map<DocumentUri, Parser.Tree>();
     private uriToFileContent = new Map<DocumentUri, string>();
@@ -69,7 +69,7 @@ export default class Analyzer {
         this.parser = parser;
         this.connection = connection;
         this.workspaceFolder = URI.parse(workspaceFolder);
-        this.rootPath = this.workspaceFolder.path;
+        this.rootPath = this.workspaceFolder.fsPath;
         this.reservedWord = buildInFs.map(item => item.label);
         this.buildInFsSigSrc = buildInFsSigs;
     }

@@ -51,10 +51,10 @@ export default class LangServer {
         this.connection.onPrepareRename(this.onPrepareRename.bind(this));
         this.connection.onRenameRequest(this.onRenameRequest.bind(this));
         this.connection.onSignatureHelp(this.onSignatureHelp.bind(this));
-        this.connection.onNotification('$/analyze-server-cache', (code => this.analyzer.analyzeServerCache(code)));
-        this.connection.onNotification('$/analyze-source-code', (cfg => this.analyzer.analyzeWorkspace(cfg)));
-        this.connection.onNotification('$/prepare-on-hover', (hoverItems => this.generateHoverMap(hoverItems)));
-        this.connection.onRequest('$/on-query-block', (params => this.onQueryBlock(params)));
+        this.connection.onNotification('analyzeServerCache', (code => this.analyzer.analyzeServerCache(code)));
+        this.connection.onNotification('analyzeSourceCode', (cfg => this.analyzer.analyzeWorkspace(cfg)));
+        this.connection.onNotification('prepareOnHover', (hoverItems => this.generateHoverMap(hoverItems)));
+        this.connection.onRequest('onQueryBlock', (params => this.onQueryBlock(params)));
 
         this.callHierarchyProvider = new CallHierarchyProvider(analyzer);
         this.connection.languages.callHierarchy.onPrepare(this.callHierarchyProvider.onPrepare.bind(this));
@@ -132,7 +132,7 @@ export default class LangServer {
             }
         });
         changedFiles.forEach(file => {
-            const filepath = URI.parse(file).path;
+            const filepath = URI.parse(file).fsPath;
             if (!Analyzer.matchFile(filepath))
                 return;
             try {
