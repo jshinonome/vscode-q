@@ -94,7 +94,7 @@
               "name": "punctuation.definition.string.begin.q-output"
             }
           },
-          "end": "\"|((?:[^\\\\\\n])$)",
+          "end": "\"|$",
           "endCaptures": {
             "0": {
               "name": "punctuation.definition.string.end.q-output"

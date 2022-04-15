@@ -56,7 +56,7 @@ repository:
       - begin: '"'
         beginCaptures:
           0: { name: punctuation.definition.string.begin.q }
-        end: '"|((?:[^\\\n])$)'
+        end: '"|$'
         endCaptures:
           0: { name: punctuation.definition.string.end.q }
         name: string.quoted.double.q
