@@ -1,5 +1,11 @@
 # change log
 
+## 2.5.5
+
+### fixed
+
+-   lang server: namespace detection
+
 ## 2.5.4
 
 ### fixed
