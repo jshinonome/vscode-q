@@ -464,10 +464,6 @@ export function activate(context: ExtensionContext): void {
         clientOptions
     );
 
-    // Push the disposable to the context's subscriptions so that the
-    // client can be deactivated on extension deactivation
-    context.subscriptions.push(client.start());
-
     context.subscriptions.push(
         commands.registerCommand('q-client.sendServerCache', code => {
             client.sendNotification('analyzeServerCache', code);
@@ -480,7 +476,7 @@ export function activate(context: ExtensionContext): void {
         })
     );
 
-    client.onReady().then(() => {
+    client.start().then(() => {
         const cfg = workspace.getConfiguration('q-server.sourceFiles');
         client.sendNotification('analyzeSourceCode', { globsPattern: cfg.get('globsPattern'), ignorePattern: cfg.get('ignorePattern') });
     });
