@@ -46,7 +46,6 @@ See the [change log](https://github.com/jshinonome/vscode-q/blob/master/CHANGELO
 | q-server.sourceFiles.globsPattern  | array   | `["**/src/**/*.q"]`              | source folder to be included               |
 | q-server.sourceFiles.ignorePattern | array   | `["**/build","**/node_modules"]` | folder to be excluded                      |
 | q-client.queryMode                 | string  | `Console`                        | query mode, Console, Grid or Visualization |
-| q-client.queryView.dense           | boolean | `false`                          | q view in dense mode                       |
 | q-client.queryGrid.decimals        | number  | `3`                              | decimals in q grid                         |
 | q-client.term.qBinary              | string  | `q`                              | q executable file or full path             |
 | q-client.term.envPath              | string  | `''`                             | environment file relative or absolute path |
