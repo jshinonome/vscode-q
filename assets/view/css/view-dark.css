@@ -1,15 +1,14 @@
-.button-outline {
-    border-color: #ea80fc;
-}
-
-.button.button-clear {
-    color: white;
-    border: 0px;
+body {
+    background-color: var(--vscode-editor-background);
 }
 
 select {
     font-size: 1.1rem;
     font-weight: 700;
+    color: white;
+    background-color: var(--vscode-editor-background);
+}
+option {
     color: white;
     background-color: var(--vscode-editor-background);
 }
@@ -36,4 +35,9 @@ input {
 #buttons {
     display: flex;
     justify-content: space-between;
+}
+
+.form-input {
+    background-color: var(--vscode-editor-background);
+    color: white;
 }

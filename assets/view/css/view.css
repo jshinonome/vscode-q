@@ -1,3 +1,7 @@
+body {
+    background-color: var(--vscode-editor-background);
+}
+
 .button.button-clear {
     color: black;
     border: 0px;

@@ -4,7 +4,7 @@
 <head>
     <!-- include styles -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:500,500italic,700,700italic">
-    <link href="{assets}/css/milligram.min.css" rel="stylesheet">
+    <link href="{assets}/css/spectre.min.css" rel="stylesheet">
     <link href="{assets}/css/ag-grid.min.css" rel="stylesheet">
     <link href="{assets}/css/ag-theme-balham{theme}.min.css" rel="stylesheet">
     <link href="{assets}/css/normalize.css" rel="stylesheet">
@@ -40,26 +40,39 @@
 
 <body>
     <div class="grid-wrapper">
-        <div id="buttons">
-            <button class="button" onclick="viewGrid()">Grid</button>
-            <button class="button" onclick="viewChart()">Chart</button>
-            <button class="button" onclick="viewBoth()">Grid & Chart</button>
-            <button class="button" onclick="toggleConf()">Config</button>
-            <button id="row-count" class="button button-clear" disabled>rows</button>
-            <button class="button" onclick="downloadData()">Download Data</button>
-            <button class="button" onclick="saveChartAsPNG()">Save Chart</button>
+        <div class="columns">
+            <div class="column col-6" style="display: flex; justify-content: flex-start;">
+                <button class="btn btn-primary" onclick="viewGrid()">Grid</button>
+                <button class="btn btn-primary" onclick="viewChart()">Chart</button>
+                <button class="btn btn-primary" onclick="viewBoth()">Grid & Chart</button>
+            </div>
+            <div class="column col-6" style="display: flex; justify-content: flex-end;">
+                <button class="btn btn-primary" onclick="toggleConf()">Config</button>
+                <button class="btn btn-primary" onclick="downloadData()">Download Data</button>
+                <button class="btn btn-primary" onclick="saveChartAsPNG()">Save Chart</button>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column" style="display: flex; justify-content: flex-start;">
+                <input class="form-input input" type="text" id="filter-text-box" placeholder="Filter ..."
+                    oninput="onFilterTextBoxChanged()">
+            </div>
+            <div class="column" style="display: flex; justify-content: flex-end; align-items: center;">
+                <span id="currentRowCount" class="label label-secondary"></span>
+            </div>
         </div>
         <div id="chartView">
             <div id="chart-conf">
-                <div class="row">
-                    <div class="column column-50 border-right">
-                        <div class="row">
-                            <div class="column column-66">
-                                <button class="button button-outline button-black" onclick="toggleTheme()">
+                <div class="columns">
+                    <div class="column col-6">
+                        <div class="columns">
+                            <div class="column col-8">
+                                <button class="btn btn-success" onclick="toggleTheme()">
                                     Toggle Theme</button>
                             </div>
                             <div class="column">
-                                <select id="chart-type-selector" title="chart type" onChange="selectChartType()">
+                                <select class="form-select" id="chart-type-selector" title="chart type"
+                                    onChange="selectChartType()">
                                     <option value="">Chart Type</option>
                                     <option value="line">Line</option>
                                     <option value="bar">Bar</option>
@@ -67,26 +80,27 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="column column-66">
-                                <label for="title">Chart Title:</label>
-                                <input type="text" id="chart-title" name="title" oninput="updateTitle()">
+                        <div class="columns">
+                            <div class="column col-8">
+                                <input class="form-input" type="text" id="chart-title" name="title"
+                                    placeholder="Chart Title" oninput="updateTitle()">
                             </div>
                             <div class="column">
-                                <label for="yaxes">Y Axes Label:</label>
-                                <input type="text" id="chart-yaxes" name="yaxes" oninput="updateTitle()">
+                                <input class="form-input" type="text" id="chart-yaxes" name="yaxes"
+                                    placeholder="Y Axes Label:" oninput="updateTitle()">
                             </div>
                         </div>
                     </div>
 
                     <div class="column">
-                        <div class="row">
+                        <div class="columns">
                             <div class="column">
-                                <button class="button button-outline button-black" onclick="sendMsgToVscode()">
+                                <button class="btn btn-success" onclick="sendMsgToVscode()">
                                     Update Query</button>
                             </div>
                             <div class="column" align="right">
-                                <select id="polling-interval" title="Polling Interval" onChange="sendMsgToVscode()">
+                                <select class="form-select" id="polling-interval" title="Polling Interval"
+                                    onChange="sendMsgToVscode()">
                                     <option value="0">Polling Interval(Stop)</option>
                                     <option value="1000">1 second</option>
                                     <option value="5000">5 seconds</option>
@@ -97,10 +111,10 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="columns">
                             <div class="column">
-                                <label for="polling-query">Query:</label>
-                                <input type="text" id="polling-query" name="query">
+                                <input class="form-input" type="text" id="polling-query" name="query"
+                                    placeholder="Query">
                             </div>
                         </div>
                     </div>
@@ -108,7 +122,7 @@
             </div>
             <canvas id="canvas"></canvas>
         </div>
-        <div id="gridView" class="ag-theme-balham{theme}"></div>
+        <div id="gridView" class="ag-theme-alpine{theme}"></div>
         <script type="text/javascript" charset="utf-8">
             // get api to interact with vscode
             let vscode = acquireVsCodeApi();
@@ -238,7 +252,7 @@
                 }
                 gridOptions.api.setColumnDefs(msg.cols);
                 gridOptions.api.setRowData(rowData);
-                document.getElementById('row-count').innerText = rowData.length + " rows"
+                document.querySelector('#currentRowCount').innerHTML = `Row Count - ${rowData.length}`;
                 let allColumnIds = [];
                 gridOptions.columnApi.getAllColumns().forEach(function (column) {
                     allColumnIds.push(column.colId);
@@ -434,6 +448,12 @@
                     interval: pollingInterval,
                     query: pollingQuery.value
                 });
+            }
+
+            function onFilterTextBoxChanged() {
+                gridOptions.api.setQuickFilter(
+                    document.getElementById('filter-text-box').value
+                );
             }
 
         </script>

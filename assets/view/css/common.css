@@ -11,15 +11,9 @@ body {
 
 #canvas {
     background-color: white;
-    margin-bottom: 5px;
-    margin-top: 5px;
 }
 
 chartView {
-    margin-bottom: 5px;
-}
-
-input {
     margin-bottom: 5px;
 }
 
@@ -63,4 +57,13 @@ input[type="submit"] {
 .table-condensed > thead > tr > td,
 .table-condensed > thead > tr > th {
     padding: 3px;
+}
+
+.columns {
+    padding: 2px;
+}
+
+.form-checkbox .form-inline {
+    font-size: 0.7rem;
+    padding: 0.1rem 0;
 }

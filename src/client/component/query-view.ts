@@ -6,7 +6,7 @@
  */
 
 import * as fs from 'fs';
-import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
+import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window } from 'vscode';
 import { QueryResult } from '../models/query-result';
 import { kTypeMap } from '../util/k-map';
 import path = require('path');
@@ -25,7 +25,6 @@ export class QueryView implements Disposable {
     private readonly _extensionPath: string;
     private _disposables: Disposable[] = [];
 
-    private _cssTheme = 'material.dark';
     private _theme = '';
     private _dataViewBg = '#2f3136;';
     private _keyColor = '#6A1B9A';
@@ -87,11 +86,8 @@ export class QueryView implements Disposable {
     }
 
     private configure(): void {
-        const cfg = workspace.getConfiguration('q-client.queryView');
         let isLightTheme = false;
         isLightTheme = window.activeColorTheme.kind === ColorThemeKind.Light;
-        this._cssTheme = cfg.dense ? 'material-dense' : 'material';
-        this._cssTheme = isLightTheme ? this._cssTheme : this._cssTheme + '.dark';
         this._theme = isLightTheme ? '' : '-dark';
         this._keyColor = isLightTheme ? '#E1BEE7' : '#6A1B9A';
         this._dataViewBg = isLightTheme ? '#eeeeee' : this._dataViewBg;
@@ -144,7 +140,6 @@ export class QueryView implements Disposable {
             path.join(this._extensionPath, templatePath, 'index.html')).toString();
         template = template.replace(/{assets}/g, dirUri.toString())
             .replace(/{theme}/g, this._theme)
-            .replace(/{cssTheme}/g, this._cssTheme)
             .replace(/{keyColor}/g, this._keyColor);
 
         return template;

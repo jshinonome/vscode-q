@@ -19,22 +19,6 @@ perspective-viewer {
     right: 0;
 }
 
-.hidden {
-    display: none;
-}
-.label {
-    color: var(--vscode-editor-foreground);
-}
-
-select {
-    color: var(--vscode-editor-foreground);
-    background-color: var(--vscode-editor-background);
-}
-
-perspective-viewer {
-    --select--padding: 0px 5px 0px 5px;
-}
-
 regular-table tr td {
     max-width: 328px;
     overflow: hidden;
