@@ -24,9 +24,7 @@ export class QConn extends TreeItem {
     port: number;
     user: string;
     password: string;
-    socketNoDelay: boolean;
     useTLS: boolean;
-    socketTimeout: number;
     conn?: q.Connection;
     command?: Command;
     flipTables = false;
@@ -47,9 +45,7 @@ export class QConn extends TreeItem {
         this.port = cfg['port'];
         this.user = ('user' in cfg) ? cfg['user'] : '';
         this.password = ('password' in cfg) ? cfg['password'] : '';
-        this.socketNoDelay = ('socketNoDelay' in cfg) ? cfg['socketNoDelay'] : false;
         this.useTLS = ('useTLS' in cfg) ? cfg['useTLS'] : false;
-        this.socketTimeout = ('socketTimeout' in cfg) ? cfg['socketTimeout'] : 0;
         this.conn = conn;
         this.tags = cfg.tags ?? '';
         this.uniqLabel = `${cfg.tags},${cfg.label}`;
@@ -61,15 +57,13 @@ export class QConn extends TreeItem {
         this.useCustomizedAuth = 'useCustomizedAuth' in cfg ? cfg['useCustomizedAuth'] : false;
         if (conn) {
             this.getKdbVersion();
-            this.setTimeout();
         }
-        this.tooltip = `${this.host}:${this.port}:${this.user} - t/o:${this.socketTimeout}(ms)`;
+        this.tooltip = `${this.host}:${this.port}:${this.user}`;
     }
 
     setConn(conn: q.Connection | undefined): void {
         this.conn = conn;
         this.getKdbVersion();
-        this.setTimeout();
     }
 
     getKdbVersion(): void {
@@ -80,14 +74,6 @@ export class QConn extends TreeItem {
                 this.version = res;
             this.tooltip = this.tooltip + ` - v${this.version}`;
             QConnManager.current?.updateQueryWrapper();
-        });
-    }
-
-    setTimeout(): void {
-        const timeout = Math.round(this.socketTimeout / 1000);
-        this.conn?.k(`system"T ${timeout}"`, (err, _res) => {
-            if (err)
-                console.log('Fail to set timeout');
         });
     }
 

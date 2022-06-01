@@ -21,17 +21,12 @@
         <input class="form-input" type="text" placeholder="" id="user">
         <label class="form-label label-sm" for="password">Password</label>
         <input class="form-input" type="password" placeholder="******" id="password">
-        <label class="form-label label-sm" for="socketTimeout">Socket Timeout (milliseconds)</label>
-        <input class="form-input" type="text" placeholder="" id="socketTimeout" value="0">
         <label class="form-label label-sm" for="label">Label</label>
         <input class="form-input" type="text" placeholder="e.g. localhost-1800" id="label"
             onfocus="generateDefaultLabel()">
         <label class="form-label label-sm" for="tags">Tags</label>
         <input class="form-input" type="text" placeholder="e.g. dev,md,rdb" id="tags">
         <div class="float-right">
-            <label class="form-checkbox input-sm form-inline">
-                <input type="checkbox" id="socketNoDelay"><i class="form-icon"></i>Socket No Delay
-            </label>
             <label class="form-checkbox input-sm form-inline">
                 <input type="checkbox" id="useTLS"><i class="form-icon"></i>Enable TLS
             </label>
@@ -68,10 +63,8 @@
             const port = document.getElementById('port');
             const user = document.getElementById('user');
             const password = document.getElementById('password');
-            const socketTimeout = document.getElementById('socketTimeout');
             const label = document.getElementById('label');
             const tags = document.getElementById('tags');
-            const socketNoDelay = document.getElementById('socketNoDelay');
             const alert = document.getElementById('alert');
             const useCustomizedAuth = document.getElementById('useCustomizedAuth');
             const useTLS = document.getElementById('useTLS');
@@ -83,8 +76,6 @@
                 let errorMsg = '';
                 if (isNaN(parseInt(port.value.trim())))
                     errorMsg += '<em>Port must be an integer</em><br>';
-                if (isNaN(parseInt(socketTimeout.value.trim())))
-                    errorMsg += '<em>Socket timeout must be an integer</em><br>';
                 if (label.value.trim() === '')
                     errorMsg += '<em>Label cannot be null</em><br>'
                 if (errorMsg === '') {
@@ -113,8 +104,6 @@
                     port: parseInt(port.value.trim()),
                     user: user.value.trim(),
                     password: password.value.trim(),
-                    socketNoDelay: socketNoDelay.checked,
-                    socketTimeout: parseInt(socketTimeout.value.trim()),
                     label: label.value.trim(),
                     tags: tags.value.trim(),
                     uniqLabel: tags.value.trim() + ',' + label.value.trim(),
@@ -129,10 +118,8 @@
                     port.value = cfg.port;
                     user.value = cfg.user;
                     password.value = cfg.password;
-                    socketTimeout.value = cfg.socketTimeout;
                     label.value = cfg.label;
                     tags.value = cfg.tags;
-                    socketNoDelay.checked = cfg.socketNoDelay;
                     useCustomizedAuth.checked = cfg.useCustomizedAuth;
                     useTLS.checked = cfg.useTLS;
                 }

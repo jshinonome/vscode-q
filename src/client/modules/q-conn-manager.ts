@@ -34,7 +34,7 @@ export class QConnManager {
     queryWrapper = '';
     isLimited = true;
     pollingId: NodeJS.Timer | undefined = undefined;
-    public static consoleSize = workspace.getConfiguration().get('q-client.output.consoleSize') as string;
+    consoleSize: string;
     public static autoRefreshExplorer = workspace.getConfiguration().get('q-client.expl.autoRefresh') as boolean;
     public static queryMode = 'Console';
     public static queryWrapper = '';
@@ -50,17 +50,17 @@ export class QConnManager {
     private constructor() {
         this.loadCfg();
         this.updateQueryWrapper();
+        this.consoleSize = workspace.getConfiguration().get('q-client.output.consoleSize') as string;
     }
 
     // when switch a server or toggle query mode, update wrapper
     public updateQueryWrapper(): void {
         const limit = this.isLimited ? '1000 sublist ' : '';
-        const consoleSize = 'system"c"';
         const wrapper = QConnManager.consoleMode
-            ? `{\`t\`r!(0b;.Q.S[${consoleSize};0j;value x])}`
+            ? `{\`t\`r!(0b;.Q.S[${this.consoleSize};0j;value x])}`
             : `{res:value x;
                 $[(count res) & .Q.qt res;:\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res;keys res);
-                not 99h=type res;:\`t\`r!(0b;.Q.S[${consoleSize};0j;res]);
+                not 99h=type res;:\`t\`r!(0b;.Q.S[${this.consoleSize};0j;res]);
                 not (\`output in key res);;
                 not 99h=type res\`output;;
                 all \`bytes\`w\`h in key res\`output;:\`t\`r!(0b;res[\`output]);
@@ -134,12 +134,6 @@ export class QConnManager {
                                     QStatusBarManager.updateConnStatus(uniqLabel);
                                     if (query) {
                                         this.sync(query);
-                                    }
-                                    if (QConnManager.consoleSize.length > 0) {
-                                        conn.k('\\c ' + QConnManager.consoleSize, (err, _res) => {
-                                            if (err)
-                                                console.log('Fail to set console size');
-                                        });
                                     }
                                 }
                             }
@@ -348,8 +342,6 @@ export class QConnManager {
                             port: qcfg.port,
                             user: qcfg.user ?? '',
                             password: qcfg.password ?? '',
-                            socketNoDelay: qcfg.socketNoDelay ?? false,
-                            socketTimeout: qcfg.socketTimeout ?? 0,
                             label: qcfg.label as string,
                             tags: qcfg.tags ?? '',
                             uniqLabel: `${qcfg.tags},${qcfg.label}`,
@@ -415,9 +407,7 @@ export class QConnManager {
                 port: qcfg.port,
                 user: qcfg.user,
                 password: qcfg.password,
-                socketNoDelay: qcfg.socketNoDelay,
                 useTLS: qcfg.useTLS === true,
-                socketTimeout: qcfg.socketTimeout,
                 label: qcfg.label,
                 tags: qcfg.tags,
                 uniqLabel: `${qcfg.tags},${qcfg.label}`,
@@ -443,8 +433,6 @@ export type QCfg = {
     port: number;
     user: string;
     password: string;
-    socketNoDelay: boolean;
-    socketTimeout: number;
     label: string;
     tags: string;
     uniqLabel: string;

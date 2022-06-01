@@ -1,5 +1,16 @@
 # change log
 
+## 2.5.7
+
+### removed
+
+-   server configuration: socketTimeout and socketNoDelay
+
+### changed
+
+-   console size: no need to set \c on server side
+-   syntaxes: fix negative number at start of the line
+
 ## 2.5.5
 
 ### fixed
