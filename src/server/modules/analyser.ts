@@ -306,6 +306,8 @@ export default class Analyzer {
         const problems: Diagnostic[] = [];
 
         let namespace = '';
+        // store semantic tokens
+        const tokens: number[][] = [];
         TreeSitterUtil.forEach(tree.rootNode, (n: Parser.SyntaxNode) => {
             if (n.type === 'ERROR') {
                 problems.push(
@@ -402,15 +404,14 @@ export default class Analyzer {
                 const params = TreeSitterUtil.hasParams(n)
                     ? TreeSitterUtil.extractParams(n).filter(param => !this.reservedWord.includes(param))
                     : ['x', 'y', 'z'];
-                const semanticTokensBuilder = this.uriToSemanticTokes.get(uri) ?? new SemanticTokensBuilder();
                 TreeSitterUtil.forEachAndSkip(n, 'function_body', node => {
                     if (params.length > 0 && node.type === 'local_identifier') {
                         const param = node.text.trim();
                         if (params.includes(param)) {
-                            // 1 means paramter type here
+                            // 1 means parameter type here
                             const token = TreeSitterUtil.token(node);
                             token.push(1, 0);
-                            semanticTokensBuilder.push(token[0], token[1], token[2], token[3], token[4]);
+                            tokens.push(token);
                         }
                     } else if (node.type === 'global_identifier') {
                         const name = node.text.trim();
@@ -438,6 +439,11 @@ export default class Analyzer {
                 }
             }
         });
+
+        const semanticTokensBuilder = this.uriToSemanticTokes.get(uri) ?? new SemanticTokensBuilder();
+        tokens.sort(
+            (t1, t2) => (t1[0] == t2[0] ? t1[1] - t2[1] : t1[0] - t2[0]))
+            .forEach(token => semanticTokensBuilder.push(token[0], token[1], token[2], token[3], token[4]));
 
         function findMissingNodes(node: Parser.SyntaxNode) {
             if (node.isMissing()) {

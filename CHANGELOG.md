@@ -1,5 +1,11 @@
 # change log
 
+## 2.5.8
+
+### fixed
+
+-   q syntaxes: sort semantic tokens before pushing to builder
+
 ## 2.5.7
 
 ### removed
@@ -9,7 +15,7 @@
 ### changed
 
 -   console size: no need to set \c on server side
--   syntaxes: fix negative number at start of the line
+-   q syntaxes: fix negative number at start of the line
 
 ## 2.5.5
 
@@ -106,6 +112,11 @@
 -   server explorer: configure to exclude namespaces
 
 ## 2.3.7
+
+### fixed
+
+-   query view: fix an overwrite issue
+-   query grid: fix an overwrite issue
 
 ### fixed
 

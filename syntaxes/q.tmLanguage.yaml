@@ -173,5 +173,3 @@ repository:
           - include: "#keywords"
           - include: "#invalids"
           - include: "#function"
-          - name: entity.name.variable.parameter.q
-            match: \b(x|y|z)\b
