@@ -1,5 +1,11 @@
 # change log
 
+## 2.5.9
+
+### fixed
+
+-   q grid/view: empty key table returns length error
+
 ## 2.5.8
 
 ### fixed

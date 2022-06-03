@@ -59,8 +59,9 @@ export class QConnManager {
         const wrapper = QConnManager.consoleMode
             ? `{\`t\`r!(0b;.Q.S[${this.consoleSize};0j;value x])}`
             : `{res:value x;
-                $[(count res) & .Q.qt res;:\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res;keys res);
+                $[.Q.qt res;:\`t\`r\`m\`k!(1b;${limit}0!res;0!meta res;keys res);
                 not 99h=type res;:\`t\`r!(0b;.Q.S[${this.consoleSize};0j;res]);
+                11h <> type key res;;
                 not (\`output in key res);;
                 not 99h=type res\`output;;
                 all \`bytes\`w\`h in key res\`output;:\`t\`r!(0b;res[\`output]);
