@@ -26,14 +26,14 @@ export class QStatusBarManager {
 
         this.queryModeStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 99);
         context.subscriptions.push(this.queryModeStatusBar);
-        this.queryModeStatusBar.color = this.isLightTheme ? '#512DA8' : '#B39DDB';
+        this.queryModeStatusBar.color = this.isLightTheme ? '#512DA8' : '#BD93F9';
         this.queryModeStatusBar.command = 'q-client.switchMode';
-        this.queryModeStatusBar.text = '$(triangle-left)q ' + QConnManager.queryMode.toLowerCase();
+        this.queryModeStatusBar.text = '$(chevron-left)q ' + QConnManager.queryMode;
         this.queryModeStatusBar.show();
 
         this.connStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 98);
         context.subscriptions.push(this.connStatusBar);
-        this.connStatusBar.color = this.isLightTheme ? '#512DA8' : '#B39DDB';
+        this.connStatusBar.color = this.isLightTheme ? '#512DA8' : '#BD93F9';
         this.connStatusBar.command = 'q-client.connectEntry';
         this.connStatusBar.show();
 
@@ -52,12 +52,12 @@ export class QStatusBarManager {
 
 
     public static updateConnStatus(label: string | undefined): void {
-        const text = (label ?? 'no connection').replace(',', '-');
-        this.current!.connStatusBar.text = text + ' $(triangle-right)';
+        const text = (label ?? 'Disconnected').replace(',', '-');
+        this.current!.connStatusBar.text = text + ' $(chevron-right)';
     }
 
     public static updateQueryModeStatus(): void {
-        this.current!.queryModeStatusBar.text = '$(triangle-left)q ' + QConnManager.queryMode.toLowerCase();
+        this.current!.queryModeStatusBar.text = '$(chevron-left)q ' + QConnManager.queryMode;
     }
 
     public static toggleQueryStatus(show: boolean): void {

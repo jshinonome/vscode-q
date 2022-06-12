@@ -386,6 +386,10 @@ export class QConnManager {
         QStatusBarManager.toggleQueryStatus(this.isBusy);
     }
 
+    disconnect(): void {
+        this.activeConn?.conn?.close();
+    }
+
     addCfg(qcfg: QCfg): void {
         const uniqLabel = qcfg.uniqLabel;
         this.qCfg = this.qCfg.filter(qcfg => qcfg.uniqLabel !== uniqLabel);

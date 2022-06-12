@@ -1,5 +1,11 @@
 # change log
 
+## 2.6.0
+
+### added
+
+-   server explorer: disconnect buttons
+
 ## 2.5.9
 
 ### fixed

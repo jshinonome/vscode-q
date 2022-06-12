@@ -242,6 +242,12 @@ export function activate(context: ExtensionContext): void {
         });
 
     commands.registerCommand(
+        'q-client.disconnect',
+        () => {
+            QConnManager.current?.disconnect();
+        });
+
+    commands.registerCommand(
         'q-client.exportServers',
         () => {
             QConnManager.current?.exportCfg();
