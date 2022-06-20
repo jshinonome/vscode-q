@@ -346,7 +346,8 @@ export class QConnManager {
                             label: qcfg.label as string,
                             tags: qcfg.tags ?? '',
                             uniqLabel: `${qcfg.tags},${qcfg.label}`,
-                            useCustomizedAuth: `${qcfg.useCustomizedAuth ?? false}`
+                            useCustomizedAuth: qcfg.useCustomizedAuth === true,
+                            useTLS: qcfg.useTLS === true,
                         };
                     } else {
                         throw new Error('Please make sure to include port and label');

@@ -24,6 +24,7 @@ label,detail,documentation,kind
 .Q.fk,foreign key,.Q.fk[column sym],2
 .Q.fmt,format,.Q.fmt[length;decimal;number],2
 .Q.fps,streaming algorithm,.Q.fps[v1;file],2
+.Q.fqk,if system and built-in functions,.Q.fqk[string],2
 .Q.fs,streaming algorithm,.Q.fs[v1;file],2
 .Q.fsn,streaming algorithm,.Q.fsn[v1;file;chunk size],2
 .Q.ft,apply simple,.Q.ft[v1;keyed table],2
@@ -50,6 +51,7 @@ label,detail,documentation,kind
 .Q.PD,partition locations,.Q.PD,6
 .Q.pf,partition field,.Q.pf,6
 .Q.pn,partition counts,.Q.pn,6
+.Q.prf0,code profiler,.Q.prf0[pid],2
 .Q.pt,partitioned tables,.Q.pt,6
 .Q.pv,modified partition values,.Q.pv,2
 .Q.PV,partition values,.Q.PV,2

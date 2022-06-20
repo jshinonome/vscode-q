@@ -1,5 +1,11 @@
 # change log
 
+## 2.6.1
+
+### fixed
+
+-   server explorer: keep useTLS when import q server cfg
+
 ## 2.6.0
 
 ### added
