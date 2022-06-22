@@ -1,10 +1,16 @@
 # change log
 
+## 2.6.2
+
+### fixed
+
+-   server explorer: trap error to skip key `.` in a namespace
+
 ## 2.6.1
 
 ### fixed
 
--   server explorer: keep useTLS when import q server cfg
+-   server list: keep useTLS when import q server cfg
 
 ## 2.6.0
 
