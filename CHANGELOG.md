@@ -5,6 +5,7 @@
 ### fixed
 
 -   server explorer: trap error to skip key `.` in a namespace
+-   q view: keep current config if append columns
 
 ## 2.6.1
 

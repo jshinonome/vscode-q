@@ -23,7 +23,7 @@
     dayjs.extend(window.dayjs_plugin_utc);
     let vscode, saveFileTypeSelector, viewer, msg;
     let keyColor = '{keyColor}';
-    let currentCols = [];
+    let currentCols = ['dummy'];
     let kMeta = {};
     const dateType = ['timestamp', 'month', 'date', 'datetime', 'timespan', 'minute', 'second', 'time'];
     const dateMap = {
@@ -48,7 +48,6 @@
         for (const td of this.querySelectorAll("td")) {
           const meta = this._datagrid.getMeta(td);
           const col_name = meta.column_header[0];
-          console.log(kMeta[col_name]);
           td.textContent = this.formatters[kMeta[col_name]](meta.user);
         }
       }
@@ -149,35 +148,27 @@
             break;
         }
 
-        if (!schemaEquals(currentCols, msg.cols)) {
+        await viewer.load(table);
+        if (!appendCols(msg.cols, currentCols)) {
           console.log('reset viewer');
           currentCols = msg.cols;
-          try {
-            await viewer.load(table);
-          } catch (error) {
-            console.error(`load data to viewer - error: ${error.message}`);
-            console.error(error);
-            await viewer.reset();
+          await viewer.restore({
+            settings: true,
+            plugin: "K Datagrid",
+            columns: currentCols,
+          });
+          const datagrid = viewer.querySelector('regular-table');
+          for (const th of datagrid.querySelectorAll('th')) {
+            const metadata = datagrid.getMeta(th);
+            if (msg.keys.includes(metadata.value)) {
+              th.style.background = keyColor;
+            } else {
+              th.style.background = "";
+            }
           }
-        } else {
-          console.log('same schema detected');
-          await viewer.load(table);
+          datagrid.draw();
         }
-        await viewer.restore({
-          settings: true,
-          plugin: "K Datagrid",
-          columns: currentCols,
-        });
-        const datagrid = viewer.querySelector('regular-table');
-        for (const th of datagrid.querySelectorAll('th')) {
-          const metadata = datagrid.getMeta(th);
-          if (msg.keys.includes(metadata.value)) {
-            th.style.background = keyColor;
-          } else {
-            th.style.background = "";
-          }
-        }
-        datagrid.draw();
+        currentCols = msg.cols;
       } catch (error) {
         console.error(`loadData - error: ${error.message}`);
       }
@@ -205,11 +196,8 @@
       });
     }
 
-    function schemaEquals(cols1, cols2) {
-      return Array.isArray(cols1) &&
-        Array.isArray(cols2) &&
-        (cols1.length === cols2.length) &&
-        cols2.every(col => cols1.includes(col));
+    function appendCols(cols1, cols2) {
+      return cols2.every(col => cols1.includes(col));
     }
 
   </script>
