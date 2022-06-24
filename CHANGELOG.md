@@ -1,5 +1,11 @@
 # change log
 
+## 2.6.3
+
+### fixed
+
+-   q view: load null temporal types
+
 ## 2.6.2
 
 ### fixed

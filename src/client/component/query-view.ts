@@ -117,7 +117,7 @@ export class QueryView implements Disposable {
                 if ('pmdznuvt'.includes(type)) {
                     const column = result.meta.c[i];
                     result.data[column] = result.data[column].map(
-                        (date: Date) => date.toISOString());
+                        (date: Date) => date ? date.toISOString() : date);
                 } else if (type === ' ') {
                     const column = result.meta.c[i];
                     result.data[column] = result.data[column].map(JSON.stringify);
