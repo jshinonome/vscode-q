@@ -131,7 +131,8 @@ export default class Analyzer {
 
         if (tree && content) {
             TreeSitterUtil.forEach(tree.rootNode, n => {
-                if (TreeSitterUtil.isReference(n) && n.text.trim() === word.text)
+                // global identifier or constant symbol
+                if (TreeSitterUtil.isReference(n) && (n.text.trim() === word.text || n.text.trim().substring(1) === word.text))
                     synNodes.push(n);
             });
         }
@@ -330,7 +331,7 @@ export default class Analyzer {
                 if (defNode?.type === 'function_body')
                     symbolKind = SymbolKind.Function;
 
-                // won't do further analy local identifier in functions
+                // won't do further analysis of local identifier in functions
                 if (containerName !== '' && namespace === '' && named.type === 'local_identifier') {
                     this.pushSymInfo(name, uri, n, containerName, symbolKind);
                     return;

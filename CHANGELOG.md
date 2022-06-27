@@ -1,5 +1,11 @@
 # change log
 
+## 2.6.4
+
+### added
+
+-   lang server: include symbol as references
+
 ## 2.6.3
 
 ### fixed

@@ -62,6 +62,8 @@ export function isReference(n: SyntaxNode): boolean {
         case 'local_identifier':
         case 'global_identifier':
             return true;
+        case 'constant_symbol':
+            return (n.text.startsWith('`.')) ? true : false;
         default:
             return false;
     }

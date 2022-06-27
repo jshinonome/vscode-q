@@ -211,6 +211,9 @@ export default class LangServer {
         // this.logRequest('onDefinition', params, word);
         if (!word) {
             return [];
+        } else if (word.text.startsWith('`.')) {
+            // search constant symbol as global identifier
+            word.text = word.text.substring(1);
         }
         return this.analyzer.getDefinitionByUriWord(params.textDocument.uri, word);
     }
@@ -236,13 +239,16 @@ export default class LangServer {
         // this.logRequest('onReferences', params, word)
         if (!word) {
             return null;
+        } else if (word.text.startsWith('`.')) {
+            // search constant symbol as global identifier
+            word.type = 'global_identifier';
+            word.text = word.text.substring(1);
         }
         return this.analyzer.findReferences(word, params.textDocument.uri);
     }
 
     // todo: limit to global and null container
     private onDocumentSymbol(params: DocumentSymbolParams): SymbolInformation[] {
-        // this.connection.console.log(`onDocumentSymbol`)
         return this.analyzer.getSymbolsByUri(params.textDocument.uri);
     }
 
