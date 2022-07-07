@@ -340,7 +340,7 @@ export function activate(context: ExtensionContext): void {
                             QConnManager.current?.sync(query);
                             break;
                         case QueryTarget.Terminal:
-                            sendToCurrentTerm(query.replace(/(\r\n|\n|\r)/gm, ''));
+                            sendToCurrentTerm(query.replace(/\s\/.+(\r\n|\n|\r)/gm, '').replace(/(\r\n|\n|\r)/gm, ''));
                             break;
                     }
                 }
