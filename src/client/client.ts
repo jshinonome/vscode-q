@@ -459,7 +459,7 @@ export function activate(context: ExtensionContext): void {
         synchronize: {
             // Notify the server about q file changes
             fileEvents: workspace.createFileSystemWatcher('**/*.q')
-        }
+        },
     };
 
     // Create the language client and start the client.
@@ -482,7 +482,9 @@ export function activate(context: ExtensionContext): void {
         })
     );
 
-    client.start().then(() => {
+    client.start()
+
+    client.onReady().then(() => {
         const cfg = workspace.getConfiguration('q-server.sourceFiles');
         client.sendNotification('analyzeSourceCode', { globsPattern: cfg.get('globsPattern'), ignorePattern: cfg.get('ignorePattern') });
     });

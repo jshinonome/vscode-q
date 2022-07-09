@@ -1,5 +1,11 @@
 # change log
 
+## 2.6.5
+
+### fixed
+
+-   lang client: roll back lang client to 7.0.0, as 8.0.1 sends did change later causes all other features to fail.
+
 ## 2.6.4
 
 ### added

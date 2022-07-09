@@ -169,6 +169,7 @@ export default class LangServer {
                         return { label: sym.name, kind: sym.kind === SymbolKind.Function ? CompletionItemKind.Method : CompletionItemKind.Variable };
                     }));
             const flags = new Map<string, boolean>();
+            completionItem.forEach(item => flags.set(item.label, true));
             globalId.forEach(item => {
                 if (!flags.get(item.label)) {
                     completionItem.push(item);
@@ -344,21 +345,6 @@ export default class LangServer {
             };
             return { contents: content };
         }
-        // let symbols: SymbolInformation[] = [];
-        // symbols = this.analyzer.findSymbolsForFile(currentUri);
-        // symbols = symbols.filter(
-        //     sym =>
-        //         sym.containerName === word.containerName && sym.location.range.start.line !== params.position.line)
-        // if (word.containerName==='') {
-        //     symbols.concat(
-        //         this.analyzer.findSymbolsMatchingWord(true, word.text)
-        //         .filter(sym=>sym.location.range.start.line!==params.position.line)
-        //         );
-        // }
-
-        // if (symbols.length === 1) {
-        //     return { contents: symbols[0] }
-        // }
 
         return null;
     }

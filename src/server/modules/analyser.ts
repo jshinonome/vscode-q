@@ -634,7 +634,9 @@ export default class Analyzer {
     }
 
     public getLocalIds(uri: DocumentUri, containerName: string): SymbolInformation[] {
+        // local ids as global variables
         const ids = this.getAllSymbols().filter(s => !s.containerName && !s.name.startsWith('.'));
+        // local variables
         if (containerName !== '') {
             this.uriToDefinition.get(uri)?.forEach(symInfos => symInfos.forEach(s => {
                 if (s.containerName === containerName)
