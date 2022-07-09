@@ -162,7 +162,7 @@ export default class LangServer {
 
         if (word?.text.startsWith('.')) {
             completionItem = this.buildInFsRef.filter(item => item.label.startsWith('.'));
-            globalId = this.analyzer.getServerIds().concat(
+            globalId = this.analyzer.getServerIds().filter(item => item.label.startsWith('.')).concat(
                 this.analyzer.getAllSymbols()
                     .filter(sym => sym.name.startsWith('.'))
                     .map(sym => {
@@ -189,6 +189,7 @@ export default class LangServer {
                         return { label: sym.name, kind: sym.kind === SymbolKind.Function ? CompletionItemKind.Method : CompletionItemKind.Variable };
                     }));
             const flags = new Map<string, boolean>();
+            completionItem.forEach(item => flags.set(item.label, true));
             localId.forEach(item => {
                 if (!flags.get(item.label)) {
                     completionItem.push(item);
