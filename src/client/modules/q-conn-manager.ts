@@ -74,7 +74,6 @@ export class QConnManager {
             this.queryWrapper = `{{-105!(x;enlist y;{\`t\`r!(0b;"ERROR\n",x,"\n",.Q.sbt@(-3)_y)})}[${wrapper};x]}`;
     }
 
-
     public toggleLimitQuery(): void {
         this.isLimited = !this.isLimited;
         QStatusBarManager.updateUnlimitedQueryStatus(this.isLimited);
@@ -102,7 +101,7 @@ export class QConnManager {
     }
 
     // query to run after connected to q server
-    connect(uniqLabel: string, query = ''): void {
+    connect(uniqLabel: string, query = '', queryResultHandler = this.update): void {
         try {
             const qConn = this.getConn(uniqLabel);
             if (qConn) {
@@ -114,7 +113,7 @@ export class QConnManager {
                     commands.executeCommand('q-explorer.refreshEntry');
                     this.updateQueryWrapper();
                     if (query) {
-                        this.sync(query);
+                        this.sync(query, queryResultHandler);
                     }
                 } else {
                     qConn.auth().then(qcfg => {
@@ -134,7 +133,7 @@ export class QConnManager {
                                     commands.executeCommand('q-explorer.refreshEntry');
                                     QStatusBarManager.updateConnStatus(uniqLabel);
                                     if (query) {
-                                        this.sync(query);
+                                        this.sync(query, queryResultHandler);
                                     }
                                 }
                             }
@@ -150,7 +149,7 @@ export class QConnManager {
         }
     }
 
-    sync(query: string): void {
+    sync(query: string, queryResultHandler = this.update): void {
         if (this.isBusy) {
             window.showWarningMessage('Still executing last query');
         } else if (this.activeConn) {
@@ -168,41 +167,41 @@ export class QConnManager {
             const timestamp = new Date();
             this.activeConn?.conn?.k(this.queryWrapper, query,
                 (err, res) => {
+                    // reset conn status
                     this.isBusy = false;
                     this.busyConn = undefined;
-                    const console = QueryConsole.createOrGet();
+                    QStatusBarManager.toggleQueryStatus(this.isBusy);
                     const duration = Date.now() - time;
                     if (err) {
-                        console.appendError(['ERROR', err.message], duration, uniqLabel, query);
+                        queryResultHandler({ type: 'error', data: ['ERROR', err.message], duration, uniqLabel, query });
                         HistoryTreeItem.appendHistory(
                             { uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: err.message });
                     }
                     if (res) {
                         if (typeof res.r === 'string' && res.r.startsWith('ERROR')) {
                             const msg: string[] = res.r.split('\n');
-                            console.appendError(msg, duration, uniqLabel, query);
+                            queryResultHandler({ type: 'error', data: msg, duration, uniqLabel, query });
                             HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: res.r });
-                        } else if (QConnManager.consoleMode) {
-                            console.append(res.r, duration, uniqLabel, query);
-                            HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: '' });
                         } else if ('w' in res.r && 'h' in res.r && 'bytes' in res.r) {
-                            ChartView.Create(res.r.bytes);
+                            queryResultHandler({ type: 'bytes', data: res.r.bytes, duration, uniqLabel });
+                            HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: '' });
+                        } else if (res.t) {
+                            queryResultHandler({
+                                type: 'json',
+                                data: res.r,
+                                meta: res.m,
+                                keys: res.k,
+                                duration,
+                                uniqLabel,
+                                query
+                            });
+                            HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: '' });
                         } else {
-                            if (res.t) {
-                                this.update({
-                                    type: 'json',
-                                    data: res.r,
-                                    meta: res.m,
-                                    keys: res.k,
-                                    query: query,
-                                });
-                            } else {
-                                console.append(res.r, duration, uniqLabel, query);
-                            }
+                            queryResultHandler({ type: 'text', data: res.r, duration, uniqLabel, query });
                             HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: '' });
                         }
                     }
-                    QStatusBarManager.toggleQueryStatus(this.isBusy);
+
                     if (QConnManager.autoRefreshExplorer) {
                         commands.executeCommand('q-explorer.refreshEntry');
                     }
@@ -210,58 +209,19 @@ export class QConnManager {
             );
         } else {
             commands.executeCommand('q-client.connectEntry').then(
-                uniqLabel => this.connect(uniqLabel as string, query)
+                uniqLabel => this.connect(uniqLabel as string, query, queryResultHandler)
             );
         }
     }
 
     static polling(query: string): void {
         const current = QConnManager.current;
-        if (current && !current.isBusy && current.activeConn) {
-            if (query.slice(-1) === ';') {
-                query = query.slice(0, -1);
-            } else if (query[0] === '`') {
-                // append space if query starts with back-tick, otherwise query will be treated as a symbol.
-                query = query + ' ';
+        current?.sync(query, result => {
+            if (result.type === 'error') {
+                current.stopPolling();
             }
-            current.isBusy = true;
-            current.busyConn = current.activeConn;
-            QStatusBarManager.toggleQueryStatus(current.isBusy);
-            const uniqLabel = current.activeConn?.uniqLabel;
-            const time = Date.now();
-            current.activeConn?.conn?.k(current.queryWrapper, query,
-                (err, res) => {
-                    current.isBusy = false;
-                    current.busyConn = undefined;
-                    const console = QueryConsole.createOrGet();
-                    const duration = Date.now() - time;
-                    if (err) {
-                        console.appendError(['ERROR', err.message], duration, uniqLabel, query);
-                        current.stopPolling();
-                    }
-                    if (res) {
-                        if (typeof res.r === 'string' && res.r.startsWith('ERROR')) {
-                            const msg: string[] = res.r.split('\n');
-                            console.appendError(msg, duration, uniqLabel, query);
-                            current.stopPolling();
-                        } else {
-                            if (res.t) {
-                                current.update({
-                                    type: 'json',
-                                    data: res.r,
-                                    meta: res.m,
-                                    keys: res.k,
-                                });
-                            }
-                            else {
-                                console.append(res.r, duration, uniqLabel, query);
-                            }
-                        }
-                    }
-                    QStatusBarManager.toggleQueryStatus(current.isBusy);
-                }
-            );
-        }
+            current.update(result);
+        });
     }
 
     startPolling(interval: number, query: string): void {
@@ -280,12 +240,28 @@ export class QConnManager {
     }
 
     update(result: QueryResult): void {
-        if (QConnManager.queryMode === 'Grid') {
-            QueryGrid.createOrShow();
-            QueryGrid.update(result);
-        } else {
-            QueryView.createOrShow();
-            QueryView.update(result);
+        const console = QueryConsole.createOrGet();
+        switch (result.type) {
+            case 'error':
+                console.appendError(result.data, result.duration, result.uniqLabel, result.query);
+                break;
+            case 'json':
+                if (QConnManager.queryMode === 'Grid') {
+                    QueryGrid.createOrShow();
+                    QueryGrid.update(result);
+                } else {
+                    QueryView.createOrShow();
+                    QueryView.update(result);
+                }
+                break;
+            case 'bytes':
+                ChartView.Create(result.data);
+                break;
+            case 'text':
+                console.append(result.data, result.duration, result.uniqLabel, result.query);
+                break;
+            default:
+                window.showWarningMessage('Unsupported type message: ' + result.type);
         }
     }
 

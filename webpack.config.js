@@ -4,14 +4,38 @@
 
 const path = require('path');
 
-const clientConf = {
-    target: 'node',
-
+const conf = {
     node: {
         __dirname: false,
         __filename: false,
     },
 
+    devtool: 'source-map',
+
+    module: {
+        rules: [
+            {
+                test: /\.ts$/,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'ts-loader',
+                        options: {
+                            compilerOptions: {
+                                sourceMap: true,
+                            },
+                        },
+                    },
+                ],
+            },
+        ],
+    },
+}
+
+
+const clientConf = {
+    ...conf,
+    target: 'node',
     entry: {
         client: './src/client/client.ts',
     },
@@ -20,7 +44,6 @@ const clientConf = {
         filename: 'client.js',
         libraryTarget: 'commonjs2',
     },
-    devtool: 'source-map',
     externals: {
         vscode: 'commonjs vscode',
         'node:path': 'path',
@@ -30,69 +53,68 @@ const clientConf = {
     resolve: {
         extensions: ['.ts', '.js'],
     },
-    module: {
-        rules: [
-            {
-                test: /\.ts$/,
-                exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'ts-loader',
-                        options: {
-                            compilerOptions: {
-                                sourceMap: true,
-                            },
-                        },
-                    },
-                ],
-            },
-        ],
-    },
 };
 
 const serverConf = {
+    ...conf,
     target: 'node',
-
-    node: {
-        __dirname: false,
-        __filename: false,
-    },
-
     entry: {
         server: './src/server/server.ts',
     },
-
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'server.js',
         libraryTarget: 'commonjs2',
     },
-
-    devtool: 'source-map',
     externals: {
         vscode: 'commonjs vscode',
     },
     resolve: {
         extensions: ['.ts', '.js'],
     },
+};
+
+const qConsoleRendererConf = {
+    ...conf,
+    entry: './src/renderer/index.tsx',
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'renderer.js',
+        libraryTarget: 'module',
+    },
+    resolve: {
+        extensions: ['.ts', '.tsx', '.css', '.js', '.jsx']
+    },
+    experiments: {
+        outputModule: true,
+    },
     module: {
         rules: [
             {
-                test: /\.ts$/,
+                test: /\.tsx?$/,
                 exclude: /node_modules/,
+                loader: 'ts-loader',
+                options: {
+                    configFile: 'src/renderer/tsconfig.json',
+                    transpileOnly: true,
+                },
+            },
+            {
+                test: /\.css$/,
                 use: [
+                    'style-loader',
                     {
-                        loader: 'ts-loader',
+                        loader: 'css-loader',
                         options: {
-                            compilerOptions: {
-                                sourceMap: true,
-                            },
+                            esModule: false,
+                            importLoaders: 1,
+                            modules: true,
                         },
                     },
                 ],
             },
         ],
-    },
-};
+    }
+}
 
-module.exports = [clientConf, serverConf];
+module.exports = [clientConf, serverConf, qConsoleRendererConf];

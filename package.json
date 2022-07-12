@@ -53,7 +53,40 @@
 		}
 	},
 	"contributes": {
+		"notebooks": [
+			{
+				"id": "q-notebook",
+				"type": "q-notebook",
+				"displayName": "q Book",
+				"selector": [
+					{
+						"filenamePattern": "*.qnb"
+					}
+				]
+			}
+		],
+		"notebookRenderer": [
+			{
+				"id": "q-notebook",
+				"displayName": "q Notebook Renderer",
+				"entrypoint": "./dist/renderer.js",
+				"requiresMessaging": "optional",
+				"mimeTypes": [
+					"x-application/q-notebook"
+				]
+			}
+		],
 		"languages": [
+			{
+				"id": "qnb",
+				"extensions": [
+					".qnb"
+				],
+				"icon": {
+					"light": "./assets/icon/qnb.png",
+					"dark": "./assets/icon/qnb.png"
+				}
+			},
 			{
 				"id": "q",
 				"aliases": [
@@ -624,15 +657,21 @@
 		"@types/node": "^18.0.3",
 		"@types/request": "^2.48.8",
 		"@types/vscode": "^1.69.0",
+		"@types/vscode-notebook-renderer": "^1.60.0",
+		"@types/webpack-env": "^1.17.0",
 		"@typescript-eslint/parser": "^5.30.5",
 		"ag-grid-community": "^28.0.2",
 		"babel-jest": "^28.1.2",
 		"chart.js": "^3.8.0",
+		"css-loader": "^6.7.1",
 		"dayjs": "^1.11.3",
+		"eslint-plugin-jest": "^26.5.3",
 		"jest": "^28.1.2",
 		"node-q": "^2.6.0",
+		"style-loader": "^3.3.1",
 		"ts-loader": "^9.3.1",
 		"typescript": "^4.7.4",
+		"vscode-notebook-error-overlay": "^1.0.1",
 		"vscode-test": "^1.6.1",
 		"webpack": "^5.73.0",
 		"webpack-cli": "^4.10.0"
@@ -651,7 +690,7 @@
 		"normalize.css": "^8.0.1",
 		"picomatch": "^2.3.1",
 		"spectre.css": "^0.5.9",
-		"vscode-languageclient": "^7.0.0",
+		"vscode-languageclient": "^8.0.2-next.5",
 		"vscode-languageserver": "^8.0.1",
 		"vscode-languageserver-textdocument": "^1.0.5",
 		"vscode-uri": "^3.0.3",

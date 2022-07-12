@@ -15,5 +15,7 @@ export type QueryResult = {
     keys?: string[],
     query?: string,
     labelCol?: string,
-    numericCols?: string[]
+    numericCols?: string[],
+    duration: number,
+    uniqLabel: string,
 }

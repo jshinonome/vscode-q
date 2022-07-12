@@ -18,6 +18,8 @@ import QDictTreeItem from './items/q-dict';
 import QFunctionTreeItem from './items/q-function';
 import { QConn } from './modules/q-conn';
 import { QConnManager } from './modules/q-conn-manager';
+import { QNotebookKernel } from './modules/q-notebook-kernel';
+import { QNotebookSerializer } from './modules/q-notebook-serializer';
 import { QServerTree } from './modules/q-server-tree';
 import { QStatusBarManager } from './modules/q-status-bar-manager';
 import { runQFile, sendToCurrentTerm } from './modules/q-term';
@@ -482,12 +484,20 @@ export function activate(context: ExtensionContext): void {
         })
     );
 
-    client.start()
-
-    client.onReady().then(() => {
+    client.start().then(() => {
         const cfg = workspace.getConfiguration('q-server.sourceFiles');
         client.sendNotification('analyzeSourceCode', { globsPattern: cfg.get('globsPattern'), ignorePattern: cfg.get('ignorePattern') });
     });
+
+    context.subscriptions.push(new QNotebookKernel());
+
+    context.subscriptions.push(workspace.registerNotebookSerializer('q-notebook', new QNotebookSerializer(), {
+        transientOutputs: false,
+        transientCellMetadata: {
+            inputCollapsed: true,
+            outputCollapsed: true,
+        }
+    }));
 }
 
 export function deactivate(): void {
