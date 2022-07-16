@@ -1,1 +1,0 @@
-../client/models/query-result.ts

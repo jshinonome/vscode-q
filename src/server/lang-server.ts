@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as fs from 'fs';
+import fs from 'fs';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import {
     CompletionItem, CompletionItemKind, Connection, Diagnostic, DiagnosticSeverity,

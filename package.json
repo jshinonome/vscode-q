@@ -1,730 +1,726 @@
 {
-	"name": "vscode-q",
-	"displayName": "q",
-	"author": {
-		"name": "Jo Shinonome",
-		"email": "jshinonome@gmail.com"
-	},
-	"description": "q language support for Visual Studio Code",
-	"version": "2.6.5",
-	"homepage": "https://github.com/jshinonome/vscode-q",
-	"publisher": "jshinonome",
-	"license": "MIT",
-	"engines": {
-		"vscode": "^1.69.0"
-	},
-	"categories": [
-		"Programming Languages",
-		"Snippets",
-		"Formatters"
-	],
-	"maintainers": [
-		"Jo Shinonome <jo.shinonome@gmail.com>"
-	],
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/jshinonome/vscode-q.git"
-	},
-	"keywords": [
-		"kdb+",
-		"kdb",
-		"q"
-	],
-	"icon": "icon.png",
-	"main": "./dist/client.js",
-	"activationEvents": [
-		"onStartupFinished"
-	],
-	"scripts": {
-		"clean": "rm -rf dist",
-		"vscode:package": "vsce package",
-		"vscode:publish": "git push && git push --tags && vsce publish",
-		"compile": "tsc -p ./",
-		"watch": "tsc --watch -p ./",
-		"vscode:prepublish": "webpack --mode production",
-		"webpack": "webpack --mode development",
-		"webpack-dev": "webpack --mode development --watch",
-		"test": "jest",
-		"test-compile": "tsc -p ./"
-	},
-	"jest": {
-		"transform": {
-			"^.+\\.jsx?$": "babel-jest"
-		}
-	},
-	"contributes": {
-		"notebooks": [
-			{
-				"id": "q-notebook",
-				"type": "q-notebook",
-				"displayName": "q Book",
-				"selector": [
-					{
-						"filenamePattern": "*.qnb"
-					}
-				]
-			}
-		],
-		"notebookRenderer": [
-			{
-				"id": "q-notebook",
-				"displayName": "q Notebook Renderer",
-				"entrypoint": "./dist/renderer.js",
-				"requiresMessaging": "optional",
-				"mimeTypes": [
-					"x-application/q-notebook"
-				]
-			}
-		],
-		"languages": [
-			{
-				"id": "qnb",
-				"extensions": [
-					".qnb"
-				],
-				"icon": {
-					"light": "./assets/icon/qnb.png",
-					"dark": "./assets/icon/qnb.png"
-				}
-			},
-			{
-				"id": "q",
-				"aliases": [
-					"q",
-					"kdb+",
-					"kdb"
-				],
-				"extensions": [
-					".q"
-				],
-				"configuration": "./language-configuration.json",
-				"icon": {
-					"light": "./assets/icon/q.png",
-					"dark": "./assets/icon/q.png"
-				}
-			},
-			{
-				"id": "q-output",
-				"extensions": [
-					".q-output"
-				],
-				"configuration": "./language-configuration.json",
-				"mimetypes": [
-					"text/x-code-output"
-				]
-			}
-		],
-		"grammars": [
-			{
-				"language": "q",
-				"scopeName": "source.q",
-				"path": "./syntaxes/q.tmLanguage.json"
-			},
-			{
-				"language": "q-output",
-				"scopeName": "source.q-output",
-				"path": "./syntaxes/q-output.tmLanguage.json"
-			}
-		],
-		"snippets": [
-			{
-				"language": "q",
-				"path": "./snippets/q.json"
-			}
-		],
-		"viewsContainers": {
-			"activitybar": [
-				{
-					"id": "q-ext-explorer",
-					"title": "q",
-					"icon": "assets/svg/server.svg"
-				}
-			]
-		},
-		"views": {
-			"q-ext-explorer": [
-				{
-					"id": "q-servers",
-					"name": "Server List",
-					"contextualTitle": "Servers"
-				},
-				{
-					"id": "q-explorer",
-					"name": "Server Explorer",
-					"contextualTitle": "Server Explorer"
-				},
-				{
-					"id": "q-history",
-					"name": "Query History",
-					"contextualTitle": "Query History"
-				}
-			]
-		},
-		"commands": [
-			{
-				"command": "q-client.refreshEntry",
-				"title": "Refresh q Server List",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/refresh.svg",
-					"dark": "assets/svg/dark/refresh.svg"
-				}
-			},
-			{
-				"command": "q-client.addEntry",
-				"title": "Add q Server",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/add.svg",
-					"dark": "assets/svg/dark/add.svg"
-				}
-			},
-			{
-				"command": "q-client.editEntry",
-				"title": "Edit q Server",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/edit.svg",
-					"dark": "assets/svg/dark/edit.svg"
-				}
-			},
-			{
-				"command": "q-client.deleteEntry",
-				"title": "Delete q Server",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/trash.svg",
-					"dark": "assets/svg/dark/trash.svg"
-				}
-			},
-			{
-				"command": "q-client.connectEntry",
-				"title": "Connect to q Server",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/connect.svg",
-					"dark": "assets/svg/dark/connect.svg"
-				}
-			},
-			{
-				"command": "q-explorer.revealEntry",
-				"title": "Reveal q Server",
-				"category": "kdb+/q ext"
-			},
-			{
-				"command": "q-history.rerun",
-				"title": "Rerun History",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/run.svg",
-					"dark": "assets/svg/dark/run.svg"
-				}
-			},
-			{
-				"command": "q-client.toggleLimitQuery",
-				"title": "Toggle Unlimited Query",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/flame.svg",
-					"dark": "assets/svg/dark/flame.svg"
-				}
-			},
-			{
-				"command": "q-client.queryCurrentLine",
-				"title": "Query Current Line",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/query-current-line.svg",
-					"dark": "assets/svg/dark/query-current-line.svg"
-				}
-			},
-			{
-				"command": "q-client.querySelection",
-				"title": "Query Current Selection",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/query-selection.svg",
-					"dark": "assets/svg/dark/query-selection.svg"
-				}
-			},
-			{
-				"command": "q-client.queryBlock",
-				"title": "Query Current Block",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/query-block.svg",
-					"dark": "assets/svg/dark/query-block.svg"
-				}
-			},
-			{
-				"command": "q-term.sendCurrentLine",
-				"title": "Send Current Line to Terminal",
-				"category": "kdb+/q ext"
-			},
-			{
-				"command": "q-term.sendSelection",
-				"title": "Send Current Selection to Terminal",
-				"category": "kdb+/q ext"
-			},
-			{
-				"command": "q-client.sendBlock",
-				"title": "Send Current Block to Terminal",
-				"category": "kdb+/q ext"
-			},
-			{
-				"command": "q-client.abortQuery",
-				"title": "Abort Current Query",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/debug-stop.svg",
-					"dark": "assets/svg/dark/debug-stop.svg"
-				}
-			},
-			{
-				"command": "q-client.disconnect",
-				"title": "Disconnect to Active Server",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/debug-disconnect.svg",
-					"dark": "assets/svg/dark/debug-disconnect.svg"
-				}
-			},
-			{
-				"command": "q-client.switchMode",
-				"title": "Switch Query Mode",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/gear.svg",
-					"dark": "assets/svg/dark/gear.svg"
-				}
-			},
-			{
-				"command": "q-client.importServers",
-				"title": "Import Server List",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/import.svg",
-					"dark": "assets/svg/dark/import.svg"
-				}
-			},
-			{
-				"command": "q-client.exportServers",
-				"title": "Export Server List",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/export.svg",
-					"dark": "assets/svg/dark/export.svg"
-				}
-			},
-			{
-				"command": "q-client.reactions",
-				"title": "Raise an Issue",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/reactions.svg",
-					"dark": "assets/svg/dark/reactions.svg"
-				}
-			},
-			{
-				"command": "q-client.tagEntry",
-				"title": "Tag a Server",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/tag.svg",
-					"dark": "assets/svg/dark/tag.svg"
-				}
-			},
-			{
-				"command": "q-explorer.refreshEntry",
-				"title": "Refresh q Explorer",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/refresh.svg",
-					"dark": "assets/svg/dark/refresh.svg"
-				}
-			},
-			{
-				"command": "q-explorer.toggleAutoRefresh",
-				"title": "Toggle Auto Refresh",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/sync.svg",
-					"dark": "assets/svg/dark/sync.svg"
-				}
-			},
-			{
-				"command": "q-explorer.preview",
-				"title": "Preview",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/preview.svg",
-					"dark": "assets/svg/dark/preview.svg"
-				}
-			},
-			{
-				"command": "q-client.terminal.run",
-				"title": "Run q File in Terminal",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/debug-start.svg",
-					"dark": "assets/svg/dark/debug-start.svg"
-				}
-			},
-			{
-				"command": "q-client.insertActiveConnLabel",
-				"title": "Insert Active Connection Label",
-				"category": "kdb+/q ext"
-			},
-			{
-				"command": "q-notebook.export",
-				"title": "Export",
-				"category": "kdb+/q ext",
-				"icon": {
-					"light": "assets/svg/light/export.svg",
-					"dark": "assets/svg/dark/export.svg"
-				},
-				"enablement": "notebookType == q-notebook"
-			}
-		],
-		"menus": {
-			"view/title": [
-				{
-					"command": "q-client.addEntry",
-					"when": "view == q-servers",
-					"group": "navigation@0"
-				},
-				{
-					"command": "q-client.importServers",
-					"when": "view == q-servers",
-					"group": "navigation@1"
-				},
-				{
-					"command": "q-client.exportServers",
-					"when": "view == q-servers",
-					"group": "navigation@2"
-				},
-				{
-					"command": "q-client.refreshEntry",
-					"when": "view == q-servers",
-					"group": "navigation@3"
-				},
-				{
-					"command": "q-client.toggleLimitQuery",
-					"when": "view == q-servers",
-					"group": "navigation@4"
-				},
-				{
-					"command": "q-client.switchMode",
-					"when": "view == q-servers",
-					"group": "navigation@5"
-				},
-				{
-					"command": "q-client.reactions",
-					"when": "view == q-servers",
-					"group": "navigation@6"
-				},
-				{
-					"command": "q-client.disconnect",
-					"when": "view == q-explorer",
-					"group": "navigation@0"
-				},
-				{
-					"command": "q-client.abortQuery",
-					"when": "view == q-explorer",
-					"group": "navigation@1"
-				},
-				{
-					"command": "q-explorer.refreshEntry",
-					"when": "view == q-explorer",
-					"group": "navigation@2"
-				},
-				{
-					"command": "q-explorer.toggleAutoRefresh",
-					"when": "view == q-explorer",
-					"group": "navigation@3"
-				},
-				{
-					"command": "q-client.queryBlock",
-					"when": "view == q-explorer",
-					"group": "navigation@4"
-				},
-				{
-					"command": "q-client.querySelection",
-					"when": "view == q-explorer",
-					"group": "navigation@5"
-				},
-				{
-					"command": "q-client.queryCurrentLine",
-					"when": "view == q-explorer",
-					"group": "navigation@6"
-				}
-			],
-			"view/item/context": [
-				{
-					"command": "q-client.editEntry",
-					"when": "view == q-servers && viewItem == qconn",
-					"group": "inline"
-				},
-				{
-					"command": "q-client.deleteEntry",
-					"when": "view == q-servers && viewItem == qconn",
-					"group": "inline"
-				},
-				{
-					"command": "q-client.tagEntry",
-					"when": "view == q-servers && viewItem == qconn",
-					"group": "inline"
-				},
-				{
-					"command": "q-history.rerun",
-					"when": "view == q-history && viewItem == history",
-					"group": "inline"
-				},
-				{
-					"command": "q-explorer.preview",
-					"when": "view == q-explorer && viewItem == qdict",
-					"group": "inline"
-				},
-				{
-					"command": "q-explorer.preview",
-					"when": "view == q-explorer && viewItem == qvar",
-					"group": "inline"
-				},
-				{
-					"command": "q-explorer.preview",
-					"when": "view == q-explorer && viewItem == qtable",
-					"group": "inline"
-				},
-				{
-					"command": "q-explorer.preview",
-					"when": "view == q-explorer && viewItem == qfunction",
-					"group": "inline"
-				}
-			],
-			"editor/title": [
-				{
-					"command": "q-client.terminal.run",
-					"when": "resourceLangId ==  q",
-					"group": "navigation"
-				}
-			],
-			"notebook/toolbar": [
-				{
-					"when": "notebookType == q-notebook",
-					"command": "q-notebook.export",
-					"group": "navigation"
-				},
-				{
-					"when": "notebookType == q-notebook",
-					"command": "q-client.connectEntry",
-					"group": "navigation"
-				}
-			],
-			"editor/context": [
-				{
-					"command": "q-client.terminal.run",
-					"when": "resourceLangId == q",
-					"group": "q"
-				}
-			]
-		},
-		"keybindings": [
-			{
-				"command": "q-client.queryCurrentLine",
-				"key": "ctrl+q",
-				"when": "editorLangId == q"
-			},
-			{
-				"command": "q-client.querySelection",
-				"key": "ctrl+r",
-				"when": "editorLangId == q"
-			},
-			{
-				"command": "q-client.queryBlock",
-				"key": "ctrl+e",
-				"when": "editorLangId == q"
-			},
-			{
-				"command": "q-term.sendCurrentLine",
-				"key": "ctrl+shift+q",
-				"when": "editorLangId == q"
-			},
-			{
-				"command": "q-term.sendSelection",
-				"key": "ctrl+shift+r",
-				"when": "editorLangId == q"
-			},
-			{
-				"command": "q-term.sendBlock",
-				"key": "ctrl+shift+e",
-				"when": "editorLangId == q"
-			}
-		],
-		"configuration": {
-			"type": "object",
-			"title": "kdb+/q Ext Configuration",
-			"properties": {
-				"q-server.sourceFiles.globsPattern": {
-					"scope": "resource",
-					"type": "array",
-					"items": {
-						"type": "string"
-					},
-					"default": [
-						"**/src/**/*.q"
-					],
-					"description": "Pattern to be included"
-				},
-				"q-server.sourceFiles.ignorePattern": {
-					"scope": "resource",
-					"type": "array",
-					"items": {
-						"type": "string"
-					},
-					"default": [
-						"**/build",
-						"**/node_modules"
-					],
-					"description": "Pattern to be excluded"
-				},
-				"qLangServer.trace.server": {
-					"scope": "window",
-					"type": "string",
-					"enum": [
-						"off",
-						"messages",
-						"verbose"
-					],
-					"default": "off",
-					"description": "Traces the communication between vscode and q language server"
-				},
-				"q-client.queryMode": {
-					"scope": "window",
-					"type": "string",
-					"enum": [
-						"Console",
-						"Grid",
-						"Visualization"
-					],
-					"default": "Console",
-					"description": "Query Mode"
-				},
-				"q-client.queryGrid.decimals": {
-					"scope": "resource",
-					"type": "number",
-					"default": 3,
-					"description": "Decimals of q Grid"
-				},
-				"q-client.term.qBinary": {
-					"scope": "resource",
-					"type": "string",
-					"default": "q",
-					"description": "q Binary Path"
-				},
-				"q-client.term.envPath": {
-					"scope": "resource",
-					"type": "string",
-					"default": "",
-					"description": "Environment File Path(Shell Script)"
-				},
-				"q-client.expl.prevQueryLimit": {
-					"scope": "resource",
-					"type": "number",
-					"default": 5,
-					"description": "Preview Query Limit"
-				},
-				"q-client.output.autoClear": {
-					"scope": "resource",
-					"type": "boolean",
-					"default": false,
-					"description": "Auto Clear Output"
-				},
-				"q-client.expl.autoRefresh": {
-					"scope": "resource",
-					"type": "boolean",
-					"default": false,
-					"description": "Auto Refresh Server Explorer"
-				},
-				"q-client.expl.excludedNamespaces": {
-					"scope": "resource",
-					"type": "array",
-					"items": {
-						"type": "string"
-					},
-					"default": [
-						"q",
-						"Q",
-						"h",
-						"j",
-						"o",
-						"s"
-					],
-					"description": "Excluded Namespaces"
-				},
-				"q-client.output.includeQuery": {
-					"scope": "resource",
-					"type": "boolean",
-					"default": false,
-					"description": "Include Query"
-				},
-				"q-client.output.consoleSize": {
-					"scope": "resource",
-					"type": "string",
-					"default": "36 180",
-					"description": "Console Size"
-				}
-			}
-		}
-	},
-	"devDependencies": {
-		"@babel/core": "^7.18.6",
-		"@babel/preset-env": "^7.18.6",
-		"@babel/preset-typescript": "^7.18.6",
-		"@finos/perspective": "1.5.1",
-		"@finos/perspective-viewer": "1.5.1",
-		"@finos/perspective-viewer-d3fc": "1.5.1",
-		"@finos/perspective-viewer-datagrid": "1.5.1",
-		"@types/long": "^4.0.2",
-		"@types/node": "^18.0.3",
-		"@types/request": "^2.48.8",
-		"@types/vscode": "^1.69.0",
-		"@types/vscode-notebook-renderer": "^1.60.0",
-		"@types/webpack-env": "^1.17.0",
-		"@typescript-eslint/parser": "^5.30.5",
-		"ag-grid-community": "^28.0.2",
-		"babel-jest": "^28.1.2",
-		"chart.js": "^3.8.0",
-		"css-loader": "^6.7.1",
-		"dayjs": "^1.11.3",
-		"eslint-plugin-jest": "^26.5.3",
-		"jest": "^28.1.2",
-		"node-q": "^2.6.0",
-		"preact": "^10.10.0",
-		"style-loader": "^3.3.1",
-		"ts-loader": "^9.3.1",
-		"typescript": "^4.7.4",
-		"vscode-test": "^1.6.1",
-		"webpack": "^5.73.0",
-		"webpack-cli": "^4.10.0"
-	},
-	"dependencies": {
-		"@types/graceful-fs": "^4.1.5",
-		"@types/klaw": "^3.0.3",
-		"@types/picomatch": "^2.3.0",
-		"@typescript-eslint/eslint-plugin": "^5.30.5",
-		"csv-parser": "^3.0.0",
-		"env-paths": "^3.0.0",
-		"eslint": "^8.19.0",
-		"fuse.js": "^6.6.2",
-		"graceful-fs": "^4.2.10",
-		"klaw": "^4.0.1",
-		"normalize.css": "^8.0.1",
-		"picomatch": "^2.3.1",
-		"spectre.css": "^0.5.9",
-		"vscode-languageclient": "^8.0.2-next.5",
-		"vscode-languageserver": "^8.0.1",
-		"vscode-languageserver-textdocument": "^1.0.5",
-		"vscode-uri": "^3.0.3",
-		"web-tree-sitter": "^0.20.5"
-	}
+    "name": "vscode-q",
+    "displayName": "q",
+    "author": {
+        "name": "Jo Shinonome",
+        "email": "jshinonome@gmail.com"
+    },
+    "description": "q language support for Visual Studio Code",
+    "version": "2.6.5",
+    "homepage": "https://github.com/jshinonome/vscode-q",
+    "publisher": "jshinonome",
+    "license": "MIT",
+    "engines": {
+        "vscode": "^1.69.0"
+    },
+    "categories": [
+        "Programming Languages",
+        "Snippets",
+        "Formatters"
+    ],
+    "maintainers": [
+        "Jo Shinonome <jo.shinonome@gmail.com>"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jshinonome/vscode-q.git"
+    },
+    "keywords": [
+        "kdb+",
+        "kdb",
+        "q"
+    ],
+    "icon": "icon.png",
+    "main": "./dist/client.js",
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "scripts": {
+        "clean": "rm -rf dist",
+        "vscode:package": "vsce package",
+        "vscode:publish": "git push && git push --tags && vsce publish",
+        "compile": "tsc -p ./",
+        "watch": "tsc --watch -p ./",
+        "vscode:prepublish": "webpack --mode production",
+        "webpack": "webpack --mode development",
+        "webpack-dev": "webpack --mode development --watch",
+        "test": "jest",
+        "test-compile": "tsc -p ./"
+    },
+    "contributes": {
+        "notebooks": [
+            {
+                "id": "q-notebook",
+                "type": "q-notebook",
+                "displayName": "q Book",
+                "selector": [
+                    {
+                        "filenamePattern": "*.qnb"
+                    }
+                ]
+            }
+        ],
+        "notebookRenderer": [
+            {
+                "id": "q-notebook",
+                "displayName": "q Notebook Renderer",
+                "entrypoint": "./dist/renderer.js",
+                "requiresMessaging": "optional",
+                "mimeTypes": [
+                    "x-application/q-notebook"
+                ]
+            }
+        ],
+        "languages": [
+            {
+                "id": "qnb",
+                "extensions": [
+                    ".qnb"
+                ],
+                "icon": {
+                    "light": "./assets/icon/qnb.png",
+                    "dark": "./assets/icon/qnb.png"
+                }
+            },
+            {
+                "id": "q",
+                "aliases": [
+                    "q",
+                    "kdb+",
+                    "kdb"
+                ],
+                "extensions": [
+                    ".q"
+                ],
+                "configuration": "./language-configuration.json",
+                "icon": {
+                    "light": "./assets/icon/q.png",
+                    "dark": "./assets/icon/q.png"
+                }
+            },
+            {
+                "id": "q-output",
+                "extensions": [
+                    ".q-output"
+                ],
+                "configuration": "./language-configuration.json",
+                "mimetypes": [
+                    "text/x-code-output"
+                ]
+            }
+        ],
+        "grammars": [
+            {
+                "language": "q",
+                "scopeName": "source.q",
+                "path": "./syntaxes/q.tmLanguage.json"
+            },
+            {
+                "language": "q-output",
+                "scopeName": "source.q-output",
+                "path": "./syntaxes/q-output.tmLanguage.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "q",
+                "path": "./snippets/q.json"
+            }
+        ],
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "q-ext-explorer",
+                    "title": "q",
+                    "icon": "assets/svg/server.svg"
+                }
+            ]
+        },
+        "views": {
+            "q-ext-explorer": [
+                {
+                    "id": "q-servers",
+                    "name": "Server List",
+                    "contextualTitle": "Servers"
+                },
+                {
+                    "id": "q-explorer",
+                    "name": "Server Explorer",
+                    "contextualTitle": "Server Explorer"
+                },
+                {
+                    "id": "q-history",
+                    "name": "Query History",
+                    "contextualTitle": "Query History"
+                }
+            ]
+        },
+        "commands": [
+            {
+                "command": "q-client.refreshEntry",
+                "title": "Refresh q Server List",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/refresh.svg",
+                    "dark": "assets/svg/dark/refresh.svg"
+                }
+            },
+            {
+                "command": "q-client.addEntry",
+                "title": "Add q Server",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/add.svg",
+                    "dark": "assets/svg/dark/add.svg"
+                }
+            },
+            {
+                "command": "q-client.editEntry",
+                "title": "Edit q Server",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/edit.svg",
+                    "dark": "assets/svg/dark/edit.svg"
+                }
+            },
+            {
+                "command": "q-client.deleteEntry",
+                "title": "Delete q Server",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/trash.svg",
+                    "dark": "assets/svg/dark/trash.svg"
+                }
+            },
+            {
+                "command": "q-client.connectEntry",
+                "title": "Connect to q Server",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/connect.svg",
+                    "dark": "assets/svg/dark/connect.svg"
+                }
+            },
+            {
+                "command": "q-explorer.revealEntry",
+                "title": "Reveal q Server",
+                "category": "kdb+/q ext"
+            },
+            {
+                "command": "q-history.rerun",
+                "title": "Rerun History",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/run.svg",
+                    "dark": "assets/svg/dark/run.svg"
+                }
+            },
+            {
+                "command": "q-client.toggleLimitQuery",
+                "title": "Toggle Unlimited Query",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/flame.svg",
+                    "dark": "assets/svg/dark/flame.svg"
+                }
+            },
+            {
+                "command": "q-client.queryCurrentLine",
+                "title": "Query Current Line",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/query-current-line.svg",
+                    "dark": "assets/svg/dark/query-current-line.svg"
+                }
+            },
+            {
+                "command": "q-client.querySelection",
+                "title": "Query Current Selection",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/query-selection.svg",
+                    "dark": "assets/svg/dark/query-selection.svg"
+                }
+            },
+            {
+                "command": "q-client.queryBlock",
+                "title": "Query Current Block",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/query-block.svg",
+                    "dark": "assets/svg/dark/query-block.svg"
+                }
+            },
+            {
+                "command": "q-term.sendCurrentLine",
+                "title": "Send Current Line to Terminal",
+                "category": "kdb+/q ext"
+            },
+            {
+                "command": "q-term.sendSelection",
+                "title": "Send Current Selection to Terminal",
+                "category": "kdb+/q ext"
+            },
+            {
+                "command": "q-client.sendBlock",
+                "title": "Send Current Block to Terminal",
+                "category": "kdb+/q ext"
+            },
+            {
+                "command": "q-client.abortQuery",
+                "title": "Abort Current Query",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/debug-stop.svg",
+                    "dark": "assets/svg/dark/debug-stop.svg"
+                }
+            },
+            {
+                "command": "q-client.disconnect",
+                "title": "Disconnect to Active Server",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/debug-disconnect.svg",
+                    "dark": "assets/svg/dark/debug-disconnect.svg"
+                }
+            },
+            {
+                "command": "q-client.switchMode",
+                "title": "Switch Query Mode",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/gear.svg",
+                    "dark": "assets/svg/dark/gear.svg"
+                }
+            },
+            {
+                "command": "q-client.importServers",
+                "title": "Import Server List",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/import.svg",
+                    "dark": "assets/svg/dark/import.svg"
+                }
+            },
+            {
+                "command": "q-client.exportServers",
+                "title": "Export Server List",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/export.svg",
+                    "dark": "assets/svg/dark/export.svg"
+                }
+            },
+            {
+                "command": "q-client.reactions",
+                "title": "Raise an Issue",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/reactions.svg",
+                    "dark": "assets/svg/dark/reactions.svg"
+                }
+            },
+            {
+                "command": "q-client.tagEntry",
+                "title": "Tag a Server",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/tag.svg",
+                    "dark": "assets/svg/dark/tag.svg"
+                }
+            },
+            {
+                "command": "q-explorer.refreshEntry",
+                "title": "Refresh q Explorer",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/refresh.svg",
+                    "dark": "assets/svg/dark/refresh.svg"
+                }
+            },
+            {
+                "command": "q-explorer.toggleAutoRefresh",
+                "title": "Toggle Auto Refresh",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/sync.svg",
+                    "dark": "assets/svg/dark/sync.svg"
+                }
+            },
+            {
+                "command": "q-explorer.preview",
+                "title": "Preview",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/preview.svg",
+                    "dark": "assets/svg/dark/preview.svg"
+                }
+            },
+            {
+                "command": "q-client.terminal.run",
+                "title": "Run q File in Terminal",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/debug-start.svg",
+                    "dark": "assets/svg/dark/debug-start.svg"
+                }
+            },
+            {
+                "command": "q-client.insertActiveConnLabel",
+                "title": "Insert Active Connection Label",
+                "category": "kdb+/q ext"
+            },
+            {
+                "command": "q-notebook.export",
+                "title": "Export",
+                "category": "kdb+/q ext",
+                "icon": {
+                    "light": "assets/svg/light/export.svg",
+                    "dark": "assets/svg/dark/export.svg"
+                },
+                "enablement": "notebookType == q-notebook"
+            }
+        ],
+        "menus": {
+            "view/title": [
+                {
+                    "command": "q-client.addEntry",
+                    "when": "view == q-servers",
+                    "group": "navigation@0"
+                },
+                {
+                    "command": "q-client.importServers",
+                    "when": "view == q-servers",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "q-client.exportServers",
+                    "when": "view == q-servers",
+                    "group": "navigation@2"
+                },
+                {
+                    "command": "q-client.refreshEntry",
+                    "when": "view == q-servers",
+                    "group": "navigation@3"
+                },
+                {
+                    "command": "q-client.toggleLimitQuery",
+                    "when": "view == q-servers",
+                    "group": "navigation@4"
+                },
+                {
+                    "command": "q-client.switchMode",
+                    "when": "view == q-servers",
+                    "group": "navigation@5"
+                },
+                {
+                    "command": "q-client.reactions",
+                    "when": "view == q-servers",
+                    "group": "navigation@6"
+                },
+                {
+                    "command": "q-client.disconnect",
+                    "when": "view == q-explorer",
+                    "group": "navigation@0"
+                },
+                {
+                    "command": "q-client.abortQuery",
+                    "when": "view == q-explorer",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "q-explorer.refreshEntry",
+                    "when": "view == q-explorer",
+                    "group": "navigation@2"
+                },
+                {
+                    "command": "q-explorer.toggleAutoRefresh",
+                    "when": "view == q-explorer",
+                    "group": "navigation@3"
+                },
+                {
+                    "command": "q-client.queryBlock",
+                    "when": "view == q-explorer",
+                    "group": "navigation@4"
+                },
+                {
+                    "command": "q-client.querySelection",
+                    "when": "view == q-explorer",
+                    "group": "navigation@5"
+                },
+                {
+                    "command": "q-client.queryCurrentLine",
+                    "when": "view == q-explorer",
+                    "group": "navigation@6"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "command": "q-client.editEntry",
+                    "when": "view == q-servers && viewItem == qconn",
+                    "group": "inline"
+                },
+                {
+                    "command": "q-client.deleteEntry",
+                    "when": "view == q-servers && viewItem == qconn",
+                    "group": "inline"
+                },
+                {
+                    "command": "q-client.tagEntry",
+                    "when": "view == q-servers && viewItem == qconn",
+                    "group": "inline"
+                },
+                {
+                    "command": "q-history.rerun",
+                    "when": "view == q-history && viewItem == history",
+                    "group": "inline"
+                },
+                {
+                    "command": "q-explorer.preview",
+                    "when": "view == q-explorer && viewItem == qdict",
+                    "group": "inline"
+                },
+                {
+                    "command": "q-explorer.preview",
+                    "when": "view == q-explorer && viewItem == qvar",
+                    "group": "inline"
+                },
+                {
+                    "command": "q-explorer.preview",
+                    "when": "view == q-explorer && viewItem == qtable",
+                    "group": "inline"
+                },
+                {
+                    "command": "q-explorer.preview",
+                    "when": "view == q-explorer && viewItem == qfunction",
+                    "group": "inline"
+                }
+            ],
+            "editor/title": [
+                {
+                    "command": "q-client.terminal.run",
+                    "when": "resourceLangId ==  q",
+                    "group": "navigation"
+                }
+            ],
+            "notebook/toolbar": [
+                {
+                    "when": "notebookType == q-notebook",
+                    "command": "q-notebook.export",
+                    "group": "navigation"
+                },
+                {
+                    "when": "notebookType == q-notebook",
+                    "command": "q-client.connectEntry",
+                    "group": "navigation"
+                }
+            ],
+            "editor/context": [
+                {
+                    "command": "q-client.terminal.run",
+                    "when": "resourceLangId == q",
+                    "group": "q"
+                }
+            ]
+        },
+        "keybindings": [
+            {
+                "command": "q-client.queryCurrentLine",
+                "key": "ctrl+q",
+                "when": "editorLangId == q"
+            },
+            {
+                "command": "q-client.querySelection",
+                "key": "ctrl+r",
+                "when": "editorLangId == q"
+            },
+            {
+                "command": "q-client.queryBlock",
+                "key": "ctrl+e",
+                "when": "editorLangId == q"
+            },
+            {
+                "command": "q-term.sendCurrentLine",
+                "key": "ctrl+shift+q",
+                "when": "editorLangId == q"
+            },
+            {
+                "command": "q-term.sendSelection",
+                "key": "ctrl+shift+r",
+                "when": "editorLangId == q"
+            },
+            {
+                "command": "q-term.sendBlock",
+                "key": "ctrl+shift+e",
+                "when": "editorLangId == q"
+            }
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "kdb+/q Ext Configuration",
+            "properties": {
+                "q-server.sourceFiles.globsPattern": {
+                    "scope": "resource",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [
+                        "**/src/**/*.q"
+                    ],
+                    "description": "Pattern to be included"
+                },
+                "q-server.sourceFiles.ignorePattern": {
+                    "scope": "resource",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [
+                        "**/build",
+                        "**/node_modules"
+                    ],
+                    "description": "Pattern to be excluded"
+                },
+                "qLangServer.trace.server": {
+                    "scope": "window",
+                    "type": "string",
+                    "enum": [
+                        "off",
+                        "messages",
+                        "verbose"
+                    ],
+                    "default": "off",
+                    "description": "Traces the communication between vscode and q language server"
+                },
+                "q-client.queryMode": {
+                    "scope": "window",
+                    "type": "string",
+                    "enum": [
+                        "Console",
+                        "Grid",
+                        "Visualization"
+                    ],
+                    "default": "Console",
+                    "description": "Query Mode"
+                },
+                "q-client.queryGrid.decimals": {
+                    "scope": "resource",
+                    "type": "number",
+                    "default": 3,
+                    "description": "Decimals of q Grid"
+                },
+                "q-client.term.qBinary": {
+                    "scope": "resource",
+                    "type": "string",
+                    "default": "q",
+                    "description": "q Binary Path"
+                },
+                "q-client.term.envPath": {
+                    "scope": "resource",
+                    "type": "string",
+                    "default": "",
+                    "description": "Environment File Path(Shell Script)"
+                },
+                "q-client.expl.prevQueryLimit": {
+                    "scope": "resource",
+                    "type": "number",
+                    "default": 5,
+                    "description": "Preview Query Limit"
+                },
+                "q-client.output.autoClear": {
+                    "scope": "resource",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Auto Clear Output"
+                },
+                "q-client.expl.autoRefresh": {
+                    "scope": "resource",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Auto Refresh Server Explorer"
+                },
+                "q-client.expl.excludedNamespaces": {
+                    "scope": "resource",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [
+                        "q",
+                        "Q",
+                        "h",
+                        "j",
+                        "o",
+                        "s"
+                    ],
+                    "description": "Excluded Namespaces"
+                },
+                "q-client.output.includeQuery": {
+                    "scope": "resource",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Include Query"
+                },
+                "q-client.output.consoleSize": {
+                    "scope": "resource",
+                    "type": "string",
+                    "default": "36 180",
+                    "description": "Console Size"
+                }
+            }
+        }
+    },
+    "devDependencies": {
+        "@babel/core": "^7.18.6",
+        "@babel/preset-env": "^7.18.6",
+        "@babel/preset-typescript": "^7.18.6",
+        "@finos/perspective": "1.5.1",
+        "@finos/perspective-viewer": "1.5.1",
+        "@finos/perspective-viewer-d3fc": "1.5.1",
+        "@finos/perspective-viewer-datagrid": "1.5.1",
+        "@types/long": "^4.0.2",
+        "@types/node": "^18.0.3",
+        "@types/request": "^2.48.8",
+        "@types/vscode": "^1.69.0",
+        "@types/vscode-notebook-renderer": "^1.60.0",
+        "@types/webpack-env": "^1.17.0",
+        "@typescript-eslint/parser": "^5.30.5",
+        "ag-grid-community": "^28.0.2",
+        "babel-jest": "^28.1.2",
+        "chart.js": "^3.8.0",
+        "css-loader": "^6.7.1",
+        "dayjs": "^1.11.3",
+        "eslint-plugin-jest": "^26.5.3",
+        "jest": "^28.1.2",
+        "node-q": "^2.6.0",
+        "preact": "^10.10.0",
+        "style-loader": "^3.3.1",
+        "ts-jest": "^28.0.6",
+        "ts-loader": "^9.3.1",
+        "typescript": "^4.7.4",
+        "vscode-test": "^1.6.1",
+        "webpack": "^5.73.0",
+        "webpack-cli": "^4.10.0"
+    },
+    "dependencies": {
+        "@types/graceful-fs": "^4.1.5",
+        "@types/klaw": "^3.0.3",
+        "@types/picomatch": "^2.3.0",
+        "@typescript-eslint/eslint-plugin": "^5.30.5",
+        "csv-parser": "^3.0.0",
+        "env-paths": "^3.0.0",
+        "eslint": "^8.19.0",
+        "fuse.js": "^6.6.2",
+        "graceful-fs": "^4.2.10",
+        "klaw": "^4.0.1",
+        "normalize.css": "^8.0.1",
+        "picomatch": "^2.3.1",
+        "spectre.css": "^0.5.9",
+        "vscode-languageclient": "^8.0.2-next.5",
+        "vscode-languageserver": "^8.0.1",
+        "vscode-languageserver-textdocument": "^1.0.5",
+        "vscode-uri": "^3.0.3",
+        "web-tree-sitter": "^0.20.5"
+    }
 }

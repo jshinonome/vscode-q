@@ -1,0 +1,32 @@
+{
+    "type": "json",
+    "data": {
+        "date": [
+            "2022-07-16T00:00:00.000Z",
+            null
+        ],
+        "datetime": [
+            "2022-07-16T23:42:18.758Z",
+            null
+        ]
+    },
+    "meta": {
+        "c": [
+            "date",
+            "datetime"
+        ],
+        "t": "dp",
+        "f": [
+            null,
+            null
+        ],
+        "a": [
+            null,
+            null
+        ]
+    },
+    "keys": [],
+    "duration": 1,
+    "uniqLabel": ",localhost-1800-timeout",
+    "query": "flip `date`datetime!(.z.D,0Nd;.z.P, 0Np)\n"
+}

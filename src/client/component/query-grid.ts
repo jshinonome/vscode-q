@@ -5,13 +5,13 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as fs from 'fs';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import fs from 'fs';
+import path from 'path';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
 import { QueryResult } from '../models/query-result';
 import { QConnManager } from '../modules/q-conn-manager';
-import path = require('path');
-import dayjs = require('dayjs');
-import utc = require('dayjs/plugin/utc');
 
 dayjs.extend(utc);
 
@@ -133,30 +133,31 @@ export class QueryGrid implements Disposable {
     public static update(result: QueryResult): void {
         if (!QueryGrid.isReady) {
             setTimeout(QueryGrid.update, 100, result);
-        } else {
+        } else if (result.meta) {
             const current = QueryGrid.currentPanel as QueryGrid;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const numericCols: string[] = [];
+            const meta = result.meta;
             let labelCol = '';
-            result.cols = result.meta.c.map((col: string, i: number) => {
+            result.cols = meta.c.map((col: string, i: number) => {
                 const colDef: { headerName: string, field: string, type?: string, cellStyle?: { 'background-color': string } } = { headerName: col, field: col };
-                if ('xhijef'.includes(result.meta.t[i])) {
+                if ('xhijef'.includes(meta.t[i])) {
                     colDef.type = 'numericColumn';
-                    numericCols.push(result.meta.c[i]);
+                    numericCols.push(meta.c[i]);
                 } else if (!labelCol) {
-                    labelCol = result.meta.c[i];
+                    labelCol = meta.c[i];
                 }
                 if (result.keys?.includes(col))
                     colDef.cellStyle = { 'background-color': current._keyColor };
                 return colDef;
             });
             // temporal types has been converted to string
-            const formatterMap = result.meta.c.reduce((o: any, k: any, i: number) => (
+            const formatterMap = meta.c.reduce((o: any, k: any, i: number) => (
                 {
-                    ...o, [k]: kdbTypeMap.get(result.meta.t[i]) ?? ((value) => value)
+                    ...o, [k]: kdbTypeMap.get(meta.t[i]) ?? ((value) => value)
                 }), {}
             );
-            const data = result.meta.c.map(
+            const data = meta.c.map(
                 (col: string) => {
                     // deal with char column
                     if (typeof result.data[col] === 'string') {

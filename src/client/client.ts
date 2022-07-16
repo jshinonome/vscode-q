@@ -5,13 +5,11 @@
  * https://opensource.org/licenses/MIT
  */
 
+import path from 'path';
 import {
     commands, env, ExtensionContext, IndentAction, languages, QuickPickItem, QuickPickItemKind, Range, Selection, TextDocument, TextEdit, TreeItem, Uri, WebviewPanel, window, workspace
 } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
-import { exportAsQFile } from '../notebook/export';
-import { QNotebookKernel } from '../notebook/kernel';
-import { QNotebookSerializer } from '../notebook/serializer';
 import { AddServer } from './component/add-server';
 import { ChartView } from './component/chart-viewer';
 import { QueryGrid } from './component/query-grid';
@@ -25,7 +23,9 @@ import { QServerTree } from './modules/q-server-tree';
 import { QStatusBarManager } from './modules/q-status-bar-manager';
 import { runQFile, sendToCurrentTerm } from './modules/q-term';
 import { QueryConsole } from './modules/query-console';
-import path = require('path');
+import { exportAsQFile } from './notebook/export';
+import { QNotebookKernel } from './notebook/kernel';
+import { QNotebookSerializer } from './notebook/serializer';
 
 export function activate(context: ExtensionContext): void {
 

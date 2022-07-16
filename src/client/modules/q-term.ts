@@ -1,4 +1,4 @@
-import path = require('path');
+import path from 'path';
 import { window, workspace } from 'vscode';
 
 export function sendToCurrentTerm(text: string): void {

@@ -1,5 +1,5 @@
-import * as fs from 'fs';
-import { NotebookDocument, workspace, window, Uri } from 'vscode';
+import fs from 'fs';
+import { NotebookDocument, Uri, window, workspace } from 'vscode';
 
 async function exportAsQFile(notebook: NotebookDocument | undefined): Promise<void> {
     if (notebook) {

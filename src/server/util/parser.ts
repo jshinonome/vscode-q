@@ -5,8 +5,8 @@
  * https://opensource.org/licenses/MIT
  */
 
-import path = require('path')
-import Parser = require('web-tree-sitter');
+import path from 'path';
+import Parser from 'web-tree-sitter';
 
 export async function initializeParser(): Promise<Parser> {
     await Parser.init();

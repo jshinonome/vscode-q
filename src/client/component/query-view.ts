@@ -5,13 +5,13 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as fs from 'fs';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import fs from 'fs';
+import path from 'path';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window } from 'vscode';
 import { QueryResult } from '../models/query-result';
 import { kTypeMap } from '../util/k-map';
-import path = require('path');
-import dayjs = require('dayjs');
-import utc = require('dayjs/plugin/utc');
 
 dayjs.extend(utc);
 
@@ -111,22 +111,27 @@ export class QueryView implements Disposable {
             setTimeout(QueryView.update, 500, result);
         } else {
             const current = QueryView.currentPanel as QueryView;
-            result.cols = result.meta.c;
-            // convert temporal types, timezone adjustment is handled on web view side
-            [...result.meta.t].forEach((type: string, i: number) => {
-                if ('pmdznuvt'.includes(type)) {
-                    const column = result.meta.c[i];
-                    result.data[column] = result.data[column].map(
-                        (date: Date) => date ? date.toISOString() : date);
-                } else if (type === ' ') {
-                    const column = result.meta.c[i];
-                    result.data[column] = result.data[column].map(JSON.stringify);
-                }
-            });
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const meta = result.meta.c.reduce((o: any, k: any, i: number) => ({ ...o, [k]: kTypeMap.get(result.meta.t[i]) ?? 'string' }), {});
-            result.meta = meta;
-            current._panel.webview.postMessage(result);
+            const meta = result.meta;
+            if (meta) {
+                result.cols = meta.c;
+                // convert temporal types, timezone adjustment is handled on web view side
+                [...meta.t].forEach((type: string, i: number) => {
+                    if ('pmdznuvt'.includes(type)) {
+                        const column = meta.c[i];
+                        result.data[column] = result.data[column].map(
+                            (date: Date) => date ? date.toISOString() : date);
+                    } else if (type === ' ') {
+                        const column = meta.c[i];
+                        result.data[column] = result.data[column].map(JSON.stringify);
+                    }
+                });
+                const newMeta = meta.c.reduce(
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (o: any, k: any, i: number) => ({ ...o, [k]: kTypeMap.get(meta.t[i]) ?? 'string' }), {}
+                );
+                result.meta = newMeta;
+                current._panel.webview.postMessage(result);
+            }
         }
     }
 

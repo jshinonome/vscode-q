@@ -5,10 +5,10 @@
  * https://opensource.org/licenses/MIT
  */
 
+import csvParser from 'csv-parser';
+import fs from 'fs';
+import path from 'path';
 import { Disposable, OutputChannel, window, workspace } from 'vscode';
-import fs = require('fs');
-import csvParser = require('csv-parser');
-import path = require('path');
 
 function getErrorMsgMap(): Map<string, string> {
     const errorMsgMap = new Map();

@@ -5,11 +5,11 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as q from 'node-q';
+import q from 'node-q';
+import path from 'path';
 import { Command, extensions, TreeItem, TreeItemCollapsibleState, window } from 'vscode';
 import { QCfg, QConnManager } from './q-conn-manager';
 import { QServerTree } from './q-server-tree';
-import path = require('path');
 
 const customizedAuthExtension = extensions.getExtension('jshinonome.vscode-q-auth');
 let customizedAuth = (qcfg: QCfg) => new Promise(resolve => resolve(qcfg));

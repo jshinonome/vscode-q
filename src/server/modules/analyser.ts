@@ -19,9 +19,9 @@ import * as Parser from 'web-tree-sitter';
 import { buildInFs, buildInFsSigs } from '../util/build-in-fs';
 import * as TreeSitterUtil from '../util/tree-sitter';
 
-import klaw = require('klaw');
-import fs = require('graceful-fs');
-import picomatch = require('picomatch');
+import fs from 'graceful-fs';
+import klaw from 'klaw';
+import picomatch from 'picomatch';
 
 type nameToSymbolInfo = Map<string, SymbolInformation[]>;
 type nameToCallHierarchy = Map<string, CallHierarchyItem[]>;

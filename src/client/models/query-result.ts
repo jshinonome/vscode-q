@@ -1,17 +1,9 @@
-/**
- * Copyright (c) 2020 Jo Shinonome
- *
- * This software is released under the MIT License.
- * https://opensource.org/licenses/MIT
- */
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type QueryResult = {
     type: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data: any,
-    cols?: string[],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    meta?: any,
+    cols?: any[],
+    meta?: { c: string[], t: string, f: string[], a: string[] },
     keys?: string[],
     query?: string,
     labelCol?: string,

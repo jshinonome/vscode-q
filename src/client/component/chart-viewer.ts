@@ -5,9 +5,9 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as fs from 'fs';
+import fs from 'fs';
+import path from 'path';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window } from 'vscode';
-import path = require('path');
 
 const templatePath = './assets/view';
 

@@ -5,10 +5,10 @@
  * https://opensource.org/licenses/MIT
  */
 
+import path from 'path';
 import { TreeItem, TreeItemCollapsibleState } from 'vscode';
 import QDictTreeItem from './q-dict';
 import { setCommand } from './q-utils';
-import path = require('path');
 
 export default class QVarTreeItem extends TreeItem {
     contextValue = 'qvar';

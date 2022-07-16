@@ -5,10 +5,10 @@
  * https://opensource.org/licenses/MIT
  */
 
+import path from 'path';
 import { Event, EventEmitter, TreeDataProvider, TreeItem, TreeItemCollapsibleState } from 'vscode';
 import { QConn } from './q-conn';
 import { QConnManager } from './q-conn-manager';
-import path = require('path');
 
 const qConnManager = QConnManager.create();
 

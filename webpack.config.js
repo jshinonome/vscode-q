@@ -2,6 +2,7 @@
 
 'use strict';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path');
 
 const conf = {
@@ -30,7 +31,7 @@ const conf = {
             },
         ],
     },
-}
+};
 
 
 const clientConf = {
@@ -83,7 +84,12 @@ const qConsoleRendererConf = {
         libraryTarget: 'module',
     },
     resolve: {
-        extensions: ['.ts', '.tsx', '.css', '.js', '.jsx']
+        extensions: ['.ts', '.tsx', '.css', '.js', '.jsx'],
+        alias: {
+            'react': 'preact/compat',
+            'react-dom/test-utils': 'preact/test-utils',
+            'react-dom': 'preact/compat',
+        }
     },
     experiments: {
         outputModule: true,
@@ -114,7 +120,7 @@ const qConsoleRendererConf = {
                 ],
             },
         ],
-    }
-}
+    },
+};
 
 module.exports = [clientConf, serverConf, qConsoleRendererConf];

@@ -6,9 +6,10 @@
  */
 
 import envPaths from 'env-paths';
-import * as fs from 'fs';
-import * as q from 'node-q';
+import fs from 'fs';
+import q from 'node-q';
 import { homedir } from 'os';
+import path from 'path';
 import { commands, Uri, window, workspace } from 'vscode';
 import { ChartView } from '../component/chart-viewer';
 import { QueryGrid } from '../component/query-grid';
@@ -18,7 +19,6 @@ import { QueryResult } from '../models/query-result';
 import { QConn } from './q-conn';
 import { QStatusBarManager } from './q-status-bar-manager';
 import { QueryConsole } from './query-console';
-import path = require('path');
 
 const oldCfgPath = path.join(homedir(), '.vscode', 'q-server-cfg.json');
 const cfgPath = path.join(envPaths('vscode-q').config, 'q-server-cfg.json');

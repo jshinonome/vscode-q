@@ -5,14 +5,14 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as fs from 'fs';
+import fs from 'fs';
+import path from 'path';
 import { commands, Event, EventEmitter, TextDocumentContentChangeEvent, TreeDataProvider, TreeItem, TreeItemCollapsibleState, window, workspace } from 'vscode';
 import { QConnManager } from '../modules/q-conn-manager';
 import QFunctionTreeItem from './q-function';
 import QTableTreeItem from './q-table';
 import { setCommand } from './q-utils';
 import QVarTreeItem from './q-var';
-import path = require('path');
 
 const qTypeMap = new Map<number, string>([
     [0, 'mixed list'],

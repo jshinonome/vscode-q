@@ -6,7 +6,7 @@
  */
 
 import { NotebookCell, NotebookCellOutput, NotebookCellOutputItem, NotebookController, NotebookDocument, notebooks } from 'vscode';
-import { QConnManager } from '../client/modules/q-conn-manager';
+import { QConnManager } from '../modules/q-conn-manager';
 
 export class QNotebookKernel {
     readonly id: string = 'q-notebook-kernel';
@@ -51,10 +51,12 @@ export class QNotebookKernel {
                     case 'text':
                     case 'error':
                     case 'json':
-                        execution.replaceOutput([new NotebookCellOutput([
-                            NotebookCellOutputItem.json(
-                                result, 'x-application/q-notebook'
-                            )])]);
+                        execution.replaceOutput([
+                            new NotebookCellOutput([
+                                NotebookCellOutputItem.json(result, 'x-application/q-notebook'),
+                                NotebookCellOutputItem.json(result, 'text/x-json')
+                            ])
+                        ]);
                         break;
                     case 'bytes':
                         execution.replaceOutput([new NotebookCellOutput([

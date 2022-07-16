@@ -5,10 +5,10 @@
  * https://opensource.org/licenses/MIT
  */
 
+import csvParser from 'csv-parser';
+import fs from 'fs';
+import path from 'path';
 import { CompletionItem, CompletionItemKind } from 'vscode-languageserver/node';
-import fs = require('fs');
-import csvParser = require('csv-parser');
-import path = require('path');
 
 export function getBuildInFsRef(): CompletionItem[] {
     const buildInFs: CompletionItem[] = [];
