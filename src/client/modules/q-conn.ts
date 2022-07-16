@@ -8,6 +8,7 @@
 import * as q from 'node-q';
 import { Command, extensions, TreeItem, TreeItemCollapsibleState, window } from 'vscode';
 import { QCfg, QConnManager } from './q-conn-manager';
+import { QServerTree } from './q-server-tree';
 import path = require('path');
 
 const customizedAuthExtension = extensions.getExtension('jshinonome.vscode-q-auth');
@@ -33,6 +34,8 @@ export class QConn extends TreeItem {
     tags: string;
     uniqLabel: string;
     useCustomizedAuth: boolean;
+    _parent: QServerTree | null = null;
+
     public static customizedAuthInstalled = false;
 
     constructor(cfg: QCfg, conn: q.Connection | undefined = undefined) {
@@ -90,14 +93,6 @@ export class QConn extends TreeItem {
         }
     }
 
-    // get description(): string {
-    //     if(this.conn){
-    //         return 'connected';
-    //     }else{
-    //         return '';
-    //     }
-    // }
-
     // @ts-ignore
     get iconPath(): { light: string, dark: string } {
         if (QConnManager.current?.activeConn?.uniqLabel === this.uniqLabel) {
@@ -118,6 +113,9 @@ export class QConn extends TreeItem {
         }
     }
 
+    setParent(qServerTree: QServerTree) {
+        this._parent = qServerTree;
+    }
 
     contextValue = 'qconn';
 }

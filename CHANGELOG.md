@@ -1,5 +1,12 @@
 # change log
 
+## 3.0.0
+
+### added
+
+-   q notebook
+-   server list: reveal an active q connection
+
 ## 2.6.5
 
 ### fixed

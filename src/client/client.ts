@@ -9,6 +9,9 @@ import {
     commands, env, ExtensionContext, IndentAction, languages, QuickPickItem, QuickPickItemKind, Range, Selection, TextDocument, TextEdit, TreeItem, Uri, WebviewPanel, window, workspace
 } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
+import { exportAsQFile } from '../notebook/export';
+import { QNotebookKernel } from '../notebook/kernel';
+import { QNotebookSerializer } from '../notebook/serializer';
 import { AddServer } from './component/add-server';
 import { ChartView } from './component/chart-viewer';
 import { QueryGrid } from './component/query-grid';
@@ -18,15 +21,11 @@ import QDictTreeItem from './items/q-dict';
 import QFunctionTreeItem from './items/q-function';
 import { QConn } from './modules/q-conn';
 import { QConnManager } from './modules/q-conn-manager';
-import { QNotebookKernel } from './modules/q-notebook-kernel';
-import { QNotebookSerializer } from './modules/q-notebook-serializer';
 import { QServerTree } from './modules/q-server-tree';
 import { QStatusBarManager } from './modules/q-status-bar-manager';
 import { runQFile, sendToCurrentTerm } from './modules/q-term';
 import { QueryConsole } from './modules/query-console';
 import path = require('path');
-
-
 
 export function activate(context: ExtensionContext): void {
 
@@ -85,10 +84,10 @@ export function activate(context: ExtensionContext): void {
     const qServers = new QServerTree('root', null);
     const qRoot = new QDictTreeItem('root', null);
     const qHistory = HistoryTreeItem.createHistoryTree();
-    window.registerTreeDataProvider('q-servers', qServers);
     qServers.refresh();
     window.registerTreeDataProvider('q-explorer', qRoot);
     window.registerTreeDataProvider('q-history', qHistory);
+
     qHistory.refresh();
     QueryConsole.createOrGet();
     QueryView.setExtensionPath(context.extensionPath);
@@ -102,6 +101,19 @@ export function activate(context: ExtensionContext): void {
     const queryMode = workspace.getConfiguration().get('q-client.queryMode');
     QConnManager.setQueryMode(queryMode as string);
     // -->
+
+    const qServerTreeView = window.createTreeView('q-servers', { treeDataProvider: qServers });
+    context.subscriptions.push(qServerTreeView);
+    qServerTreeView.onDidChangeVisibility(_e => {
+        commands.executeCommand('q-explorer.revealEntry');
+    });
+
+    commands.registerCommand('q-explorer.revealEntry', async () => {
+        const conn = QConnManager.current?.activeConn;
+        if (conn && qServerTreeView.visible) {
+            await qServerTreeView.reveal(conn, { focus: true, select: false, expand: true });
+        }
+    });
 
     commands.registerCommand(
         'q-client.refreshEntry', () => qServers.refresh());
@@ -405,6 +417,14 @@ export function activate(context: ExtensionContext): void {
     );
 
     context.subscriptions.push(
+        commands.registerCommand(
+            'q-notebook.export', async () => {
+                exportAsQFile(window.activeNotebookEditor?.notebook);
+            }
+        )
+    );
+
+    context.subscriptions.push(
         commands.registerCommand('q-client.insertActiveConnLabel', () => {
             const editor = window.activeTextEditor;
             if (editor) {
@@ -457,7 +477,7 @@ export function activate(context: ExtensionContext): void {
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
         // Register the server for plain text documents
-        documentSelector: [{ scheme: 'file', language: 'q' }],
+        documentSelector: [{ scheme: 'file', language: 'q' }, { notebook: { scheme: 'file', notebookType: 'q-notebook' } }],
         synchronize: {
             // Notify the server about q file changes
             fileEvents: workspace.createFileSystemWatcher('**/*.q')

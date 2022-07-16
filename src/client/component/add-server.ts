@@ -109,7 +109,17 @@ export class AddServer implements Disposable {
         } else {
             const current = AddServer.currentPanel as AddServer;
             current._currentQCfg = qcfg;
-            current._panel.webview.postMessage(qcfg);
+            current._panel.webview.postMessage({
+                host: qcfg.host,
+                port: qcfg.port,
+                user: qcfg.user,
+                password: qcfg.password,
+                useTLS: qcfg.useTLS,
+                label: qcfg.label,
+                tags: qcfg.tags,
+                uniqLabel: qcfg.uniqLabel,
+                useCustomizedAuth: qcfg.useCustomizedAuth
+            });
 
         }
     }

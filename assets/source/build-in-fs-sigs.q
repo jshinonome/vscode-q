@@ -37,6 +37,7 @@
 .Q.qt:{[table]};
 .Q.s:{[object]};
 .Q.s1:{[object]};
+.Q.S:{[consoleSize;page;object]};
 .Q.sbt:{[backTraceObject]};
 .Q.sha1:{[str]};
 .Q.trp:{[v1;args;v2]};

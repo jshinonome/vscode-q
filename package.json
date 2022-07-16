@@ -200,6 +200,15 @@
 			{
 				"command": "q-client.connectEntry",
 				"title": "Connect to q Server",
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/connect.svg",
+					"dark": "assets/svg/dark/connect.svg"
+				}
+			},
+			{
+				"command": "q-explorer.revealEntry",
+				"title": "Reveal q Server",
 				"category": "kdb+/q ext"
 			},
 			{
@@ -365,6 +374,16 @@
 				"command": "q-client.insertActiveConnLabel",
 				"title": "Insert Active Connection Label",
 				"category": "kdb+/q ext"
+			},
+			{
+				"command": "q-notebook.export",
+				"title": "Export",
+				"category": "kdb+/q ext",
+				"icon": {
+					"light": "assets/svg/light/export.svg",
+					"dark": "assets/svg/dark/export.svg"
+				},
+				"enablement": "notebookType == q-notebook"
 			}
 		],
 		"menus": {
@@ -486,6 +505,18 @@
 				{
 					"command": "q-client.terminal.run",
 					"when": "resourceLangId ==  q",
+					"group": "navigation"
+				}
+			],
+			"notebook/toolbar": [
+				{
+					"when": "notebookType == q-notebook",
+					"command": "q-notebook.export",
+					"group": "navigation"
+				},
+				{
+					"when": "notebookType == q-notebook",
+					"command": "q-client.connectEntry",
 					"group": "navigation"
 				}
 			],
@@ -668,10 +699,10 @@
 		"eslint-plugin-jest": "^26.5.3",
 		"jest": "^28.1.2",
 		"node-q": "^2.6.0",
+		"preact": "^10.10.0",
 		"style-loader": "^3.3.1",
 		"ts-loader": "^9.3.1",
 		"typescript": "^4.7.4",
-		"vscode-notebook-error-overlay": "^1.0.1",
 		"vscode-test": "^1.6.1",
 		"webpack": "^5.73.0",
 		"webpack-cli": "^4.10.0"

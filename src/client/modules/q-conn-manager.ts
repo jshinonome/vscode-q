@@ -131,6 +131,7 @@ export class QConnManager {
                                     this.activeConn = qConn;
                                     commands.executeCommand('q-client.refreshEntry');
                                     commands.executeCommand('q-explorer.refreshEntry');
+                                    commands.executeCommand('q-explorer.revealEntry');
                                     QStatusBarManager.updateConnStatus(uniqLabel);
                                     if (query) {
                                         this.sync(query, queryResultHandler);

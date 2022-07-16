@@ -6,7 +6,7 @@
  */
 
 import { NotebookCell, NotebookCellOutput, NotebookCellOutputItem, NotebookController, NotebookDocument, notebooks } from 'vscode';
-import { QConnManager } from './q-conn-manager';
+import { QConnManager } from '../client/modules/q-conn-manager';
 
 export class QNotebookKernel {
     readonly id: string = 'q-notebook-kernel';
@@ -49,27 +49,16 @@ export class QNotebookKernel {
             this._qConnManager.sync(cell.document.getText(), result => {
                 switch (result.type) {
                     case 'text':
-                        execution.replaceOutput([new NotebookCellOutput([
-                            NotebookCellOutputItem.text(
-                                // `<pre><code class="vscode-code-block" data-vscode-code-block-lang="q"><div class="monaco-tokenized-source">${result.data.join('\n')}</div></code></pre>`, 'text/html'
-                                result.data.join('\n'), 'text/plain'
-                            )])]);
-                        break;
                     case 'error':
+                    case 'json':
                         execution.replaceOutput([new NotebookCellOutput([
-                            NotebookCellOutputItem.text(
-                                // `<pre><code class="vscode-code-block" data-vscode-code-block-lang="q"><div class="monaco-tokenized-source">${result.data.join('\n')}</div></code></pre>`, 'text/html'
-                                result.data.join('\n'), 'text/plain'
+                            NotebookCellOutputItem.json(
+                                result, 'x-application/q-notebook'
                             )])]);
                         break;
                     case 'bytes':
                         execution.replaceOutput([new NotebookCellOutput([
                             NotebookCellOutputItem.text(`<img src="data:image/png;base64,${Buffer.from(result.data).toString('base64')}"/>`, 'text/html')
-                        ])]);
-                        break;
-                    case 'json':
-                        execution.replaceOutput([new NotebookCellOutput([
-                            NotebookCellOutputItem.json(result, 'x-application/q-console'),
                         ])]);
                         break;
                 }

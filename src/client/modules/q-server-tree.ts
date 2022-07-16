@@ -50,8 +50,13 @@ export class QServerTree extends TreeItem implements TreeDataProvider<TreeItem> 
                         }
                     }
                 );
-                itemMap.get(path)?.appendChild(qconn);
+                const item = itemMap.get(path);
+                if (item) {
+                    qconn.setParent(item);
+                    item.appendChild(qconn);
+                }
             } else {
+                qconn.setParent(this);
                 this._children.push(qconn);
             }
         });
@@ -71,6 +76,23 @@ export class QServerTree extends TreeItem implements TreeDataProvider<TreeItem> 
             return Promise.resolve(
                 this._children
             );
+        }
+    }
+
+    getParent(e: TreeItem): TreeItem | null {
+        let parent: TreeItem | null;
+        if (e instanceof QServerTree) {
+            parent = e._parent;
+        } else if (e instanceof QConn) {
+            parent = e._parent;
+        } else {
+            parent = this._parent;
+        }
+        // as root is not available, return null here
+        if (parent?.label === 'root') {
+            return null;
+        } else {
+            return parent;
         }
     }
 
