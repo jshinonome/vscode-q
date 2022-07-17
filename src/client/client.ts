@@ -210,7 +210,7 @@ export function activate(context: ExtensionContext): void {
                     allItems,
                     { placeHolder: 'Connect to a q process' });
                 if (item) {
-                    commands.executeCommand('q-client.connect', item.label);
+                    await commands.executeCommand('q-client.connect', item.label);
                     return item.label;
                 }
             }

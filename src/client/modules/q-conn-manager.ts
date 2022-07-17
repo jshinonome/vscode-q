@@ -119,7 +119,9 @@ export class QConnManager {
                     qConn.auth().then(qcfg => {
                         q.connect(qcfg,
                             (err, conn) => {
-                                if (err) window.showErrorMessage(err.message);
+                                if (err) {
+                                    window.showErrorMessage(err.message);
+                                }
                                 if (conn) {
                                     conn.addListener('close', _hadError => {
                                         if (_hadError) {
@@ -139,14 +141,17 @@ export class QConnManager {
                                 }
                             }
                         );
-                    }).catch(reason => console.log(reason));
-
+                    }).catch(
+                        reason => window.showErrorMessage(`Failed to connect to '${uniqLabel}', error - ${reason.toString()}`)
+                    );
                 }
             } else {
-                window.showWarningMessage(`process - ${uniqLabel} -  not found`);
+                const errorMsg = `process - ${uniqLabel} -  not found`;
+                window.showWarningMessage(errorMsg);
             }
         } catch (error) {
-            window.showErrorMessage(`Failed to connect to '${uniqLabel}', please check q-server-cfg.json`);
+            const errorMsg = `Failed to connect to '${uniqLabel}', please check q-server-cfg.json`;
+            window.showErrorMessage(errorMsg);
         }
     }
 
@@ -210,7 +215,21 @@ export class QConnManager {
             );
         } else {
             commands.executeCommand('q-client.connectEntry').then(
-                uniqLabel => this.connect(uniqLabel as string, query, queryResultHandler)
+                uniqLabel => {
+                    setTimeout(() => {
+                        if (this.activeConn?.uniqLabel === uniqLabel) {
+                            this.sync(query, queryResultHandler);
+                        } else {
+                            queryResultHandler(
+                                {
+                                    type: 'error',
+                                    data: ['ERROR', `not connect to ${uniqLabel} yet`],
+                                    duration: 0,
+                                    uniqLabel: uniqLabel as string
+                                });
+                        }
+                    }, 100);
+                }
             );
         }
     }
