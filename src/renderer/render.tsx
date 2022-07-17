@@ -6,13 +6,13 @@ import { kTypeName } from '../client/util/k-map';
 import './style.css';
 
 const darkColor={
-    'info':'#5E35B1',
-    'error':'#B71C1C',
+    'info':'rgb(158, 158, 158, 0.05)',
+    'error':'rgb(244, 67, 54, 0.11)',
 };
 
 const lightColor = {
-    'info':'#EDE7F6',
-    'error':'#FFEBEE',
+    'info':'rgb(158, 158, 158, 0.05)',
+    'error':'rgb(244, 67, 54, 0.11)',
 };
 
 
@@ -41,7 +41,7 @@ export const QNotebookCell: FunctionComponent<{ queryResult: Readonly<QueryResul
 };
 
 const CodeCell: FunctionComponent<{ color: Readonly<string>, text: string }> = ({ color, text }) => {
-    return <div style={'max-height:50em;overflow:auto'}><pre style={'padding:5px;border-left:5px solid '+color}>
+    return <div style={'max-height:50em;overflow:auto;background:'+color}><pre style={'padding:5px'}>
         <code class="vscode-code-block" data-vscode-code-block-lang="q"><div class="monaco-tokenized-source">{text}</div></code>
     </pre></div>;
 };
