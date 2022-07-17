@@ -8,6 +8,7 @@
 This extension provides kdb+\q language support:
 
 -   q syntaxes
+-   q notebook(\*.qnb)
 -   server list group by tags
 -   server explorer
 -   query grid powered by [ag-grid-community](https://www.ag-grid.com/) & [chart.js](https://www.chartjs.org/)
@@ -59,6 +60,14 @@ See the [change log](https://github.com/jshinonome/vscode-q/blob/master/CHANGELO
 ## q Language Server(local server, no connection to the internet)
 
 The server will analyze q source files in all 'src' folder. Insert ';' to indicated end of statement if necessary.
+
+## Notebook
+
+Files with postfix \*.qnb are using notebook feature. There are 2 output mode for q notebook, switch to following query mode for different output format
+
+-   q Console -> notebook console
+-   q Grid -> notebook html
+-   q Visualization -> notebook html
 
 ## Server List
 
