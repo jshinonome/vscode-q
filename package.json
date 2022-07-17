@@ -9,7 +9,7 @@
     "version": "3.0.0",
     "homepage": "https://github.com/jshinonome/vscode-q",
     "publisher": "jshinonome",
-    "license": "MIT",
+    "license": "GPLV3",
     "engines": {
         "vscode": "^1.69.0"
     },
