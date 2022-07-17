@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2020 Jo Shinonome
- *
- * This software is released under the MIT License.
- * https://opensource.org/licenses/MIT
- */
-
 import fs from 'fs';
 import path from 'path';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window } from 'vscode';

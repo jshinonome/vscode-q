@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2020 Jo Shinonome
- *
- * This software is released under the MIT License.
- * https://opensource.org/licenses/MIT
- */
-
 import q from 'node-q';
 import path from 'path';
 import { Command, extensions, TreeItem, TreeItemCollapsibleState, window } from 'vscode';

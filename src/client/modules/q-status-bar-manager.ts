@@ -1,9 +1,3 @@
-/**
- * Copyright (c) 2020 Jo Shinonome
- *
- * This software is released under the MIT License.
- * https://opensource.org/licenses/MIT
- */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { ColorThemeKind, ExtensionContext, StatusBarAlignment, StatusBarItem, window } from 'vscode';
 import { QConnManager } from './q-conn-manager';

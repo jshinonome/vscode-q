@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2020 Jo Shinonome
- *
- * This software is released under the MIT License.
- * https://opensource.org/licenses/MIT
- */
-
 import path from 'path';
 import { TreeItem, TreeItemCollapsibleState } from 'vscode';
 import QDictTreeItem from './q-dict';

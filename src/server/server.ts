@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2020 Jo Shinonome
- *
- * This software is released under the MIT License.
- * https://opensource.org/licenses/MIT
- */
-
 import { Connection, createConnection, InitializeParams, InitializeResult, ProposedFeatures } from 'vscode-languageserver/node';
 import LangServer from './lang-server';
 

@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2021 Jo Shinonome
- *
- * This software is released under the MIT License.
- * https://opensource.org/licenses/MIT
- */
-
 const kTypeMap = new Map<string, string>([
     ['b', 'boolean'],
     ['g', 'string'],

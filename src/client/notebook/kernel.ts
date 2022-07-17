@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2022 Jo Shinonome
- *
- * This software is released under the MIT License.
- * https://opensource.org/licenses/MIT
- */
-
 import { NotebookCell, NotebookCellOutput, NotebookCellOutputItem, NotebookController, NotebookDocument, notebooks } from 'vscode';
 import { QConnManager } from '../modules/q-conn-manager';
 

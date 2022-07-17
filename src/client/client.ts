@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2020 Jo Shinonome
- *
- * This software is released under the MIT License.
- * https://opensource.org/licenses/MIT
- */
-
 import path from 'path';
 import {
     commands, env, ExtensionContext, IndentAction, languages, QuickPickItem, QuickPickItemKind, Range, Selection, TextDocument, TextEdit, TreeItem, Uri, WebviewPanel, window, workspace

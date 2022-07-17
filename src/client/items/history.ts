@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2020 Jo Shinonome
- *
- * This software is released under the MIT License.
- * https://opensource.org/licenses/MIT
- */
-
 import dayjs from 'dayjs';
 import envPaths from 'env-paths';
 import fs from 'fs';

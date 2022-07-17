@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2020 Jo Shinonome
- *
- * This software is released under the MIT License.
- * https://opensource.org/licenses/MIT
- */
-
 import { Range, uinteger } from 'vscode-languageserver/node';
 import { SyntaxNode } from 'web-tree-sitter';
 

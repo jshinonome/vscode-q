@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2022 Jo Shinonome
- *
- * This software is released under the MIT License.
- * https://opensource.org/licenses/MIT
- */
-
 import { CancellationToken, NotebookCellData, NotebookCellKind, NotebookCellOutput, NotebookCellOutputItem, NotebookData, NotebookSerializer } from 'vscode';
 
 interface RawNotebookCell {
