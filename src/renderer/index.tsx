@@ -8,8 +8,15 @@ export const activate: ActivationFunction = _context => {
         renderOutputItem(outputItem, element) {
             try {
                 render(<QNotebookCell queryResult={outputItem.json()}/>, element);
-            } catch {
-                render(<p>Error!</p>, element);
+            } catch(e) {
+                render(<QNotebookCell queryResult={
+                    {
+                        data:['ERROR', 'Failed to render this message'+(e as Error).toString()],
+                        duration:0,
+                        type:'error',
+                        uniqLabel:''
+                    }
+                }></QNotebookCell>, element);
             }
         },
     // disposeOutputItem(outputId) { }

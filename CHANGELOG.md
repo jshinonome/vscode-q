@@ -1,5 +1,12 @@
 # change log
 
+## 3.0.1
+
+### fixed
+
+-   q notebook: export q cells only
+-   q notebook: change to q temporal format
+
 ## 3.0.0
 
 ### added

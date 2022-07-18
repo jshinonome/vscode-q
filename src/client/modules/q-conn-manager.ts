@@ -149,8 +149,13 @@ export class QConnManager {
     }
 
     sync(query: string, queryResultHandler = this.update): void {
-        if (this.isBusy) {
-            window.showWarningMessage('Still executing last query');
+        if (this.isBusy && this.activeConn) {
+            queryResultHandler({
+                type: 'error',
+                data: ['ERROR', 'Still executing last query'],
+                duration: 0,
+                uniqLabel: this.activeConn.uniqLabel,
+            });
         } else if (this.activeConn) {
             if (query.slice(-1) === ';') {
                 query = query.slice(0, -1);

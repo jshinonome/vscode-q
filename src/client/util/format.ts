@@ -5,7 +5,7 @@ import { QueryResult } from '../models/query-result';
 dayjs.extend(utc);
 
 type formatter = (value: any) => any;
-const decimals = 7;
+const decimals = 2;
 
 const kTypeMap = new Map<string, formatter>([
     ['b', (value) => value ? '1b' : '0b'],
@@ -14,10 +14,10 @@ const kTypeMap = new Map<string, formatter>([
     ['e', (value) => value ? value.toFixed(decimals) : value],
     ['f', (value) => value ? value.toFixed(decimals) : value],
     // Nanoseconds is not native supported in javascript
-    ['p', (value) => dayjs.utc(value).format('YYYY-MM-DD[T]HH:mm:ss.SSS')],
-    ['m', (value) => dayjs.utc(value).format('YYYY-MM')],
-    ['d', (value) => dayjs.utc(value).format('YYYY-MM-DD')],
-    ['z', (value) => dayjs.utc(value).format('YYYY-MM-DD[T]HH:mm:ss.SSS')],
+    ['p', (value) => dayjs.utc(value).format('YYYY.MM.DD[D]HH:mm:ss.SSS')],
+    ['m', (value) => dayjs.utc(value).format('YYYY.MMm')],
+    ['d', (value) => dayjs.utc(value).format('YYYY.MM.DD')],
+    ['z', (value) => dayjs.utc(value).format('YYYY.MM.DD[D]HH:mm:ss.SSS')],
     ['n', (value) => dayjs.utc(value).format('HH:mm:ss.SSS')],
     ['u', (value) => dayjs.utc(value).format('HH:mm')],
     ['v', (value) => dayjs.utc(value).format('HH:mm:ss')],

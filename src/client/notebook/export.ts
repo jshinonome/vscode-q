@@ -14,10 +14,12 @@ async function exportAsQFile(notebook: NotebookDocument | undefined): Promise<vo
         if (fileUri) {
             fs.writeFile(
                 fileUri.fsPath,
-                notebook.getCells().map(cell => {
-                    const line = cell.document.getText().trimEnd();
-                    return line.endsWith(';') ? line : line + ';';
-                }).join('\n\n'),
+                notebook.getCells()
+                    .filter(cell => cell.document.languageId === 'q')
+                    .map(cell => {
+                        const line = cell.document.getText().trimEnd();
+                        return line.endsWith(';') ? line : line + ';';
+                    }).join('\n\n'),
                 err => window.showErrorMessage(err?.message ?? ''));
         }
         console.log(notebook.getCells().map(cell => cell.document.getText()));

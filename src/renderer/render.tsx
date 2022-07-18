@@ -42,7 +42,9 @@ export const QNotebookCell: FunctionComponent<{ queryResult: Readonly<QueryResul
 
 const CodeCell: FunctionComponent<{ color: Readonly<string>, text: string }> = ({ color, text }) => {
     return <div style={'max-height:50em;overflow:auto;background:'+color}><pre style={'padding:5px'}>
-        <code class="vscode-code-block" data-vscode-code-block-lang="q"><div class="monaco-tokenized-source">{text}</div></code>
+        <code class="vscode-code-block" data-vscode-code-block-lang="q">
+            <div class="monaco-tokenized-source">{text}</div>
+        </code>
     </pre></div>;
 };
 
