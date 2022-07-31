@@ -5,14 +5,14 @@ import { QueryResult } from '../models/query-result';
 dayjs.extend(utc);
 
 type formatter = (value: any) => any;
-const decimals = 2;
+const significantDigits = 7;
 
 const kTypeMap = new Map<string, formatter>([
     ['b', (value) => value ? '1b' : '0b'],
     ['x', (value) => '0x' + value],
     ['h', (value) => value + 'h'],
-    ['e', (value) => value ? value.toFixed(decimals) : value],
-    ['f', (value) => value ? value.toFixed(decimals) : value],
+    ['e', (value: number) => value ? value.toPrecision(significantDigits) : value],
+    ['f', (value: number) => value ? value.toPrecision(significantDigits) : value],
     // Nanoseconds is not native supported in javascript
     ['p', (value) => dayjs.utc(value).format('YYYY.MM.DD[D]HH:mm:ss.SSS')],
     ['m', (value) => dayjs.utc(value).format('YYYY.MMm')],

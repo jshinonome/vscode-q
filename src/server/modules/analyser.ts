@@ -83,7 +83,7 @@ export default class Analyzer {
         // if nothing found, search globally
         if (symbols.length == 0)
             this.uriToDefinition.forEach(nameToSymInfo => {
-                symbols = symbols.concat(nameToSymInfo.get(word.text) || []);
+                symbols.push(...nameToSymInfo.get(word.text) || []);
             });
 
         return symbols.map(s => s.location);
@@ -105,7 +105,7 @@ export default class Analyzer {
 
         if (word.type === 'global_identifier' || word.containerName === '') {
             // find in all files
-            this.uriToTree.forEach((_, u) => locations = locations.concat(this.getSynNodeLocationsByUriWord(u, word)));
+            this.uriToTree.forEach((_, u) => locations.push(...this.getSynNodeLocationsByUriWord(u, word)));
         } else {
             // find in current file
             locations = this.getSynNodeLocationsByUriWord(uri, word);
@@ -190,13 +190,13 @@ export default class Analyzer {
         exactMatch: boolean,
         word: string,
     ): SymbolInformation[] {
-        let symbols: SymbolInformation[] = [];
+        const symbols: SymbolInformation[] = [];
 
         this.uriToDefinition.forEach((nameToSymInfo) => {
             nameToSymInfo.forEach((syms, name) => {
                 const match = exactMatch ? name === word : name.startsWith(word);
                 if (match) {
-                    symbols = symbols.concat(syms);
+                    symbols.push(...syms);
                 }
             });
         });
@@ -606,9 +606,9 @@ export default class Analyzer {
     }
 
     public getAllSymbols(): SymbolInformation[] {
-        let symbols: SymbolInformation[] = [];
+        const symbols: SymbolInformation[] = [];
         this.uriToDefinition.forEach((nameToSymInfo) => {
-            nameToSymInfo.forEach((sym) => symbols = symbols.concat(sym));
+            nameToSymInfo.forEach((sym) => symbols.push(...sym));
         });
         return symbols;
     }
