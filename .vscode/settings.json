@@ -3,5 +3,6 @@
   "colorize.languages": [
     "json",
     "typescript"
-  ]
+  ],
+  "npm.packageManager": "npm"
 }

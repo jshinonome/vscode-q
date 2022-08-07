@@ -1,4 +1,4 @@
-import { NotebookCell, NotebookCellOutput, NotebookCellOutputItem, NotebookController, NotebookDocument, notebooks } from 'vscode';
+import { NotebookCell, NotebookCellExecution, NotebookCellOutput, NotebookCellOutputItem, NotebookController, NotebookDocument, notebooks } from 'vscode';
 import { QConnManager } from '../modules/q-conn-manager';
 
 export class QNotebookKernel {
@@ -10,6 +10,7 @@ export class QNotebookKernel {
     private readonly _controller: NotebookController;
     private readonly _qConnManager = QConnManager.create();
     private _executionOrder = 0;
+    private currentExecution: NotebookCellExecution | null = null;
 
     constructor() {
         this._controller = notebooks.createNotebookController(
@@ -20,6 +21,7 @@ export class QNotebookKernel {
         this._controller.supportedLanguages = this.supportedLanguages;
         this._controller.supportsExecutionOrder = true;
         this._controller.executeHandler = this._executeAll.bind(this);
+        this._controller.interruptHandler = this._interrupt.bind(this);
     }
 
     dispose(): void {
@@ -32,11 +34,15 @@ export class QNotebookKernel {
         }
     }
 
+    private _interrupt(_notebook: NotebookDocument) {
+        this.currentExecution?.end(false, Date.now());
+    }
+
     private async _doExecution(cell: NotebookCell): Promise<void> {
         const execution = this._controller.createNotebookCellExecution(cell);
         execution.executionOrder = ++this._executionOrder;
+        this.currentExecution = execution;
         execution.start(Date.now());
-
 
         try {
             this._qConnManager.sync(cell.document.getText(), result => {

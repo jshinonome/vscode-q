@@ -1,5 +1,11 @@
 # change log
 
+## 3.0.2
+
+### added
+
+-   q notebook: interrupt cell
+
 ## 3.0.1
 
 ### fixed
