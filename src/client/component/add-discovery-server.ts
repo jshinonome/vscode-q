@@ -1,16 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window } from 'vscode';
-import { QConn } from '../modules/q-conn';
-import { QCfg, QConnManager } from '../modules/q-conn-manager';
+import { discoveredProcessTag, DiscoveryServer, DiscoveryServerCfg, discoveryServerTree } from '../modules/discovery-server';
 
 const templatePath = './assets/view';
 
-export class AddServer implements Disposable {
-    public static currentPanel: AddServer | undefined;
-    public static readonly viewType = 'AddServer';
+export class AddDiscoveryServer implements Disposable {
+    public static currentPanel: AddDiscoveryServer | undefined;
+    public static readonly viewType = 'AddDiscoveryServer';
     public static extensionPath = '';
-    private _currentQCfg: QCfg | null = null;
+    private _currentServer: DiscoveryServer | null = null;
     private readonly _panel: WebviewPanel;
     private readonly _extensionPath: string;
     private _disposables: Disposable[] = [];
@@ -19,23 +18,22 @@ export class AddServer implements Disposable {
     public static isReady = false;
 
     public static setExtensionPath(extensionPath: string): void {
-        AddServer.extensionPath = extensionPath;
+        AddDiscoveryServer.extensionPath = extensionPath;
     }
 
-    public static createOrShow(): AddServer {
-        if (AddServer.extensionPath === '') {
-            window.showWarningMessage('Failed to Open Add Server View');
+    public static createOrShow(): AddDiscoveryServer {
+        if (AddDiscoveryServer.extensionPath === '') {
+            window.showWarningMessage('Failed to Open Add Discovery Server View');
         }
-        const extensionPath = AddServer.extensionPath;
-        // const column = window.activeTextEditor ? window.activeTextEditor.viewColumn : undefined;
-        if (AddServer.currentPanel) {
-            AddServer.currentPanel._panel.reveal();
-            return AddServer.currentPanel;
+        const extensionPath = AddDiscoveryServer.extensionPath;
+        if (AddDiscoveryServer.currentPanel) {
+            AddDiscoveryServer.currentPanel._panel.reveal();
+            return AddDiscoveryServer.currentPanel;
         }
 
         const panel = window.createWebviewPanel(
-            AddServer.viewType,
-            'Add a Server',
+            AddDiscoveryServer.viewType,
+            'Add a Discovery Server',
             {
                 viewColumn: ViewColumn.One,
                 preserveFocus: true,
@@ -48,33 +46,33 @@ export class AddServer implements Disposable {
                 localResourceRoots: [Uri.file(path.join(extensionPath, 'assets'))]
             }
         );
-        AddServer.currentPanel = new AddServer(panel, extensionPath);
-        AddServer.isReady = false;
-        return AddServer.currentPanel;
+        AddDiscoveryServer.currentPanel = new AddDiscoveryServer(panel, extensionPath);
+        AddDiscoveryServer.isReady = false;
+        return AddDiscoveryServer.currentPanel;
     }
 
     public static revive(panel: WebviewPanel, extensionPath: string): void {
-        AddServer.currentPanel = new AddServer(panel, extensionPath);
+        AddDiscoveryServer.currentPanel = new AddDiscoveryServer(panel, extensionPath);
     }
 
     private constructor(panel: WebviewPanel, extensionPath: string) {
         this._panel = panel;
         this._extensionPath = extensionPath;
-        this._currentQCfg = null;
+        this._currentServer = null;
         this.configure();
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
         this._panel.webview.html = this._getHtmlForWebview();
         this._panel.webview.onDidReceiveMessage(message => {
             switch (message.cmd) {
                 case 'ready':
-                    AddServer.isReady = true;
+                    AddDiscoveryServer.isReady = true;
                     break;
                 case 'updateCfg':
-                    this.updateServerCfg(message.cfg, message.overwrite);
+                    this.updateCfg(message.cfg, message.overwrite);
                     break;
             }
         });
-        this._panel.title = 'Add a Server';
+        this._panel.title = 'Add a Discovery Server';
         this._panel.iconPath = Uri.file(path.join(extensionPath, 'icon.png'));
     }
 
@@ -85,7 +83,7 @@ export class AddServer implements Disposable {
     }
 
     public dispose(): void {
-        AddServer.currentPanel = undefined;
+        AddDiscoveryServer.currentPanel = undefined;
         // Clean up our assets
         this._panel.dispose();
         while (this._disposables.length) {
@@ -96,33 +94,29 @@ export class AddServer implements Disposable {
         }
     }
 
-    public static update(qcfg: QCfg): void {
-        if (!AddServer.isReady) {
-            setTimeout(AddServer.update, 100, qcfg);
+    public static preload(server: DiscoveryServer): void {
+        if (!AddDiscoveryServer.isReady) {
+            setTimeout(AddDiscoveryServer.preload, 100, server);
         } else {
-            const current = AddServer.currentPanel as AddServer;
-            current._currentQCfg = qcfg;
+            const current = AddDiscoveryServer.currentPanel as AddDiscoveryServer;
+            current._currentServer = server;
             current._panel.webview.postMessage({
-                host: qcfg.host,
-                port: qcfg.port,
-                user: qcfg.user,
-                password: qcfg.password,
-                useTLS: qcfg.useTLS,
-                label: qcfg.label,
-                tags: qcfg.tags,
-                uniqLabel: qcfg.uniqLabel,
-                useCustomizedAuth: qcfg.useCustomizedAuth
+                url: server.url,
+                user: server.user,
+                password: server.password,
+                useTLS: server.useTLS,
+                tags: server.tags,
             });
-
         }
     }
 
-    public async updateServerCfg(qcfg: QCfg, overwrite: boolean): Promise<void> {
-        console.log('update server configuration called');
-        if (overwrite && this._currentQCfg) {
-            QConnManager.current?.removeCfg(this._currentQCfg.uniqLabel);
+    public async updateCfg(cfg: DiscoveryServerCfg, overwrite: boolean): Promise<void> {
+        if (overwrite && this._currentServer) {
+            discoveryServerTree.removeChildByTags(cfg.tags);
         }
-        QConnManager.current?.addCfg(qcfg);
+        discoveryServerTree.appendChild(cfg);
+        discoveryServerTree.save();
+        discoveryServerTree.reload();
         this.dispose();
     }
 
@@ -133,8 +127,7 @@ export class AddServer implements Disposable {
         // And the uri we use to load this script in the webview
         const dirUri = webview.asWebviewUri(dir);
         let template = fs.readFileSync(
-            path.join(this._extensionPath, templatePath, 'add-server.html')).toString();
-        const customizedAuthInstalled = QConn.customizedAuthInstalled ? 'checked' : 'disabled';
+            path.join(this._extensionPath, templatePath, 'add-discovery-server.html')).toString();
         template = template.replace(/{assets}/g, dirUri.toString())
             .replace(/{theme}/g, this._theme);
         return template;

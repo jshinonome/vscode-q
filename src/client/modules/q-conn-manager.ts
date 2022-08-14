@@ -8,15 +8,17 @@ import { ChartView } from '../component/chart-viewer';
 import { QueryGrid } from '../component/query-grid';
 import { QueryView } from '../component/query-view';
 import HistoryTreeItem from '../items/history';
-import { QueryResult } from '../models/query-result';
+import { discoveredProcessTag } from './discovery-server';
 import { QConn } from './q-conn';
+import { qServers } from './q-server-tree';
 import { QStatusBarManager } from './q-status-bar-manager';
 import { QueryConsole } from './query-console';
+import { QueryResult } from './query-result';
 
 const oldCfgPath = path.join(homedir(), '.vscode', 'q-server-cfg.json');
 const cfgPath = path.join(envPaths('vscode-q').config, 'q-server-cfg.json');
 
-export class QConnManager {
+class QConnManager {
     public static current: QConnManager | undefined;
     qConnPool = new Map<string, QConn>();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -102,7 +104,7 @@ export class QConnManager {
                 if (conn) {
                     this.activeConn = qConn;
                     QStatusBarManager.updateConnStatus(uniqLabel);
-                    commands.executeCommand('q-client.refreshEntry');
+                    qServers.refresh()
                     commands.executeCommand('q-explorer.refreshEntry');
                     this.updateQueryWrapper();
                     if (query) {
@@ -124,7 +126,7 @@ export class QConnManager {
                                     });
                                     qConn?.setConn(conn);
                                     this.activeConn = qConn;
-                                    commands.executeCommand('q-client.refreshEntry');
+                                    qServers.refresh();
                                     commands.executeCommand('q-explorer.refreshEntry');
                                     commands.executeCommand('q-explorer.revealEntry');
                                     QStatusBarManager.updateConnStatus(uniqLabel);
@@ -284,7 +286,7 @@ export class QConnManager {
     }
 
     loadCfg(): void {
-        // read the q server configuration file from home dir
+        // read the q server configuration file
         if (!fs.existsSync(cfgPath)) {
             fs.mkdirSync(path.dirname(cfgPath), { recursive: true });
             if (fs.existsSync(oldCfgPath)) {
@@ -297,7 +299,7 @@ export class QConnManager {
         this.qCfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
         this.qCfg = this.qCfg.map(qcfg => {
             qcfg.uniqLabel = `${qcfg.tags},${qcfg.label}`;
-            qcfg.useCustomizedAuth = qcfg.useCustomizedAuth === true ? true : false;
+            qcfg.useCustomizedAuth = qcfg.useCustomizedAuth === true;
             return qcfg;
         });
         // reserver current conn
@@ -401,19 +403,24 @@ export class QConnManager {
     }
 
     dumpCfg(): void {
-        fs.writeFileSync(cfgPath, JSON.stringify(this.qCfg.map(qcfg => {
-            return {
-                host: qcfg.host,
-                port: qcfg.port,
-                user: qcfg.user,
-                password: qcfg.password,
-                useTLS: qcfg.useTLS === true,
-                label: qcfg.label,
-                tags: qcfg.tags,
-                uniqLabel: `${qcfg.tags},${qcfg.label}`,
-                useCustomizedAuth: qcfg.useCustomizedAuth === true
-            };
-        }), null, 4), 'utf8');
+        fs.writeFileSync(cfgPath,
+            JSON.stringify(
+                this.qCfg
+                    // skip discovered processes
+                    .filter(qcfg => !qcfg.tags.startsWith(discoveredProcessTag))
+                    .map(qcfg => {
+                        return {
+                            host: qcfg.host,
+                            port: qcfg.port,
+                            user: qcfg.user,
+                            password: qcfg.password,
+                            useTLS: qcfg.useTLS === true,
+                            label: qcfg.label,
+                            tags: qcfg.tags,
+                            uniqLabel: `${qcfg.tags},${qcfg.label}`,
+                            useCustomizedAuth: qcfg.useCustomizedAuth === true
+                        };
+                    }), null, 2), 'utf8');
     }
 
     removeConn(uniqLabel: string): void {
@@ -423,12 +430,12 @@ export class QConnManager {
             this.activeConn = undefined;
             QStatusBarManager.updateConnStatus(undefined);
         }
-        commands.executeCommand('q-client.refreshEntry');
+        qServers.refresh();
         window.showWarningMessage(`Lost connection to ${uniqLabel} `);
     }
 }
 
-export type QCfg = {
+type QCfg = {
     host: string;
     port: number;
     user: string;
@@ -439,3 +446,5 @@ export type QCfg = {
     useCustomizedAuth: boolean;
     useTLS: boolean;
 }
+
+export { QConnManager, QCfg };

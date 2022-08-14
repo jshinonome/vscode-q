@@ -3,7 +3,7 @@ import utc from 'dayjs/plugin/utc';
 import fs from 'fs';
 import path from 'path';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window } from 'vscode';
-import { QueryResult } from '../models/query-result';
+import { QueryResult } from '../modules/query-result';
 import { kTypeMap } from '../util/k-map';
 
 dayjs.extend(utc);

@@ -3,8 +3,8 @@ import utc from 'dayjs/plugin/utc';
 import fs from 'fs';
 import path from 'path';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
-import { QueryResult } from '../models/query-result';
 import { QConnManager } from '../modules/q-conn-manager';
+import { QueryResult } from '../modules/query-result';
 
 dayjs.extend(utc);
 

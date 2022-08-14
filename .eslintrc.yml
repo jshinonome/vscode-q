@@ -12,6 +12,7 @@ parserOptions:
 plugins:
   - "@typescript-eslint"
   - "jest"
+  - "html"
 rules:
   indent:
     - error

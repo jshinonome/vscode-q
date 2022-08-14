@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FunctionComponent } from 'preact';
-import { QueryResult } from '../client/models/query-result';
+import { QueryResult } from '../client/modules/query-result';
 import { formatKTable } from '../client/util/format';
 import { kTypeName } from '../client/util/k-map';
 import './style.css';

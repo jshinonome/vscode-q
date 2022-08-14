@@ -1,5 +1,11 @@
 # change log
 
+## 3.0.5
+
+### added
+
+-   discovery server
+
 ## 3.0.2
 
 ### added

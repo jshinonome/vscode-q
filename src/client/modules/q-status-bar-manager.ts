@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { ColorThemeKind, ExtensionContext, StatusBarAlignment, StatusBarItem, window } from 'vscode';
+import { ColorThemeKind, ExtensionContext, StatusBarAlignment, StatusBarItem, window, ThemeColor } from 'vscode';
 import { QConnManager } from './q-conn-manager';
 
 export class QStatusBarManager {
@@ -9,6 +9,8 @@ export class QStatusBarManager {
     private queryModeStatusBar: StatusBarItem;
     private isLightTheme = window.activeColorTheme.kind === ColorThemeKind.Light;
     public static current: QStatusBarManager | undefined;
+    private originalColor: string | ThemeColor;
+    private originalBackgroundColor: ThemeColor | undefined;
     public static create(context: ExtensionContext): QStatusBarManager {
         if (!this.current) {
             this.current = new QStatusBarManager(context);
@@ -41,13 +43,36 @@ export class QStatusBarManager {
         this.unlimitedQueryStatusBar.color = '#F44336';
         this.unlimitedQueryStatusBar.tooltip = 'Unlimited Query';
         context.subscriptions.push(this.unlimitedQueryStatusBar);
+        this.originalColor = this.connStatusBar.color;
+        this.originalBackgroundColor = this.connStatusBar.backgroundColor;
 
     }
 
+    setProdColor() {
+        this.connStatusBar.color = '#FFEBEE';
+        this.connStatusBar.backgroundColor = new ThemeColor('statusBarItem.errorBackground');
+        this.queryModeStatusBar.color = '#FFEBEE';
+        this.queryModeStatusBar.backgroundColor = new ThemeColor('statusBarItem.errorBackground');
+    }
+
+    restoreOriginalColor() {
+        this.connStatusBar.color = this.originalColor;
+        this.connStatusBar.backgroundColor = this.originalBackgroundColor;
+        this.queryModeStatusBar.color = this.originalColor;
+        this.queryModeStatusBar.backgroundColor = this.originalBackgroundColor;
+    }
 
     public static updateConnStatus(label: string | undefined): void {
         const text = (label ?? 'Disconnected').replace(',', '-');
-        this.current!.connStatusBar.text = text + ' $(chevron-right)';
+        if (this.current) {
+            this.current.connStatusBar.text = text + ' $(chevron-right)';
+            const r = /\b(prd|prod|product)\b/;
+            if (r.test(text.toLocaleLowerCase())) {
+                this.current.setProdColor();
+            } else {
+                this.current.restoreOriginalColor();
+            }
+        }
     }
 
     public static updateQueryModeStatus(): void {

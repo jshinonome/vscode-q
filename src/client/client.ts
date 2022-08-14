@@ -3,6 +3,7 @@ import {
     commands, env, ExtensionContext, IndentAction, languages, QuickPickItem, QuickPickItemKind, Range, Selection, TextDocument, TextEdit, TreeItem, Uri, WebviewPanel, window, workspace
 } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
+import { AddDiscoveryServer } from './component/add-discovery-server';
 import { AddServer } from './component/add-server';
 import { ChartView } from './component/chart-viewer';
 import { QueryGrid } from './component/query-grid';
@@ -10,9 +11,10 @@ import { QueryView } from './component/query-view';
 import HistoryTreeItem from './items/history';
 import QDictTreeItem from './items/q-dict';
 import QFunctionTreeItem from './items/q-function';
+import { DiscoveryServer, discoveryServerTree } from './modules/discovery-server';
 import { QConn } from './modules/q-conn';
 import { QConnManager } from './modules/q-conn-manager';
-import { QServerTree } from './modules/q-server-tree';
+import { qServers } from './modules/q-server-tree';
 import { QStatusBarManager } from './modules/q-status-bar-manager';
 import { runQFile, sendToCurrentTerm } from './modules/q-term';
 import { QueryConsole } from './modules/query-console';
@@ -74,19 +76,19 @@ export function activate(context: ExtensionContext): void {
     QStatusBarManager.create(context);
     QStatusBarManager.updateConnStatus(undefined);
     // q-server-explorer
-    const qServers = new QServerTree('root', null);
     const qRoot = new QDictTreeItem('root', null);
-    const qHistory = HistoryTreeItem.createHistoryTree();
-    qServers.refresh();
+    const queryHistory = HistoryTreeItem.createHistoryTree();
     window.registerTreeDataProvider('q-explorer', qRoot);
-    window.registerTreeDataProvider('q-history', qHistory);
+    window.registerTreeDataProvider('query-history', queryHistory);
+    window.registerTreeDataProvider('discovery-server-tree', discoveryServerTree);
 
-    qHistory.refresh();
+    queryHistory.refresh();
     QueryConsole.createOrGet();
     QueryView.setExtensionPath(context.extensionPath);
     QueryGrid.setExtensionPath(context.extensionPath);
     AddServer.setExtensionPath(context.extensionPath);
     ChartView.setExtensionPath(context.extensionPath);
+    AddDiscoveryServer.setExtensionPath(context.extensionPath);
     // --> init
 
 
@@ -108,8 +110,33 @@ export function activate(context: ExtensionContext): void {
         }
     });
 
+    // <-- Discovery Server
+    commands.registerCommand('q-client.discoveryServer.download', (server: DiscoveryServer) => server.download());
+
+    commands.registerCommand('q-client.discoveryServer.reload', () => discoveryServerTree.reload());
+
+    commands.registerCommand('q-client.discoveryServer.addEntry', () => AddDiscoveryServer.createOrShow());
+
+    commands.registerCommand('q-client.discoveryServer.editEntry',
+        (server: DiscoveryServer) => {
+            AddDiscoveryServer.createOrShow();
+            AddDiscoveryServer.preload(server);
+        });
+
+    commands.registerCommand('q-client.discoveryServer.deleteEntry',
+        (server: DiscoveryServer) => {
+            window.showInputBox(
+                { prompt: `Confirm to Remove Discovery Server '${server.tags} - ${server.user}' (Y/n)` }
+            ).then(value => {
+                if (value === 'Y') {
+                    server.dispose();
+                }
+            });
+        });
+    // --> Discovery Server
+
     commands.registerCommand(
-        'q-client.refreshEntry', () => qServers.refresh());
+        'q-client.refreshEntry', () => qServers.reload());
 
     commands.registerCommand(
         'q-explorer.toggleAutoRefresh', () => {
@@ -117,7 +144,6 @@ export function activate(context: ExtensionContext): void {
             window.showInformationMessage(`Auto Refresh Explorer ${QConnManager.autoRefreshExplorer ? 'On' : 'Off'}`);
         });
 
-    // q cfg input
     commands.registerCommand(
         'q-client.addEntry',
         () => {
@@ -292,7 +318,7 @@ export function activate(context: ExtensionContext): void {
     });
 
     context.subscriptions.push(
-        commands.registerCommand('q-history.rerun', (history) => {
+        commands.registerCommand('q-client.history.rerun', (history) => {
             if (QConnManager.current?.activeConn?.uniqLabel === history.uniqLabel)
                 QConnManager.current?.sync(history.query);
             else

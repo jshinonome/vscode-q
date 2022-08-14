@@ -1,11 +1,12 @@
 import path from 'path';
 import { Event, EventEmitter, TreeDataProvider, TreeItem, TreeItemCollapsibleState } from 'vscode';
+import { discoveredProcessTag } from './discovery-server';
 import { QConn } from './q-conn';
-import { QConnManager } from './q-conn-manager';
+import { QCfg, QConnManager } from './q-conn-manager';
 
 const qConnManager = QConnManager.create();
 
-export class QServerTree extends TreeItem implements TreeDataProvider<TreeItem> {
+class QServerTree extends TreeItem implements TreeDataProvider<TreeItem> {
     private _onDidChangeTreeData: EventEmitter<QConn | undefined> = new EventEmitter<QConn | undefined>();
     readonly onDidChangeTreeData: Event<QConn | undefined> = this._onDidChangeTreeData.event;
     _parent: TreeItem | null;
@@ -17,14 +18,35 @@ export class QServerTree extends TreeItem implements TreeDataProvider<TreeItem> 
         this._parent = parent;
     }
 
-    refresh(): void {
+    // append cfg to children and remove conn with tags
+    reload(cfg: QCfg[] = [], tags = discoveredProcessTag): void {
         if (this._parent) {
             return;
         }
-        qConnManager.loadCfg();
+        // no need to load cfg from disk if append discovered processes
+        if (cfg.length === 0) {
+            qConnManager.loadCfg();
+        }
+        const pool = qConnManager.qConnPool;
         this._children = [];
+        // remove existing conns
+        if (tags) {
+            pool.forEach(qconn => {
+                if (qconn.tags === tags) {
+                    pool.get(qconn.uniqLabel)?.conn?.close();
+                    pool.delete(qconn.uniqLabel);
+                }
+            });
+            qConnManager.qCfg = qConnManager.qCfg.filter(cfg => cfg.tags !== tags);
+        }
+        if (cfg.length > 0) {
+            cfg.forEach(qcfg => {
+                pool.set(qcfg.uniqLabel, new QConn(qcfg, undefined));
+            })
+            qConnManager.qCfg.push(...cfg);
+        }
         const itemMap = new Map<string, QServerTree>();
-        qConnManager.qConnPool.forEach(qconn => {
+        pool.forEach(qconn => {
             if (qconn.tags.length) {
                 // eslint-disable-next-line @typescript-eslint/no-this-alias
                 let parent: QServerTree = this;
@@ -53,6 +75,10 @@ export class QServerTree extends TreeItem implements TreeDataProvider<TreeItem> 
                 this._children.push(qconn);
             }
         });
+        this.refresh();
+    }
+
+    refresh() {
         this._onDidChangeTreeData.fire(undefined);
     }
 
@@ -124,3 +150,9 @@ export class QServerTree extends TreeItem implements TreeDataProvider<TreeItem> 
 
     }
 }
+
+const qServers = new QServerTree('root', null);
+
+qServers.reload();
+
+export { QServerTree, qServers };

@@ -140,8 +140,13 @@
             "q-ext-explorer": [
                 {
                     "id": "q-servers",
-                    "name": "Server List",
-                    "contextualTitle": "Servers"
+                    "name": "Processes",
+                    "contextualTitle": "Processes"
+                },
+                {
+                    "id": "discovery-server-tree",
+                    "name": "Discovery Server",
+                    "contextualTitle": "Discovery Server"
                 },
                 {
                     "id": "q-explorer",
@@ -149,7 +154,7 @@
                     "contextualTitle": "Server Explorer"
                 },
                 {
-                    "id": "q-history",
+                    "id": "query-history",
                     "name": "Query History",
                     "contextualTitle": "Query History"
                 }
@@ -159,7 +164,7 @@
             {
                 "command": "q-client.refreshEntry",
                 "title": "Refresh q Server List",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/refresh.svg",
                     "dark": "assets/svg/dark/refresh.svg"
@@ -168,7 +173,7 @@
             {
                 "command": "q-client.addEntry",
                 "title": "Add q Server",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/add.svg",
                     "dark": "assets/svg/dark/add.svg"
@@ -177,7 +182,7 @@
             {
                 "command": "q-client.editEntry",
                 "title": "Edit q Server",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/edit.svg",
                     "dark": "assets/svg/dark/edit.svg"
@@ -186,7 +191,7 @@
             {
                 "command": "q-client.deleteEntry",
                 "title": "Delete q Server",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/trash.svg",
                     "dark": "assets/svg/dark/trash.svg"
@@ -195,7 +200,7 @@
             {
                 "command": "q-client.connectEntry",
                 "title": "Connect to q Server",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/connect.svg",
                     "dark": "assets/svg/dark/connect.svg"
@@ -204,12 +209,57 @@
             {
                 "command": "q-explorer.revealEntry",
                 "title": "Reveal q Server",
-                "category": "kdb+/q ext"
+                "category": "kdb+/q"
             },
             {
-                "command": "q-history.rerun",
+                "command": "q-client.discoveryServer.reload",
+                "title": "Reload Discovery Server",
+                "category": "kdb+/q",
+                "icon": {
+                    "light": "assets/svg/light/refresh.svg",
+                    "dark": "assets/svg/dark/refresh.svg"
+                }
+            },
+            {
+                "command": "q-client.discoveryServer.addEntry",
+                "title": "Add Discovery Server",
+                "category": "kdb+/q",
+                "icon": {
+                    "light": "assets/svg/light/add.svg",
+                    "dark": "assets/svg/dark/add.svg"
+                }
+            },
+            {
+                "command": "q-client.discoveryServer.editEntry",
+                "title": "Edit Discovery Server",
+                "category": "kdb+/q",
+                "icon": {
+                    "light": "assets/svg/light/edit.svg",
+                    "dark": "assets/svg/dark/edit.svg"
+                }
+            },
+            {
+                "command": "q-client.discoveryServer.deleteEntry",
+                "title": "Delete q Server",
+                "category": "kdb+/q",
+                "icon": {
+                    "light": "assets/svg/light/trash.svg",
+                    "dark": "assets/svg/dark/trash.svg"
+                }
+            },
+            {
+                "command": "q-client.discoveryServer.download",
+                "title": "Discover Process",
+                "category": "kdb+/q",
+                "icon": {
+                    "light": "assets/svg/light/cloud-download.svg",
+                    "dark": "assets/svg/dark/cloud-download.svg"
+                }
+            },
+            {
+                "command": "q-client.history.rerun",
                 "title": "Rerun History",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/run.svg",
                     "dark": "assets/svg/dark/run.svg"
@@ -218,7 +268,7 @@
             {
                 "command": "q-client.toggleLimitQuery",
                 "title": "Toggle Unlimited Query",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/flame.svg",
                     "dark": "assets/svg/dark/flame.svg"
@@ -227,7 +277,7 @@
             {
                 "command": "q-client.queryCurrentLine",
                 "title": "Query Current Line",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/query-current-line.svg",
                     "dark": "assets/svg/dark/query-current-line.svg"
@@ -236,7 +286,7 @@
             {
                 "command": "q-client.querySelection",
                 "title": "Query Current Selection",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/query-selection.svg",
                     "dark": "assets/svg/dark/query-selection.svg"
@@ -245,7 +295,7 @@
             {
                 "command": "q-client.queryBlock",
                 "title": "Query Current Block",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/query-block.svg",
                     "dark": "assets/svg/dark/query-block.svg"
@@ -254,22 +304,22 @@
             {
                 "command": "q-term.sendCurrentLine",
                 "title": "Send Current Line to Terminal",
-                "category": "kdb+/q ext"
+                "category": "kdb+/q"
             },
             {
                 "command": "q-term.sendSelection",
                 "title": "Send Current Selection to Terminal",
-                "category": "kdb+/q ext"
+                "category": "kdb+/q"
             },
             {
                 "command": "q-client.sendBlock",
                 "title": "Send Current Block to Terminal",
-                "category": "kdb+/q ext"
+                "category": "kdb+/q"
             },
             {
                 "command": "q-client.abortQuery",
                 "title": "Abort Current Query",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/debug-stop.svg",
                     "dark": "assets/svg/dark/debug-stop.svg"
@@ -278,7 +328,7 @@
             {
                 "command": "q-client.disconnect",
                 "title": "Disconnect to Active Server",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/debug-disconnect.svg",
                     "dark": "assets/svg/dark/debug-disconnect.svg"
@@ -287,7 +337,7 @@
             {
                 "command": "q-client.switchMode",
                 "title": "Switch Query Mode",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/gear.svg",
                     "dark": "assets/svg/dark/gear.svg"
@@ -296,7 +346,7 @@
             {
                 "command": "q-client.importServers",
                 "title": "Import Server List",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/import.svg",
                     "dark": "assets/svg/dark/import.svg"
@@ -305,7 +355,7 @@
             {
                 "command": "q-client.exportServers",
                 "title": "Export Server List",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/export.svg",
                     "dark": "assets/svg/dark/export.svg"
@@ -314,7 +364,7 @@
             {
                 "command": "q-client.reactions",
                 "title": "Raise an Issue",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/reactions.svg",
                     "dark": "assets/svg/dark/reactions.svg"
@@ -323,7 +373,7 @@
             {
                 "command": "q-client.tagEntry",
                 "title": "Tag a Server",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/tag.svg",
                     "dark": "assets/svg/dark/tag.svg"
@@ -332,7 +382,7 @@
             {
                 "command": "q-explorer.refreshEntry",
                 "title": "Refresh q Explorer",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/refresh.svg",
                     "dark": "assets/svg/dark/refresh.svg"
@@ -341,7 +391,7 @@
             {
                 "command": "q-explorer.toggleAutoRefresh",
                 "title": "Toggle Auto Refresh",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/sync.svg",
                     "dark": "assets/svg/dark/sync.svg"
@@ -350,7 +400,7 @@
             {
                 "command": "q-explorer.preview",
                 "title": "Preview",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/preview.svg",
                     "dark": "assets/svg/dark/preview.svg"
@@ -359,7 +409,7 @@
             {
                 "command": "q-client.terminal.run",
                 "title": "Run q File in Terminal",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/debug-start.svg",
                     "dark": "assets/svg/dark/debug-start.svg"
@@ -368,12 +418,12 @@
             {
                 "command": "q-client.insertActiveConnLabel",
                 "title": "Insert Active Connection Label",
-                "category": "kdb+/q ext"
+                "category": "kdb+/q"
             },
             {
                 "command": "q-notebook.export",
                 "title": "Export",
-                "category": "kdb+/q ext",
+                "category": "kdb+/q",
                 "icon": {
                     "light": "assets/svg/light/export.svg",
                     "dark": "assets/svg/dark/export.svg"
@@ -417,6 +467,16 @@
                     "command": "q-client.reactions",
                     "when": "view == q-servers",
                     "group": "navigation@6"
+                },
+                {
+                    "command": "q-client.discoveryServer.addEntry",
+                    "when": "view == discovery-server-tree",
+                    "group": "navigation@0"
+                },
+                {
+                    "command": "q-client.discoveryServer.reload",
+                    "when": "view == discovery-server-tree",
+                    "group": "navigation@1"
                 },
                 {
                     "command": "q-client.disconnect",
@@ -471,8 +531,23 @@
                     "group": "inline"
                 },
                 {
-                    "command": "q-history.rerun",
-                    "when": "view == q-history && viewItem == history",
+                    "command": "q-client.discoveryServer.editEntry",
+                    "when": "view == discovery-server-tree && viewItem == discovery-server",
+                    "group": "inline"
+                },
+                {
+                    "command": "q-client.discoveryServer.deleteEntry",
+                    "when": "view == discovery-server-tree && viewItem == discovery-server",
+                    "group": "inline"
+                },
+                {
+                    "command": "q-client.discoveryServer.download",
+                    "when": "view == discovery-server-tree && viewItem == discovery-server",
+                    "group": "inline"
+                },
+                {
+                    "command": "q-client.history.rerun",
+                    "when": "view == query-history && viewItem == history",
                     "group": "inline"
                 },
                 {
@@ -557,7 +632,7 @@
         ],
         "configuration": {
             "type": "object",
-            "title": "kdb+/q Ext Configuration",
+            "title": "kdb+/q Configuration",
             "properties": {
                 "q-server.sourceFiles.globsPattern": {
                     "scope": "resource",
@@ -675,26 +750,27 @@
         "@babel/core": "^7.18.10",
         "@babel/preset-env": "^7.18.10",
         "@babel/preset-typescript": "^7.18.6",
-        "@finos/perspective": "1.6.2",
-        "@finos/perspective-viewer": "1.6.2",
-        "@finos/perspective-viewer-d3fc": "1.6.2",
-        "@finos/perspective-viewer-datagrid": "1.6.2",
+        "@finos/perspective": "1.6.3",
+        "@finos/perspective-viewer": "1.6.3",
+        "@finos/perspective-viewer-d3fc": "1.6.3",
+        "@finos/perspective-viewer-datagrid": "1.6.3",
         "@types/long": "^4.0.2",
-        "@types/node": "^18.6.4",
+        "@types/node": "^18.7.2",
         "@types/request": "^2.48.8",
         "@types/vscode": "^1.70.0",
         "@types/vscode-notebook-renderer": "^1.60.0",
         "@types/webpack-env": "^1.17.0",
-        "@typescript-eslint/parser": "^5.32.0",
+        "@typescript-eslint/parser": "^5.33.0",
         "ag-grid-community": "^28.1.0",
         "babel-jest": "^28.1.3",
         "chart.js": "^3.9.1",
         "css-loader": "^6.7.1",
-        "dayjs": "^1.11.4",
-        "eslint-plugin-jest": "^26.8.0",
+        "dayjs": "^1.11.5",
+        "eslint-plugin-html": "^7.1.0",
+        "eslint-plugin-jest": "^26.8.2",
         "jest": "^28.1.3",
         "node-q": "^2.6.0",
-        "preact": "^10.10.1",
+        "preact": "^10.10.2",
         "style-loader": "^3.3.1",
         "ts-jest": "^28.0.7",
         "ts-loader": "^9.3.1",
@@ -707,7 +783,7 @@
         "@types/graceful-fs": "^4.1.5",
         "@types/klaw": "^3.0.3",
         "@types/picomatch": "^2.3.0",
-        "@typescript-eslint/eslint-plugin": "^5.32.0",
+        "@typescript-eslint/eslint-plugin": "^5.33.0",
         "csv-parser": "^3.0.0",
         "env-paths": "^3.0.0",
         "eslint": "^8.21.0",
