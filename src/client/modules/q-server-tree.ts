@@ -42,7 +42,7 @@ class QServerTree extends TreeItem implements TreeDataProvider<TreeItem> {
         if (cfg.length > 0) {
             cfg.forEach(qcfg => {
                 pool.set(qcfg.uniqLabel, new QConn(qcfg, undefined));
-            })
+            });
             qConnManager.qCfg.push(...cfg);
         }
         const itemMap = new Map<string, QServerTree>();

@@ -77,7 +77,7 @@ class DiscoveryServer extends TreeItem implements TreeDataProvider<TreeItem> {
     }
 
     appendChild(cfg: DiscoveryServerCfg) {
-        const server = new DiscoveryServer(cfg, this)
+        const server = new DiscoveryServer(cfg, this);
         this._children = this._children.filter(child => child.tags !== cfg.tags);
         this._children.push(server);
         this._children.sort((c1, c2) => c1.tags.localeCompare(c2.tags));
@@ -120,7 +120,7 @@ class DiscoveryServer extends TreeItem implements TreeDataProvider<TreeItem> {
                     try {
                         processInfo = JSON.parse(msg);
                     } catch (_error) {
-                        window.showErrorMessage(`[Discovery Server] Failed to parse "${msg.slice(0, 30)}"`)
+                        window.showErrorMessage(`[Discovery Server] Failed to parse "${msg.slice(0, 30)}"`);
                         return;
                     }
                     const cfg: QCfg[] = processInfo.map(info => ({
@@ -135,13 +135,13 @@ class DiscoveryServer extends TreeItem implements TreeDataProvider<TreeItem> {
                         useTLS: this.useTLS,
                     }));
                     qServers.reload(cfg, tags);
-                    window.showInformationMessage(`[Discovery Server] Discovered ${cfg.length} processes with "${tags}"`)
+                    window.showInformationMessage(`[Discovery Server] Discovered ${cfg.length} processes with "${tags}"`);
                 });
                 resp.on('error',
                     err => window.showErrorMessage(`[Discovery Server] Failed to discover processes, "${err}"`));
-            })
+            });
         } catch (error) {
-            window.showErrorMessage(`[Discovery Server] Failed to discover processes, "${error}"`)
+            window.showErrorMessage(`[Discovery Server] Failed to discover processes, "${error}"`);
         }
     }
 

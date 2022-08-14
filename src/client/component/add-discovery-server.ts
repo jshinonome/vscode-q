@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { ColorThemeKind, Disposable, Uri, ViewColumn, WebviewPanel, window } from 'vscode';
-import { discoveredProcessTag, DiscoveryServer, DiscoveryServerCfg, discoveryServerTree } from '../modules/discovery-server';
+import { DiscoveryServer, DiscoveryServerCfg, discoveryServerTree } from '../modules/discovery-server';
 
 const templatePath = './assets/view';
 

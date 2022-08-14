@@ -104,7 +104,7 @@ class QConnManager {
                 if (conn) {
                     this.activeConn = qConn;
                     QStatusBarManager.updateConnStatus(uniqLabel);
-                    qServers.refresh()
+                    qServers.refresh();
                     commands.executeCommand('q-explorer.refreshEntry');
                     this.updateQueryWrapper();
                     if (query) {

@@ -37,12 +37,12 @@
             let cfg;
             window.addEventListener('message', event => {
                 cfg = event.data;
-                console.log(`got a configuration`);
+                console.log('got a configuration');
                 loadCfg();
             });
 
             window.onload = (event) => {
-                console.log("Page is fully loaded");
+                console.log('Page is fully loaded');
                 try {
                     vscode.postMessage({ cmd: 'ready' });
                 }
@@ -60,20 +60,20 @@
             function validateInput() {
                 let errorMsg = '';
                 if (tags.value.trim() === '')
-                    errorMsg += '<em>Tags cannot be null</em><br>'
+                    errorMsg += '<em>Tags cannot be null</em><br>';
                 if (errorMsg === '') {
-                    alert.style.display = "none";
+                    alert.style.display = 'none';
                     return true;
                 } else {
                     alert.innerHTML = errorMsg;
-                    alert.style.display = "block";
+                    alert.style.display = 'block';
                     return false;
                 }
             }
             function create() {
                 if (!validateInput())
                     return;
-                console.log(getCfg())
+                console.log(getCfg());
                 sendCfgToVscode(getCfg(), false);
             }
             function update() {
@@ -88,7 +88,7 @@
                     password: password.value.trim(),
                     tags: tags.value.trim(),
                     useTLS: useTLS.checked,
-                }
+                };
             }
 
             function loadCfg() {
@@ -103,7 +103,7 @@
 
             function sendCfgToVscode(cfg, overwrite) {
                 vscode.postMessage({
-                    cmd: "updateCfg",
+                    cmd: 'updateCfg',
                     cfg: cfg,
                     overwrite: overwrite
                 });
