@@ -81,6 +81,10 @@ Special tag color:
 
 ![server-list](assets/demo/server-list.png)
 
+## Discovery Server
+
+The url should be a REST API endpoint, which returns a list of `{host:string, port:number, label:string}`. The returned list will be added to Server List, but it won't be saved.
+
 ## Server Explorer
 
 List variables defined on the active server.
