@@ -114,7 +114,9 @@ class DiscoveryServer extends TreeItem implements TreeDataProvider<TreeItem> {
         const tags = `${discoveredProcessTag},${this.tags}`;
         try {
             http.get(this.url, resp => {
-                resp.on('data', data => {
+                let data = '';
+                resp.on('data', chunk => { data += chunk; });
+                resp.on('end', () => {
                     const msg = data.toString();
                     let processInfo: ProcessInfo[] = [];
                     try {
