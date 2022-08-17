@@ -18,7 +18,7 @@ import { qServers } from './modules/q-server-tree';
 import { QStatusBarManager } from './modules/q-status-bar-manager';
 import { runQFile, sendToCurrentTerm } from './modules/q-term';
 import { QueryConsole } from './modules/query-console';
-import { exportAsQFile } from './notebook/export';
+// import { exportAsQFile } from './notebook/export';
 import { QNotebookKernel } from './notebook/kernel';
 import { QNotebookSerializer } from './notebook/serializer';
 
@@ -438,7 +438,7 @@ export function activate(context: ExtensionContext): void {
     context.subscriptions.push(
         commands.registerCommand(
             'q-notebook.export', async () => {
-                exportAsQFile(window.activeNotebookEditor?.notebook);
+                // exportAsQFile(window.activeNotebookEditor?.notebook);
             }
         )
     );
