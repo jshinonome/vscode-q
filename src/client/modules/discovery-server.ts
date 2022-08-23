@@ -136,6 +136,7 @@ class DiscoveryServer extends TreeItem implements TreeDataProvider<TreeItem> {
                         useCustomizedAuth: false,
                         useTLS: this.useTLS,
                     }));
+                    cfg.sort((c1, c2) => c1.label.localeCompare(c2.label));
                     qServers.reload(cfg, tags);
                     window.showInformationMessage(`[Discovery Server] Discovered ${cfg.length} processes with "${tags}"`);
                 });
