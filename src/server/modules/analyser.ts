@@ -258,13 +258,13 @@ export default class Analyzer {
 
     public analyzeLoadFiles(uri: DocumentUri): void {
         this.uriToLoadFile.get(uri)?.forEach(f => {
-            if (!this.uriToTree.get(`file://${f}`))
+            if (!this.uriToTree.get(URI.file(f).toString()))
                 this.analyzeFile(f);
         });
     }
 
     public analyzeFile(filepath: string): void {
-        const uri = `file://${filepath}`;
+        const uri = URI.file(filepath).toString();
         try {
             const fileContent = fs.readFileSync(filepath, 'utf8');
             this.connection.console.info(`Analyzing ${uri}`);
