@@ -18,7 +18,7 @@ import { qServers } from './modules/q-server-tree';
 import { QStatusBarManager } from './modules/q-status-bar-manager';
 import { runQFile, sendToCurrentTerm } from './modules/q-term';
 import { QueryConsole } from './modules/query-console';
-// import { exportAsQFile } from './notebook/export';
+import { exportAsQFile } from './notebook/export';
 import { QNotebookKernel } from './notebook/kernel';
 import { QNotebookSerializer } from './notebook/serializer';
 
@@ -342,6 +342,7 @@ export function activate(context: ExtensionContext): void {
         if (editor) {
             let n = 0;
             let query = '';
+            let block = { query: '', n: 0 };
             const params = {
                 textDocument: {
                     uri: editor.document.uri.toString(),
@@ -360,7 +361,8 @@ export function activate(context: ExtensionContext): void {
                     );
                     break;
                 case QueryCodeType.Block:
-                    ({ query, n } = await client.sendRequest('onQueryBlock', params));
+                    block = await client.sendRequest('onQueryBlock', params);
+                    ({ query, n } = block);
                     break;
             }
             if (query) {
@@ -438,7 +440,7 @@ export function activate(context: ExtensionContext): void {
     context.subscriptions.push(
         commands.registerCommand(
             'q-notebook.export', async () => {
-                // exportAsQFile(window.activeNotebookEditor?.notebook);
+                exportAsQFile(window.activeNotebookEditor?.notebook);
             }
         )
     );
