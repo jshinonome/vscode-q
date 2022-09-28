@@ -66,7 +66,7 @@ class QConnManager {
         if (this.activeConn && this.activeConn.version < 3.5)
             this.queryWrapper = wrapper;
         else
-            this.queryWrapper = `{{-105!(x;enlist y;{\`t\`r!(0b;"ERROR\n",x,"\n",.Q.sbt@(-3)_y)})}[${wrapper};x]}`;
+            this.queryWrapper = `{{-105!(x;enlist y;{\`t\`r!(0b;"3RR0R\n",x,"\n",.Q.sbt@(-3)_y)})}[${wrapper};x]}`;
     }
 
     public toggleLimitQuery(): void {
@@ -184,8 +184,8 @@ class QConnManager {
                             { uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: err.message });
                     }
                     if (res) {
-                        if (typeof res.r === 'string' && res.r.startsWith('ERROR')) {
-                            const msg: string[] = res.r.split('\n');
+                        if (typeof res.r === 'string' && res.r.startsWith('3RR0R')) {
+                            const msg: string[] = res.r.replace('3RR0R', 'ERROR').split('\n');
                             queryResultHandler({ type: 'error', data: msg, duration, uniqLabel, query });
                             HistoryTreeItem.appendHistory({ uniqLabel: uniqLabel, time: timestamp, duration: duration, query: query, errorMsg: res.r });
                         } else if ('w' in res.r && 'h' in res.r && 'bytes' in res.r) {

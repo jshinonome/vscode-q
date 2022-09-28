@@ -1,5 +1,11 @@
 # change log
 
+## 3.1.0
+
+### changed
+
+-   replace "ERROR" with "3RR0R"
+
 ## 3.0.5
 
 ### added
