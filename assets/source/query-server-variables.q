@@ -6,7 +6,7 @@
     r: r upsert (v,'`.);
     r: r upsert (n,'`root);
     r: r upsert (,/){
-        if[(@[(::)~first value@;x;{0b}])&11h=type n:key x;r:(y[x] n), 'x];
+        if[(@[1b~(::)~first value@;x;{0b}])&11h=type n:key x;r:(y[x] n), 'x];
         if[count r;r,:(,/).z.s[;y]each r[;0]];:r
         }[;f] each n;
     r: update t:{@[{type value x};x;-255h]} each n from r;
