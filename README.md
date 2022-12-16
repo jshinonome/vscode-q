@@ -1,33 +1,33 @@
 # vscode-q
 
-[![](https://img.shields.io/visual-studio-marketplace/v/jshinonome.vscode-q?labelColor=651FFF&color=B388FF&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
-[![](https://vsmarketplacebadge.apphb.com/downloads/jshinonome.vscode-q.svg?labelColor=651FFF&color=B388FF&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
-[![](https://vsmarketplacebadge.apphb.com/installs/jshinonome.vscode-q.svg?labelColor=651FFF&color=B388FF&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
+[![](https://img.shields.io/visual-studio-marketplace/v/jshinonome.vscode-q?labelColor=4a148c&color=9c27b0&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
+[![](https://img.shields.io/visual-studio-marketplace/i/jshinonome.vscode-q?labelColor=4a148c&color=9c27b0&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
+[![](https://img.shields.io/visual-studio-marketplace/d/jshinonome.vscode-q?labelColor=4a148c&color=9c27b0&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 [![Join the chat at https://gitter.im/vscode-q/community](https://badges.gitter.im/vscode-q/community.svg)](https://gitter.im/vscode-q/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This extension provides kdb+\q language support:
 
--   q syntaxes
--   q notebook(\*.qnb)
--   server list group by tags
--   server explorer
--   query grid powered by [ag-grid-community](https://www.ag-grid.com/) & [chart.js](https://www.chartjs.org/)
--   query visualization powered by [perspective](https://perspective.finos.org/)
--   language server powered by [tree-sitter](https://tree-sitter.github.io/tree-sitter/)
-    -   rename symbol (F2)
-    -   go to definition (F12)
-    -   go to reference (Shift+F12)
-    -   workspace symbol (Ctrl+T)
-    -   document highlight
-    -   document symbol (Ctrl+Shift+O)
-    -   completion
-        -   identifiers defined in code
-        -   identifiers defined on kdb+ process
-        -   column names define on kdb+ process
-    -   completion resolve
-    -   signature help
-    -   semantic highlight
-    -   call hierarchy
+- q syntaxes
+- q notebook(\*.qnb)
+- server list group by tags
+- server explorer
+- query grid powered by [ag-grid-community](https://www.ag-grid.com/) & [chart.js](https://www.chartjs.org/)
+- query visualization powered by [perspective](https://perspective.finos.org/)
+- language server powered by [tree-sitter](https://tree-sitter.github.io/tree-sitter/)
+  - rename symbol (F2)
+  - go to definition (F12)
+  - go to reference (Shift+F12)
+  - workspace symbol (Ctrl+T)
+  - document highlight
+  - document symbol (Ctrl+Shift+O)
+  - completion
+    - identifiers defined in code
+    - identifiers defined on kdb+ process
+    - column names define on kdb+ process
+  - completion resolve
+  - signature help
+  - semantic highlight
+  - call hierarchy
 
 See the [change log](https://github.com/jshinonome/vscode-q/blob/master/CHANGELOG.md).
 
@@ -39,8 +39,8 @@ See the [change log](https://github.com/jshinonome/vscode-q/blob/master/CHANGELO
 
 ## Configuration
 
--   To configure globally, type <kbd>ctrl</kbd>+<kbd>,</kbd> to open Settings and change the following values.
--   To configure for workspace, type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd>, call `Preferences: Open Workspace Settings` and change the following values.
+- To configure globally, type <kbd>ctrl</kbd>+<kbd>,</kbd> to open Settings and change the following values.
+- To configure for workspace, type <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd>, call `Preferences: Open Workspace Settings` and change the following values.
 
 | configuration                      | type    | default value                    | description                                |
 | ---------------------------------- | ------- | -------------------------------- | ------------------------------------------ |
@@ -65,9 +65,9 @@ The server will analyze q source files in all 'src' folder. Insert ';' to indica
 
 Files with postfix \*.qnb are using notebook feature. There are 2 output mode for q notebook, switch to following query mode for different output format
 
--   q Console -> notebook console
--   q Grid -> notebook html
--   q Visualization -> notebook html
+- q Console -> notebook console
+- q Grid -> notebook html
+- q Visualization -> notebook html
 
 ## Server List
 
@@ -75,9 +75,9 @@ List servers, click to switch server. Generate tree structure from tags.
 
 Special tag color:
 
--   green: dev, development
--   blue: uat
--   red: prd, prod.
+- green: dev, development
+- blue: uat
+- red: prd, prod.
 
 ![server-list](assets/demo/server-list.png)
 
@@ -121,12 +121,12 @@ Append space to `},],)` by formatting the file. Turn on `Editor: Format On Save`
 
 ## Shortcuts
 
--   <kbd>ctrl</kbd>+<kbd>q</kbd>: query current line
--   <kbd>ctrl</kbd>+<kbd>r</kbd>: query selection
--   <kbd>ctrl</kbd>+<kbd>e</kbd>: query block
--   <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>q</kbd>: send current line to terminal
--   <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>r</kbd>: send selection to terminal
--   <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>e</kbd>: send block to terminal
+- <kbd>ctrl</kbd>+<kbd>q</kbd>: query current line
+- <kbd>ctrl</kbd>+<kbd>r</kbd>: query selection
+- <kbd>ctrl</kbd>+<kbd>e</kbd>: query block
+- <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>q</kbd>: send current line to terminal
+- <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>r</kbd>: send selection to terminal
+- <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>e</kbd>: send block to terminal
 
 To change shortcuts
 
@@ -224,23 +224,23 @@ refer to [vscode-q-auth](https://github.com/jshinonome/vscode-q-auth)
 
 Special thanks to the following packages.
 
--   [node-q](https://github.com/michaelwittig/node-q)
--   [perspective](https://github.com/finos/perspective/)
--   [tree-sitter](https://github.com/tree-sitter/tree-sitter)
--   [ag-grid-community](https://www.ag-grid.com/)
+- [node-q](https://github.com/michaelwittig/node-q)
+- [perspective](https://github.com/finos/perspective/)
+- [tree-sitter](https://github.com/tree-sitter/tree-sitter)
+- [ag-grid-community](https://www.ag-grid.com/)
 
 ## Reference
 
--   https://github.com/simongarland/vim
--   https://github.com/quintanar401/language-kdb-q
--   https://github.com/tree-sitter/tree-sitter-javascript
--   https://github.com/bash-lsp/bash-language-server
--   https://github.com/RandomFractals/vscode-data-preview
+- https://github.com/simongarland/vim
+- https://github.com/quintanar401/language-kdb-q
+- https://github.com/tree-sitter/tree-sitter-javascript
+- https://github.com/bash-lsp/bash-language-server
+- https://github.com/RandomFractals/vscode-data-preview
 
 ## Recommended Packages
 
--   [Theme: Dracula](https://marketplace.visualstudio.com/items?itemName=dracula-theme.theme-dracula)
--   [Font : Fira Code](https://github.com/tonsky/FiraCode)
+- [Theme: Dracula](https://marketplace.visualstudio.com/items?itemName=dracula-theme.theme-dracula)
+- [Font : Fira Code](https://github.com/tonsky/FiraCode)
 
 ## Contributing
 
