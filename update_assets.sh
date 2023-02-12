@@ -13,9 +13,7 @@ cp node_modules/dayjs/plugin/utc.js $jsDir/plugin
 
 # update js for view
 cp node_modules/ag-grid-community/dist/ag-grid-community.min.js assets/view/js/
-cp node_modules/ag-grid-community/dist/styles/ag-grid.min.css assets/view/css/
-cp node_modules/ag-grid-community/dist/styles/ag-theme-alpine*min.css assets/view/css/
-cp node_modules/chart.js/dist/chart.min.js assets/view/js
+cp node_modules/chart.js/dist/chart.umd.js assets/view/js
 
 # update spectre
 cp node_modules/spectre.css/dist/spectre.min.css assets/view/css/
