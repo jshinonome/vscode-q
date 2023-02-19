@@ -98,7 +98,7 @@ export class QNotebookSerializer implements NotebookSerializer {
         }
 
         // Give a string of all the data to save and VS Code will handle the rest
-        return new TextEncoder().encode(JSON.stringify(contents));
+        return new TextEncoder().encode(JSON.stringify(contents, null, 2));
     }
 }
 

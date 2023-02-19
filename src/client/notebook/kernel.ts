@@ -46,6 +46,7 @@ export class QNotebookKernel {
 
         try {
             this._qConnManager.sync(cell.document.getText(), result => {
+                execution.clearOutput();
                 switch (result.type) {
                     case 'text':
                     case 'error':

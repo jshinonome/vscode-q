@@ -22,7 +22,6 @@ async function exportAsQFile(notebook: NotebookDocument | undefined): Promise<vo
                     }).join('\n\n'),
                 err => window.showErrorMessage(err?.message ?? ''));
         }
-        console.log(notebook.getCells().map(cell => cell.document.getText()));
     }
 }
 
