@@ -13,6 +13,7 @@ type DiscoveryServerCfg = {
     user: string;
     password: string;
     useTLS: boolean;
+    requireAuth: boolean;
     tags: string;
 }
 
@@ -21,6 +22,7 @@ const rootDiscoveryServerCfg: DiscoveryServerCfg = {
     user: '',
     password: '',
     useTLS: false,
+    requireAuth: false,
     tags: 'root',
 };
 
@@ -34,6 +36,7 @@ class DiscoveryServer extends TreeItem implements TreeDataProvider<TreeItem> {
     user: string;
     password: string;
     useTLS: boolean;
+    requireAuth: boolean;
     tags: string;
 
     public static customizedAuthInstalled = false;
@@ -45,6 +48,7 @@ class DiscoveryServer extends TreeItem implements TreeDataProvider<TreeItem> {
         this.user = cfg.user;
         this.password = cfg.password;
         this.useTLS = cfg.useTLS;
+        this.requireAuth = cfg.requireAuth ?? false;
         this.tags = cfg.tags;
         this.tooltip = `${this.tags} - ${this.user}`;
     }
@@ -71,6 +75,7 @@ class DiscoveryServer extends TreeItem implements TreeDataProvider<TreeItem> {
                         user: server.user,
                         password: server.password,
                         useTLS: server.useTLS,
+                        requireAuth: server.requireAuth,
                         tags: server.tags,
                     })), null, 2), 'utf8');
         }
@@ -113,7 +118,8 @@ class DiscoveryServer extends TreeItem implements TreeDataProvider<TreeItem> {
     download() {
         const tags = `${discoveredProcessTag},${this.tags}`;
         try {
-            http.get(this.url, resp => {
+            const options: http.RequestOptions = this.requireAuth ? { auth: `${this.user}:${this.password}` } : {};
+            http.get(this.url, options, resp => {
                 let data = '';
                 resp.on('data', chunk => { data += chunk; });
                 resp.on('end', () => {

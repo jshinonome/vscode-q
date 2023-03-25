@@ -120,7 +120,7 @@
               "name": "punctuation.definition.string.begin.q"
             }
           },
-          "end": "\"|$",
+          "end": "\"",
           "endCaptures": {
             "0": {
               "name": "punctuation.definition.string.end.q"
@@ -131,6 +131,10 @@
             {
               "name": "constant.character.escape.q",
               "match": "\\\\(\\\\|n|t|r|\"|[0-7]{3})"
+            },
+            {
+              "name": "invalid.illegal.newline.q",
+              "match": "^[^\\s]"
             }
           ]
         }
@@ -148,7 +152,7 @@
       "patterns": [
         {
           "name": "support.function.utility.q",
-          "match": "\\.Q\\.(a|A|addmonths|addr|b6|bt|btoa|bv|Cf|chk|cn|D|D|dd|def|dpft|dpfts|dsftg|en|ens|f|fc|ff|fk|fmt|fps|fs|fsn|ft|fu|gc|gz|hdpf|hg|host|hp|id|ind|j10|j12|k|l|M|MAP|nA|opt|P|par|pd|PD|pf|pn|pt|pv|PV|qp|qp|qt|qt|res|s|s1|sbt|sha1|trp|ts|ty|u|u|v|V|view|vp|w|x|x10|x12|Xf)\\b"
+          "match": "\\.Q\\.(a|A|addmonths|addr|b6|bt|btoa|bv|Cf|chk|cn|D|dd|def|dpft|dpfts|dsftg|en|ens|f|fc|ff|fk|fmt|fps|fs|fsn|ft|fu|gc|gz|hdpf|hg|host|hp|id|ind|j10|j12|k|l|M|MAP|nA|opt|P|par|pd|PD|pf|pn|pt|pv|PV|qp|qt|res|S|s|s1|sbt|sha1|trp|ts|ty|u|v|V|view|vp|w|x|x10|x12|Xf)\\b"
         },
         {
           "name": "support.function.json.q",

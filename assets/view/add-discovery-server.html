@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <div class="alert" id="alert">
+    <div class="toast toast-error" id="alert" style="display: none;">
     </div>
     <div class="form" style="max-width: 800px;">
         <label class="form-label label-sm" for="host">URL</label>
@@ -22,6 +22,9 @@
         <label class="form-label label-sm" for="tags">Tags</label>
         <input class="form-input" type="text" placeholder="e.g. dev,md,rdb" id="tags">
         <div class="float-right">
+            <label class="form-checkbox input-sm form-inline">
+                <input type="checkbox" id="requireAuth"><i class="form-icon"></i>Require Auth
+            </label>
             <label class="form-checkbox input-sm form-inline">
                 <input type="checkbox" id="useTLS"><i class="form-icon"></i>Enable TLS
             </label>
@@ -57,6 +60,7 @@
             const tags = document.getElementById('tags');
             const alert = document.getElementById('alert');
             const useTLS = document.getElementById('useTLS');
+            const requireAuth = document.getElementById('requireAuth');
             function validateInput() {
                 let errorMsg = '';
                 if (tags.value.trim() === '')
@@ -88,6 +92,7 @@
                     password: password.value.trim(),
                     tags: tags.value.trim(),
                     useTLS: useTLS.checked,
+                    requireAuth: requireAuth.checked,
                 };
             }
 
@@ -98,6 +103,7 @@
                     password.value = cfg.password;
                     tags.value = cfg.tags;
                     useTLS.checked = cfg.useTLS;
+                    requireAuth.checked = cfg.requireAuth ?? false;
                 }
             }
 

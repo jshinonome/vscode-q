@@ -56,13 +56,15 @@ repository:
       - begin: '"'
         beginCaptures:
           0: { name: punctuation.definition.string.begin.q }
-        end: '"|$'
+        end: '"'
         endCaptures:
           0: { name: punctuation.definition.string.end.q }
         name: string.quoted.double.q
         patterns:
           - name: constant.character.escape.q
             match: \\(\\|n|t|r|"|[0-7]{3})
+          - name: invalid.illegal.newline.q
+            match: ^[^\s]
   invalids:
     patterns:
       - name: invalid.illegal.bracket.q

@@ -1,5 +1,12 @@
 # change log
 
+## 3.1.4
+
+### added
+
+- q syntax: support multiple lines string
+- discovery server: require authentication option
+
 ## 3.1.3
 
 ### fixed

@@ -106,6 +106,7 @@ export class AddDiscoveryServer implements Disposable {
                 password: server.password,
                 useTLS: server.useTLS,
                 tags: server.tags,
+                requireAuth: server.requireAuth ?? false,
             });
         }
     }
