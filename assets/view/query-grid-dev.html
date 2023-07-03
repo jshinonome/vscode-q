@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- include styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:500,500italic,700,700italic">
+    <link href="css/milligram.min.css" rel="stylesheet">
+    <link href="css/ag-grid.min.css" rel="stylesheet">
+    <link href="css/ag-theme-balham-dark.min.css" rel="stylesheet">
+    <link href="css/normalize.css" rel="stylesheet">
+    <link href="css/common.css" rel="stylesheet">
+    <link href="css/view.css" rel="stylesheet">
+    <!-- include the lib -->
+    <script src="js/ag-grid-community.min.js"></script>
+    <script src="js/chart.min.js"></script>
+    <style media="only screen">
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            box-sizing: border-box;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        html {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 0;
+            overflow: auto;
+        }
+
+        body {
+            padding: 1rem;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid-wrapper">
+        <div id="buttons">
+            <div class="row">
+                <div class="column column-66">
+                    <button class="button button-outline" onclick="viewGrid()">View Grid</button>
+                    <button class="button button-outline" onclick="viewChart()">View Chart</button>
+                    <button class="button button-outline" onclick="viewBoth()">View Both</button>
+                    <button class="button button-outline" onclick="toggleConf()">Chart Config</button>
+                </div>
+                <div class="column">
+                    <button class="button" onclick="downloadData()">Download Data</button>
+                    <button class="button" onclick="saveChartAsPNG()">Save Chart</button>
+                </div>
+            </div>
+        </div>
+        <div id="chartView">
+            <div id="chart-conf">
+                <div class="row">
+                    <div class="column column-50 border-right">
+                        <div class="row">
+                            <div class="column column-66">
+                                <button class="button button-outline button-black" onclick="updateChart()">
+                                    Update Chart</button>
+                                <button class="button button-outline button-black" onclick="toggleTheme()">
+                                    Toggle Theme</button>
+                            </div>
+                            <div class="column">
+                                <select id="chart-type-selector" title="chart type" onChange="selectChartType()">
+                                    <option value="">Chart Type</option>
+                                    <option value="line">Line</option>
+                                    <option value="bar">Bar</option>
+                                    <option value="scatter">Scatter</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column column-66">
+                                <label for="title">Chart Title:</label>
+                                <input type="text" id="chart-title" name="title" oninput="updateTitle()">
+                            </div>
+                            <div class="column">
+                                <label for="yaxes">Y Axes Label:</label>
+                                <input type="text" id="chart-yaxes" name="yaxes" oninput="updateTitle()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column">
+                        <div class="row">
+                            <div class="column column-66">
+                                <button class="button button-outline button-black" onclick="startPolling()" disabled>
+                                    Start Polling(nyi)</button>
+                                <button class="button button-outline button-black" onclick="stopPolling()">
+                                    Stop Polling</button>
+                            </div>
+                            <div class="column">
+                                <select id="polling-inverval" title="Polling Interval"
+                                    onChange="updatePollingInterval()">
+                                    <option value="">Polling Interval</option>
+                                    <option value="1">1 second</option>
+                                    <option value="5">5 seconds</option>
+                                    <option value="15">15 seconds</option>
+                                    <option value="30">30 seconds</option>
+                                    <option value="60">60 seconds</option>
+                                    <option value="120">120 seconds</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <label for="polling-query">Query:</label>
+                                <input type="text" id="polling-query" name="query">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <canvas id="canvas"></canvas>
+        </div>
+        <div id="gridView" class="ag-theme-balham-dark"></div>
+        <script type="text/javascript" charset="utf-8">
+            // specify the columns
+            let message =
+            {
+                cols: [
+                    { headerName: "date", field: "date" },
+                    { headerName: "qty", field: "qty", type: "numericColumn" },
+                    { headerName: "price", field: "price", type: "numericColumn" },
+                ],
+                data: {
+                    "date": ["2020-12-31", "2021-01-01", "2021-01-02", "2021-01-03", "2021-01-04", "2021-01-05", "2021-01-06", "2021-01-07", "2021-01-08", "2021-01-09"],
+                    "qty": [22, 10, 77, 60, 60, 2, 75, 79, 3, 14],
+                    "price": [6.622945, 6.876924, 3.303231, 0.7176765, 1.588603, 9.082041, 4.509384, 8.597389, 4.630911, 4.218259]
+                },
+                meta: {
+                    "c": ["date", "qty", "price"],
+                    "t": "djf",
+                    "f": ["", "", ""], "a": ["", "", ""]
+                },
+                labelCol: "date",
+                numericCols: ["qty", "price"],
+            };
+
+            // let the grid know which columns and what data to use
+            let gridOptions = {
+                defaultColDef: {
+                    sortable: true,
+                    resizable: true,
+                    filter: true,
+                },
+                applyColumnDefOrder: true,
+                enableCellTextSelection: true,
+            };
+
+            // lookup the container we want the Grid to use
+            let eGridDiv = document.getElementById("gridView");
+
+            // create the grid passing in the div to use together with the columns & data we want to use
+            new agGrid.Grid(eGridDiv, gridOptions);
+
+
+            let chartColors = [
+                "rgb(31, 119, 180)",
+                "rgb(255, 127, 14)",
+                "rgb(44, 160, 44)",
+                "rgb(214, 39, 40)",
+                "rgb(148, 103, 189)",
+                "rgb(140, 86, 75)",
+                "rgb(227, 119, 194)",
+                "rgb(127, 127, 127)",
+                "rgb(188, 189, 34)",
+                "rgb(23, 190, 207)",
+            ];
+
+            let eChartDiv = document.getElementById("chartView");
+            let canvas = document.getElementById("canvas");
+
+            let chartConf = {
+                type: "line",
+                options: {
+                    responsive: true,
+                    animation: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: ""
+                        },
+                        tooltip: {
+                            mode: "index",
+                            intersect: false,
+                        },
+                    },
+                    hover: {
+                        mode: "nearest",
+                        intersect: true
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: ""
+                            },
+                            ticks: {
+                                major: {
+                                    enabled: true
+                                },
+                            },
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: ""
+                            },
+                            ticks: {}
+                        }
+                    },
+                    elements: {
+                        line: {
+                            tension: 0 // disables bezier curves
+                        }
+                    },
+                    responsiveAnimationDuration: 0 // animation duration after a resize
+                }
+            }
+            let chart = new Chart(canvas.getContext("2d"), chartConf);
+            let chartTypeSelector = document.getElementById('chart-type-selector');
+
+            let chartConfPanel = document.getElementById('chart-conf');
+            chartConfPanel.style.visibility = "hidden";
+            chartConfPanel.style.height = "0";
+
+            let chartThemeIsLight = true;
+
+            window.onload = (event) => {
+                console.log("Page is fully loaded");
+                isReady = true;
+                try {
+                    loadGrid(message);
+                    drawChart(message);
+                }
+                catch (error) {
+                    console.error(`Fail to load data - error: ${error.message}`);
+                }
+            };
+
+            function loadGrid(msg) {
+                const rowData = [];
+                if (msg.meta.c) {
+                    msg.data[msg.meta.c[0]].forEach(
+                        (_v, i) => {
+                            const row = {};
+                            msg.meta.c.forEach(
+                                (col) => row[col] = msg.data[col][i]
+                            );
+                            rowData.push(row);
+                        });
+                }
+                gridOptions.api.setColumnDefs(msg.cols);
+                gridOptions.api.setRowData(rowData);
+                let allColumnIds = [];
+                gridOptions.columnApi.getAllColumns().forEach(function (column) {
+                    allColumnIds.push(column.colId);
+                });
+                gridOptions.columnApi.autoSizeColumns(allColumnIds, false);
+            }
+
+            function drawChart(msg) {
+                // find label column
+                if (msg.numericCols.length === 0) {
+                    viewGrid();
+                }
+                chartConf.data = generateData(msg);
+                chart.update();
+            }
+
+            function viewGrid() {
+                eGridDiv.style.visibility = "visible";
+                eGridDiv.style.height = "100%";
+                eChartDiv.style.visibility = "hidden";
+                eChartDiv.style.height = "0%";
+            };
+
+            function viewChart() {
+                eGridDiv.style.visibility = "hidden";
+                eGridDiv.style.height = "0%";
+                eChartDiv.style.visibility = "visible";
+                eChartDiv.style.height = "auto";
+            };
+
+            function viewBoth() {
+                eGridDiv.style.visibility = "visible";
+                eGridDiv.style.height = "100%";
+                eChartDiv.style.visibility = "visible";
+                eChartDiv.style.height = "auto";
+            };
+
+            function updateTitle() {
+                chartConf.options.plugins.title.text = document.getElementById("chart-title").value;
+                chartConf.options.scales.y.title.text = document.getElementById("chart-yaxes").value;
+                chart.update();
+            }
+
+            function selectChartType() {
+                const chartType = chartTypeSelector.value;
+                if (chartType) {
+                    chartConf.type = chartType;
+                    chartConf.options.scales.x.offset = chartType === "bar";
+                    chartConf.data = generateData(message);
+                    chart.update();
+                }
+            }
+
+            function generateData(msg) {
+                const labels = msg.labelCol ? msg.data[msg.labelCol] : Array.from(msg.data[msg.numericCols[0]].keys());
+                const numericCols = msg.numericCols.slice(0, 10)
+                switch (chartTypeSelector.value) {
+                    case "scatter":
+                        if (numericCols.length < 2) {
+                            return { datasets: [] }
+                        }
+                        chartConf.options.scales.x.type = "linear";
+                        chartConf.options.scales.x.title.text = "";
+                        const datasets = [];
+                        for (let i = 0; i * 2 < numericCols.length; i++) {
+                            const x = msg.data[numericCols[2 * i]]
+                            const y = msg.data[numericCols[1 + 2 * i]]
+                            datasets.push(
+                                {
+                                    label: numericCols[2 * i] + "-" + numericCols[1 + 2 * i],
+                                    data: x.map((v, i) => { return { x: Number(v), y: Number(y[i]) } }),
+                                    backgroundColor: chartColors[i],
+                                    borderColor: chartColors[i],
+                                }
+                            )
+                        }
+                        console.log(datasets);
+                        return { datasets: datasets };
+                        break;
+                    default:
+                        chartConf.options.scales.x.type = "category";
+                        chartConf.options.scales.x.title.text = msg.labelCol
+                        return {
+                            labels: labels,
+                            datasets: numericCols.map((col, i) => {
+                                return {
+                                    label: col,
+                                    data: msg.data[col],
+                                    backgroundColor: chartColors[i],
+                                    borderColor: chartColors[i],
+                                    fill: false,
+                                    pointRadius: 1,
+                                    borderWidth: 1,
+                                }
+                            })
+                        }
+                }
+            }
+
+            function saveChartAsPNG() {
+                const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false }).replace(/:/g, "");
+                let link = document.createElement('a');
+                link.download = 'chart_' + document.getElementById("chart-title").value + "_" + timestamp + '.png';
+                link.href = canvas.toDataURL()
+                link.click();
+            }
+
+            function toggleTheme() {
+                let options = chartConf.options;
+                let x = options.scales.x;
+                let y = options.scales.y;
+                let tooltip = options.plugins.tooltip;
+
+                if (!chartThemeIsLight) {
+                    // light
+                    chartThemeIsLight = true;
+                    x.grid.color = y.grid.color = 'rgba(0, 0, 0, 0.3)';
+                    x.ticks.color = y.ticks.color = '#666';
+                    x.title.color = y.title.color = '#666';
+                    Chart.defaults.color = '#666';
+                    tooltip.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                    tooltip.titleColor = tooltip.bodyColor = '#fff';
+                    canvas.style.backgroundColor = '#FAFAFA';
+                    chartColors = [
+                        "rgb(31, 119, 180)",
+                        "rgb(255, 127, 14)",
+                        "rgb(44, 160, 44)",
+                        "rgb(214, 39, 40)",
+                        "rgb(148, 103, 189)",
+                        "rgb(140, 86, 75)",
+                        "rgb(227, 119, 194)",
+                        "rgb(127, 127, 127)",
+                        "rgb(188, 189, 34)",
+                        "rgb(23, 190, 207)",
+                    ];
+                } else {
+                    // dark
+                    chartThemeIsLight = false;
+                    x.grid.color = y.grid.color = 'rgba(255, 255, 255, 0.3)';
+                    x.ticks.color = y.ticks.color = '#ccc';
+                    x.title.color = y.title.color = '#ccc';
+                    Chart.defaults.color = '#ccc';
+                    tooltip.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+                    tooltip.titleColor = tooltip.bodyColor = '#000';
+                    canvas.style.backgroundColor = '#212121';
+                    chartColors = [
+                        "rgb(78,  121, 167)",
+                        "rgb(242, 142, 43)",
+                        "rgb(225, 87,  89)",
+                        "rgb(118, 183, 178)",
+                        "rgb(89,  161, 79)",
+                        "rgb(237, 201, 72)",
+                        "rgb(176, 122, 161)",
+                        "rgb(255, 157, 167)",
+                        "rgb(156, 117, 95)",
+                        "rgb(186, 176, 172)",
+                    ]
+                }
+                drawChart(message);
+                chart.update();
+            }
+
+            function downloadData() {
+                const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false }).replace(/:/g, "");
+                const blob = new Blob([gridOptions.api.getDataAsCsv()], { type: 'text/csv;charset=utf-8;' });
+                let link = document.createElement("a");
+                url = URL.createObjectURL(blob);
+                link.href = url;
+                link.download = 'data_' + document.getElementById("chart-title").value + "_" + timestamp + '.csv';
+                // document.body.appendChild(link);
+                link.click();
+                // document.body.removeChild(link);
+            }
+
+            function toggleConf() {
+                if (chartConfPanel.style.visibility === "hidden") {
+                    chartConfPanel.style.height = "auto";
+                    chartConfPanel.style.visibility = "visible";
+                } else {
+                    chartConfPanel.style.visibility = "hidden";
+                    chartConfPanel.style.height = "0";
+                }
+            }
+
+        </script>
+    </div>
+</body>
+
+</html>

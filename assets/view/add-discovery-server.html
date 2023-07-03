@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- include styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:500,500italic,700,700italic">
+    <link href="{assets}/css/spectre.min.css" rel="stylesheet">
+    <link href="{assets}/css/view{theme}.css" rel="stylesheet">
+    </style>
+</head>
+
+<body>
+    <div class="toast toast-error" id="alert" style="display: none;">
+    </div>
+    <div class="form" style="max-width: 800px;">
+        <label class="form-label label-sm" for="host">URL</label>
+        <input class="form-input" type="text" placeholder="discovery server url" id="url">
+        <label class="form-label label-sm" for="user">User</label>
+        <input class="form-input" type="text" placeholder="" id="user">
+        <label class="form-label label-sm" for="password">Password</label>
+        <input class="form-input" type="password" placeholder="******" id="password">
+        <label class="form-label label-sm" for="tags">Tags</label>
+        <input class="form-input" type="text" placeholder="e.g. dev,md,rdb" id="tags">
+        <div class="float-right">
+            <label class="form-checkbox input-sm form-inline">
+                <input type="checkbox" id="requireAuth"><i class="form-icon"></i>Require Auth
+            </label>
+            <label class="form-checkbox input-sm form-inline">
+                <input type="checkbox" id="useTLS"><i class="form-icon"></i>Enable TLS
+            </label>
+        </div>
+        <div style="padding-top: 5px;">
+            <input class="btn btn-primary btn-sm" type="submit" value="Create" onclick="create()">
+            <input class="btn btn-primary btn-sm" type="submit" value="Update" onclick="update()">
+        </div>
+
+        <script type="text/javascript" charset="utf-8">
+            // get api to interact with vscode
+            let vscode = acquireVsCodeApi();
+            let cfg;
+            window.addEventListener('message', event => {
+                cfg = event.data;
+                console.log('got a configuration');
+                loadCfg();
+            });
+
+            window.onload = (event) => {
+                console.log('Page is fully loaded');
+                try {
+                    vscode.postMessage({ cmd: 'ready' });
+                }
+                catch (error) {
+                    console.error(`Fail to load configuration - error: ${error.message}`);
+                }
+            };
+
+            const url = document.getElementById('url');
+            const user = document.getElementById('user');
+            const password = document.getElementById('password');
+            const tags = document.getElementById('tags');
+            const alert = document.getElementById('alert');
+            const useTLS = document.getElementById('useTLS');
+            const requireAuth = document.getElementById('requireAuth');
+            function validateInput() {
+                let errorMsg = '';
+                if (tags.value.trim() === '')
+                    errorMsg += '<em>Tags cannot be null</em><br>';
+                if (errorMsg === '') {
+                    alert.style.display = 'none';
+                    return true;
+                } else {
+                    alert.innerHTML = errorMsg;
+                    alert.style.display = 'block';
+                    return false;
+                }
+            }
+            function create() {
+                if (!validateInput())
+                    return;
+                console.log(getCfg());
+                sendCfgToVscode(getCfg(), false);
+            }
+            function update() {
+                if (!validateInput())
+                    return;
+                sendCfgToVscode(getCfg(), true);
+            }
+            function getCfg() {
+                return {
+                    url: url.value.trim(),
+                    user: user.value.trim(),
+                    password: password.value.trim(),
+                    tags: tags.value.trim(),
+                    useTLS: useTLS.checked,
+                    requireAuth: requireAuth.checked,
+                };
+            }
+
+            function loadCfg() {
+                if (cfg) {
+                    url.value = cfg.url ?? '';
+                    user.value = cfg.user;
+                    password.value = cfg.password;
+                    tags.value = cfg.tags;
+                    useTLS.checked = cfg.useTLS;
+                    requireAuth.checked = cfg.requireAuth ?? false;
+                }
+            }
+
+            function sendCfgToVscode(cfg, overwrite) {
+                vscode.postMessage({
+                    cmd: 'updateCfg',
+                    cfg: cfg,
+                    overwrite: overwrite
+                });
+            }
+        </script>
+    </div>
+</body>
+
+</html>

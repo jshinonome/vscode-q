@@ -1,0 +1,36 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"jsx": "react-jsx",
+		"jsxImportSource": "preact",
+		"types": [
+			"node",
+			"jest"
+		],
+		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"target": "es2019",
+		"lib": [
+			"ES2019",
+			"DOM"
+		],
+		"outDir": "dist",
+		"sourceMap": true,
+		"strict": true,
+		"rootDir": "src",
+		"plugins": [
+			{
+				"name": "typescript-tslint-plugin"
+			}
+		]
+	},
+	"exclude": [
+		"node_modules",
+		".vscode-test",
+		"test"
+	],
+	"include": [
+		"src/**/*.ts",
+		"src/**/*.tsx"
+	]
+}

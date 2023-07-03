@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- include styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:500,500italic,700,700italic">
+    <link href="{assets}/css/spectre.min.css" rel="stylesheet">
+    <link href="{assets}/css/view{theme}.css" rel="stylesheet">
+    </style>
+</head>
+
+<body>
+    <div class="alert" id="alert">
+    </div>
+    <div class="form" style="max-width: 800px;">
+        <label class="form-label label-sm" for="host">Hostname</label>
+        <input class="form-input" type="text" placeholder="localhost" id="host">
+        <label class="form-label label-sm" for="port">Port</label>
+        <input class="form-input" type="text" placeholder="e.g. 1800" id="port">
+        <label class="form-label label-sm" for="user">User</label>
+        <input class="form-input" type="text" placeholder="" id="user">
+        <label class="form-label label-sm" for="password">Password</label>
+        <input class="form-input" type="password" placeholder="******" id="password">
+        <label class="form-label label-sm" for="label">Label</label>
+        <input class="form-input" type="text" placeholder="e.g. localhost-1800" id="label"
+            onfocus="generateDefaultLabel()">
+        <label class="form-label label-sm" for="tags">Tags</label>
+        <input class="form-input" type="text" placeholder="e.g. dev,md,rdb" id="tags">
+        <div class="float-right">
+            <label class="form-checkbox input-sm form-inline">
+                <input type="checkbox" id="useTLS">
+                <i class="form-icon"></i>Enable TLS
+            </label>
+            <label class="form-checkbox input-sm form-inline">
+                <input type="checkbox" id="useCustomizedAuth" {customizedAuthInstalled}>
+                <i class="form-icon"></i>Customized Authentication
+            </label>
+        </div>
+        <div style="padding-top: 5px;">
+            <input class="btn btn-primary btn-sm" type="submit" value="Create" onclick="create()">
+            <input class="btn btn-primary btn-sm" type="submit" value="Update" onclick="update()">
+        </div>
+
+        <script type="text/javascript" charset="utf-8">
+            // get api to interact with vscode
+            let vscode = acquireVsCodeApi();
+            let cfg;
+            window.addEventListener('message', event => {
+                cfg = event.data;
+                console.log('got a configuration');
+                loadCfg();
+            });
+
+            window.onload = (event) => {
+                console.log('Page is fully loaded');
+                try {
+                    vscode.postMessage({ cmd: 'ready' });
+                }
+                catch (error) {
+                    console.error(`Fail to load configuration - error: ${error.message}`);
+                }
+            };
+
+            const host = document.getElementById('host');
+            const port = document.getElementById('port');
+            const user = document.getElementById('user');
+            const password = document.getElementById('password');
+            const label = document.getElementById('label');
+            const tags = document.getElementById('tags');
+            const alert = document.getElementById('alert');
+            const useCustomizedAuth = document.getElementById('useCustomizedAuth');
+            const useTLS = document.getElementById('useTLS');
+            function generateDefaultLabel() {
+                if (label.value === '')
+                    label.value = host.value + '-' + port.value;
+            }
+            function validateInput() {
+                let errorMsg = '';
+                if (isNaN(parseInt(port.value.trim())))
+                    errorMsg += '<em>Port must be an integer</em><br>';
+                if (label.value.trim() === '')
+                    errorMsg += '<em>Label cannot be null</em><br>';
+                if (errorMsg === '') {
+                    alert.style.display = 'none';
+                    return true;
+                } else {
+                    alert.innerHTML = errorMsg;
+                    alert.style.display = 'block';
+                    return false;
+                }
+            }
+            function create() {
+                if (!validateInput())
+                    return;
+                console.log(getCfg());
+                sendCfgToVscode(getCfg(), false);
+            }
+            function update() {
+                if (!validateInput())
+                    return;
+                sendCfgToVscode(getCfg(), true);
+            }
+            function getCfg() {
+                return {
+                    host: host.value.trim(),
+                    port: parseInt(port.value.trim()),
+                    user: user.value.trim(),
+                    password: password.value.trim(),
+                    label: label.value.trim(),
+                    tags: tags.value.trim(),
+                    uniqLabel: tags.value.trim() + ',' + label.value.trim(),
+                    useCustomizedAuth: useCustomizedAuth.checked,
+                    useTLS: useTLS.checked,
+                };
+            }
+
+            function loadCfg() {
+                if (cfg) {
+                    host.value = cfg.host ?? '';
+                    port.value = cfg.port;
+                    user.value = cfg.user;
+                    password.value = cfg.password;
+                    label.value = cfg.label;
+                    tags.value = cfg.tags;
+                    useCustomizedAuth.checked = cfg.useCustomizedAuth;
+                    useTLS.checked = cfg.useTLS;
+                }
+            }
+
+            function sendCfgToVscode(cfg, overwrite) {
+                vscode.postMessage({
+                    cmd: 'updateCfg',
+                    cfg: cfg,
+                    overwrite: overwrite
+                });
+            }
+        </script>
+    </div>
+</body>
+
+</html>

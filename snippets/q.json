@@ -1,0 +1,71 @@
+{
+    "Query table": {
+        "prefix": "se",
+        "body": "select ${1:column} from ${2:table}",
+        "description": "Query table"
+    },
+    "Update table": {
+        "prefix": "up",
+        "body": "update ${1:column} from ${2:table}"
+    },
+    "Load csv": {
+        "prefix": "load",
+        "body": "(${1:types};${2:delimiter})0:${3:handle/strings}"
+    },
+    "Load fixed": {
+        "prefix": "load",
+        "body": "(${1:types};${2:widths})0:${3:handle/strings}"
+    },
+    "Load key-value": {
+        "prefix": "load",
+        "body": "\"${1:type}${2:(separator)}${3:[*]}${4:delimiter}\"0:${5:string}"
+    },
+    "Trap at '@'": {
+        "prefix": "trap",
+        "body": "@[${1:function};${2:paramters};${3:error_handler}]"
+    },
+    "Trap at '.'": {
+        "prefix": "trap",
+        "body": ".[${1:function};${2:enlist_paramters};${3:error_handler}]"
+    },
+    "Replace at depth 1": {
+        "prefix": "replace",
+        "body": "@[${1:list/dict/handle};${2:index(ices)};:;${3:atom(s)}]"
+    },
+    "Replace at depths ": {
+        "prefix": "replace",
+        "body": ".[${1:list/dict/handle};${2:depths(list)};:;${3:atom(s)}]"
+    },
+    "Amend at depth 1": {
+        "prefix": "amend",
+        "body": "@[${1:list/dict/handle};${2:index(ices)};${3:unary}]"
+    },
+    "Amend at depths": {
+        "prefix": "amend",
+        "body": "@[${1:list/dict/handle};${2:depths(list)};${3:unary}]"
+    },
+    "each right": {
+        "prefix": "each",
+        "body": "/:"
+    },
+    "each left": {
+        "prefix": "each",
+        "body": "\\:"
+    },
+    "each prior": {
+        "prefix": "each",
+        "body": "${1:binary}':[${2:x};${3:y}]"
+    },
+    "each parallel": {
+        "prefix": "each",
+        "body": "${1:unary}':[${2:x}]"
+    },
+    "do": {
+        "prefix": "do",
+        "body": "do[${1:times};${2:expression};${3:expression...}]"
+    },
+    "while": {
+        "prefix": "while",
+        "body": "while[${1:test};${2:expression};${3:expression...}]"
+    }
+}

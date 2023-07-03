@@ -1,0 +1,66 @@
+{
+    "type": "json",
+    "data": {
+        "timestamp": [
+            "2022-07-16T23:42:04.124Z"
+        ],
+        "month": [
+            "2022-07-01T00:00:00.000Z"
+        ],
+        "date": [
+            "2022-07-16T00:00:00.000Z"
+        ],
+        "datetime": [
+            "2022-07-16T23:42:04.124Z"
+        ],
+        "timespan": [
+            "2000-01-01T23:42:04.124Z"
+        ],
+        "minute": [
+            "2000-01-01T23:42:00.000Z"
+        ],
+        "second": [
+            "2000-01-01T23:42:04.000Z"
+        ],
+        "time": [
+            "2000-01-01T23:42:04.123Z"
+        ]
+    },
+    "meta": {
+        "c": [
+            "timestamp",
+            "month",
+            "date",
+            "datetime",
+            "timespan",
+            "minute",
+            "second",
+            "time"
+        ],
+        "t": "pmdznuvt",
+        "f": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "a": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ]
+    },
+    "keys": [],
+    "duration": 2,
+    "uniqLabel": ",localhost-1800-timeout",
+    "query": "enlist {x!x $\\: .z.P} `timestamp`month`date`datetime`timespan`minute`second`time\n"
+}

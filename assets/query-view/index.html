@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>query view</title>
+  <link rel="stylesheet" type="text/css" href="{assets}/css/material{theme}.css">
+  <link href="{assets}/css/view{theme}.css" rel="stylesheet">
+  <script type="text/javascript" src="{assets}/js/dayjs.min.js"></script>
+  <script type="text/javascript" src="{assets}/js/plugin/utc.js"></script>
+  <script type="text/javascript" src="{assets}/js/perspective.js"></script>
+  <script type="text/javascript" src="{assets}/js/perspective-viewer.js"></script>
+  <script type="text/javascript" src="{assets}/js/perspective-viewer-datagrid.js"></script>
+  <script type="text/javascript" src="{assets}/js/perspective-viewer-d3fc.js"></script>
+</head>
+
+<body>
+  <perspective-viewer id="data-viewer" class="perspective-viewer-material{theme}" editable="true"
+    style="--select--background-color: var(--vscode-editor-background)" throttle="1000"></perspective-viewer>
+  <script type="text/javascript" charset="utf-8">
+    dayjs.extend(window.dayjs_plugin_utc);
+    let vscode, saveFileTypeSelector, viewer, msg;
+    let keyColor = '{keyColor}';
+    let currentCols = ['dummy'];
+    let kMeta = {};
+    const dateType = ['timestamp', 'month', 'date', 'datetime', 'timespan', 'minute', 'second', 'time'];
+    const dateMap = {
+      'timestamp': 'datetime',
+      'month': 'date',
+      'date': 'date',
+      'datetime': 'datetime',
+      'timespan': 'datetime',
+      'minute': 'datetime',
+      'second': 'datetime',
+      'time': 'datetime',
+    }
+
+    class KDatagrid extends customElements.get(
+      "perspective-viewer-datagrid"
+    ) {
+      get name() {
+        return "K Datagrid";
+      }
+
+      style_temporal_types(...args) {
+        for (const td of this.querySelectorAll("td")) {
+          const meta = this._datagrid.getMeta(td);
+          const col_name = meta.column_header[0];
+          td.textContent = this.formatters[kMeta[col_name]](meta.user);
+        }
+      }
+
+      async activate(...args) {
+        await super.activate(...args);
+        const view = await this.parentElement.getView();
+        if (!this._datagrid) {
+          this._datagrid = this.querySelector("regular-table");
+          this._datagrid.addStyleListener(
+            this.style_temporal_types.bind(this)
+          );
+
+          this.formatters = {
+            datetime: (value) => dayjs(value).format('YYYY-MM-DD[T]HH:mm:ss.SSS'),
+            timestamp: (value) => dayjs(value).format('YYYY-MM-DD[T]HH:mm:ss.SSS'),
+            time: (value) => dayjs(value).format('HH:mm:ss.SSS'),
+            timespan: (value) => dayjs(value).format('HH:mm:ss.SSS'),
+            minute: (value) => dayjs(value).format('HH:mm'),
+            second: (value) => dayjs(value).format('HH:mm:ss'),
+            date: (value) => dayjs(value).format('YYYY-MM-DD'),
+            month: (value) => dayjs(value).format('YYYY-MM'),
+            string: (value) => value,
+            integer: Intl.NumberFormat("en-us").format,
+            float: new Intl.NumberFormat("en-us", {
+              style: "decimal",
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 7,
+            }).format,
+            boolean: (val) => (val ? "check" : "close"),
+          };
+        }
+      }
+    }
+
+    customElements.define("k-datagrid", KDatagrid);
+    customElements
+      .get("perspective-viewer")
+      .registerPlugin("k-datagrid");
+
+    const worker = perspective.worker();
+
+    // get api to interact with vscode
+    vscode = acquireVsCodeApi();
+
+    // add vscode message handler
+    window.addEventListener('message', event => {
+      const message = event.data;
+      console.log(`got a vscode message, type: ${message.type}, columns: ${message.cols}`);
+      switch (message.type) {
+        // raw byte array
+        case 'rba':
+        case 'json':
+          msg = message;
+          loadData(message);
+          break;
+      }
+    });
+
+    // init viewer when ready
+    window.addEventListener('DOMContentLoaded', async function () {
+      console.log('DOM Content is loaded');
+      saveFileTypeSelector = document.getElementById('save-file-type-selector');
+      viewer = document.getElementsByTagName('perspective-viewer')[0];
+      viewer.toggleConfig();
+      try {
+        // request first data update
+        vscode.postMessage({ cmd: 'ready' });
+      }
+      catch (error) {
+        console.error(`sending msg failed - error: ${error.message}`);
+      }
+    });
+
+    // load data to table(required for offline) and to viewer
+    async function loadData(msg) {
+      try {
+        var table;
+        switch (msg.type) {
+          case 'rba':
+            table = await worker.table(Uint8Array.from(msg.data).buffer);
+            break;
+          case 'json':
+            kMeta = { ...msg.meta };
+            for (const column in msg.meta) {
+              const type = msg.meta[column];
+              if (dateType.includes(type)) {
+                msg.data[column] = msg.data[column].map(
+                  date => {
+                    const d = new Date(date);
+                    return dayjs(d).utcOffset(d.getTimezoneOffset()).format('YYYY-MM-DD[T]HH:mm:ss.SSS')
+                  });
+                msg.meta[column] = dateMap[type];
+              }
+            };
+            table = await worker.table(msg.meta);
+            table.replace(msg.data);
+            break;
+        }
+
+        await viewer.load(table);
+        if (!appendCols(msg.cols, currentCols)) {
+          console.log('reset viewer');
+          currentCols = msg.cols;
+          await viewer.restore({
+            settings: true,
+            plugin: "K Datagrid",
+            columns: currentCols,
+          });
+          const datagrid = viewer.querySelector('regular-table');
+          for (const th of datagrid.querySelectorAll('th')) {
+            const metadata = datagrid.getMeta(th);
+            if (msg.keys.includes(metadata.value)) {
+              th.style.background = keyColor;
+            } else {
+              th.style.background = "";
+            }
+          }
+          datagrid.draw();
+        }
+        currentCols = msg.cols;
+      } catch (error) {
+        console.error(`loadData - error: ${error.message}`);
+      }
+    }
+
+    // save data
+    function saveData() {
+      const dataFileType = saveFileTypeSelector.value;
+      switch (dataFileType) {
+        case '.csv':
+          viewer.view.to_csv().then(csv => sendDataToVscode(csv, dataFileType));
+          break;
+        case '.xlsx':
+          viewer.view.to_json({ date_format: 'en-US' }).then(json => sendDataToVscode(json, dataFileType));
+          break;
+      }
+    }
+
+
+    function sendDataToVscode(data, filetype) {
+      vscode.postMessage({
+        cmd: 'saveData',
+        data: data,
+        fileType: filetype
+      });
+    }
+
+    function appendCols(cols1, cols2) {
+      return cols2.every(col => cols1.includes(col));
+    }
+
+  </script>
+</body>
+
+</html>

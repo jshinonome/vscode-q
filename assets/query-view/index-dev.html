@@ -1,0 +1,197 @@
+<!--
+
+   Copyright (c) 2017, the Perspective Authors.
+
+   This file is part of the Perspective library, distributed under the terms of
+   the Apache License 2.0.  The full license can be found in the LICENSE file.
+
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+
+    <script type="text/javascript" src="js/perspective.inline.js"></script>
+    <script type="text/javascript" src="js/perspective-viewer.js"></script>
+    <script type="text/javascript" src="js/perspective-viewer-datagrid.js"></script>
+    <script type="text/javascript" src="js/perspective-viewer-d3fc.js"></script>
+    <link rel='stylesheet' href="https://cdn.jsdelivr.net/npm/@finos/perspective-viewer/dist/umd/material-dense.css"
+        is="custom-style">
+
+    <style>
+        perspective-viewer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <perspective-viewer editable>
+
+    </perspective-viewer>
+
+    <script>
+        const overridden_types = {
+            types: {
+                float: {
+                    filter_operator: '==',
+                    aggregate: 'sum',
+                    format: {
+                        style: 'decimal',
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 7
+                    }
+                },
+                string: {
+                    filter_operator: '==',
+                    aggregate: 'count'
+                },
+                integer: {
+                    filter_operator: '==',
+                    aggregate: 'sum',
+                    format: {}
+                },
+                boolean: {
+                    filter_operator: '==',
+                    aggregate: 'count'
+                },
+                datetime: {
+                    filter_operator: '==',
+                    aggregate: 'count',
+                    format: {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        fractionalSecondDigits: 3,
+                        hourCycle: 'h23',
+                    },
+                },
+                timestamp: {
+                    filter_operator: '==',
+                    aggregate: 'count',
+                    type: 'datetime',
+                    format: {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        fractionalSecondDigits: 3,
+                        hourCycle: 'h23',
+                    },
+                },
+                time: {
+                    filter_operator: '==',
+                    aggregate: 'count',
+                    type: 'datetime',
+                    format: {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        fractionalSecondDigits: 3,
+                        hourCycle: 'h23',
+                    },
+                    null_value: -1
+                },
+                timespan: {
+                    filter_operator: '==',
+                    aggregate: 'count',
+                    type: 'datetime',
+                    format: {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        fractionalSecondDigits: 3,
+                        hourCycle: 'h23',
+                    },
+                    null_value: -1
+                },
+                minute: {
+                    filter_operator: '==',
+                    aggregate: 'count',
+                    type: 'datetime',
+                    format: {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hourCycle: 'h23',
+                    },
+                    null_value: -1
+                },
+                second: {
+                    filter_operator: '==',
+                    aggregate: 'count',
+                    type: 'datetime',
+                    format: {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hourCycle: 'h23',
+                    },
+                    null_value: -1
+                },
+                date: {
+                    filter_operator: '==',
+                    aggregate: 'count',
+                    format: {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                    },
+                    null_value: -1
+                },
+                month: {
+                    filter_operator: '==',
+                    aggregate: 'count',
+                    type: 'date',
+                    format: {
+                        year: 'numeric',
+                        month: '2-digit',
+                    },
+                    null_value: -1
+                }
+            }
+        };
+
+        const worker = perspective.worker(overridden_types);
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            var data = [
+                { x: 1, y: "a", z: true, t: "2016-01-13T17:11:29.998", s: "2000-01-01T00:00:32.000" },
+                { x: 2, y: "b", z: false, t: "2016-01-13T17:11:29.999", s: "2000-01-01T00:00:33.000" },
+                { x: 3, y: "c", z: true, t: "2016-01-13T17:11:30.000", s: "2000-01-01T00:00:34.000" },
+                { x: 4, y: "d", z: false, t: "2016-01-13T17:11:30.001", s: "2000-01-01T00:00:35.000" }
+            ];
+
+            var viewer = document.getElementsByTagName('perspective-viewer')[0];
+
+            const table = await worker.table({
+                x: 'integer',
+                y: 'string',
+                z: 'boolean',
+                t: 'datetime',
+                s: 'second'
+            });
+
+            table.update(data);
+
+            viewer.load(table);
+        });
+    </script>
+
+</body>
+
+</html>

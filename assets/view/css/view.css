@@ -1,0 +1,32 @@
+body {
+    background-color: var(--vscode-editor-background);
+}
+
+.button.button-clear {
+    color: black;
+    border: 0px;
+}
+
+select {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+option {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+label {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.border-right {
+    border-right: 0.1rem solid #9b4dca;
+}
+
+#buttons {
+    display: flex;
+    justify-content: space-between;
+}

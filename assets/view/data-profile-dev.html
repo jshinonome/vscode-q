@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- include styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:500,500italic,700,700italic">
+    <link href="css/milligram.min.css" rel="stylesheet">
+    <link href="css/ag-grid.min.css" rel="stylesheet">
+    <link href="css/ag-theme-balham{theme}.min.css" rel="stylesheet">
+    <link href="css/normalize.css" rel="stylesheet">
+    <link href="css/common.css" rel="stylesheet">
+    <link href="css/view.css" rel="stylesheet">
+    <!-- include the lib -->
+    <script src="js/ag-grid-community.min.js"></script>
+    <script src="js/chart.min.js"></script>
+    <style media="only screen">
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            box-sizing: border-box;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        html {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 0;
+            overflow: auto;
+        }
+
+        body {
+            padding: 1rem;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row" id="overview-header">
+            <h4>Overview</h4>
+        </div>
+        <div class="row" id="overview">
+            <div class="column column-50" id="datasetStats">
+                <h5>Statistics</h5>
+                <table class="table table-condensed stats">
+                    <tbody>
+                        <tr>
+                            <th>Number of columns</th>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <th>Number of observations</th>
+                            <td>1000</td>
+                        </tr>
+                        <tr>
+                            <th>Missing values</th>
+                            <td>349</td>
+                        </tr>
+                        <tr>
+                            <th>Missing values (%)</th>
+                            <td>8.72%</td>
+                        </tr>
+                        <tr>
+                            <th>Duplicate rows</th>
+                            <td>99</td>
+                        </tr>
+                        <tr>
+                            <th>Duplicate rows (%)</th>
+                            <td>9.9%</td>
+                        </tr>
+                        <tr>
+                            <th>Total size in memory</th>
+                            <td>19716 B</td>
+                        </tr>
+                        <tr>
+                            <th>Average record size in memory</th>
+                            <td>19.71 B</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="column column-50" id="dataTypes">
+                <h5>Data Types</h5>
+                <table class="table table-condensed stats">
+                    <tbody>
+                        <tr>
+                            <th>Symbol</th>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <th>Long</th>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row" id="columns">
+            <h4>Columns</h4>
+        </div>
+        <div class="row" id="sym">
+
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,181 @@
+name: q language
+scopeName: source.q-output
+patterns:
+  # DO NOT change orders
+  - include: "#comments"
+  - include: "#outputs"
+  - include: "#strings"
+  - include: "#constants"
+  - include: "#keywords"
+  - include: "#function"
+  - include: "#invalids"
+repository:
+  outputs:
+    patterns:
+      - name: message.error.q-output
+        match: ^>>>\sERROR.*
+      - name: source.q-output
+        match: ^>>>\s.*
+      - name: source.q-output
+        match: ^\s\s\[\d+\]\s*
+      - name: source.q-output
+        match: ^<<<\s.*
+  comments:
+    patterns:
+      - name: comment.block.q-output
+        begin: ^/\s*$
+        end: ^\\\s*$
+      - name: comment.block.eof.q-output
+        begin: ^\\\s*$
+        end: \z
+      - begin: (^(//?)(?:\s*)(?:(@\w+)(?:[^.\w]+([.\w]+)(?:[^.\w]+(\w*))?)?)?)
+        beginCaptures:
+          1: { name: comment.line.slash.q-output }
+          2: { name: punctuation.definition.comment.q-output }
+          3: { name: storage.type.class.q-output }
+          4: { name: variable.parameter.q-output }
+          5: { name: entity.name.type }
+        end: (?=^)
+        contentName: comment.line.q-output
+      - name: comment.line.inline.q-output
+        match: \s/.*
+  strings:
+    patterns:
+      - begin: '"'
+        beginCaptures:
+          0: { name: punctuation.definition.string.begin.q-output }
+        end: '"|\.\.$'
+        endCaptures:
+          0: { name: punctuation.definition.string.end.q-output }
+        name: string.q-outputuoted.double.q-output
+        patterns:
+          - name: constant.character.escape.q-output
+            match: \\(\\|n|t|r|"|[0-7]{3})
+  invalids:
+    patterns:
+      - name: invalid.illegal.bracket.q-output
+        match: ^[}\]\)].*
+  constants:
+    patterns:
+      - name: support.function.utility.q-output
+        match: \.Q\.(a|A|addmonths|addr|b6|bt|btoa|bv|Cf|chk|cn|D|D|dd|def|dpft|dpfts|dsftg|en|ens|f|fc|ff|fk|fmt|fps|fs|fsn|ft|fu|gc|gz|hdpf|hg|host|hp|id|ind|j10|j12|k|l|M|MAP|nA|opt|P|par|pd|PD|pf|pn|pt|pv|PV|qp|qp|qt|qt|res|s|s1|sbt|sha1|trp|ts|ty|u|u|v|V|view|vp|w|x|x10|x12|Xf)\b
+      - name: support.function.json.q-output
+        match: \.j\.(j|k|jd)\b
+      - name: support.function.callback.q-output
+        match: \.z\.(ac|bm|exit|p[cdghiopqsw]|ts|vs|w[cos])\b
+      - name: support.constant.system.info.q-output
+        match: \.z\.([a-fhiklno-qstuwxzDKNPTWXZ]|ex|ey|pm|zd)\b
+      - name: support.function.http.q-output
+        match: \.h\.(br|c0|c1|cd|code|d|ed|edsn|fram|ha|hb|hc|he|hn|HOME|hp|hr|ht|hta|htac|htc|html|http|hu|hug|hy|iso8601|jx|logo|nbr|pre|sa|sb|sc|td|text|tx|ty|uh|val|xd|xmp|xs|xt)\b
+      - name: support.function.file.q-output
+        match: \b(0:|1:|2:)
+      - name: support.function.internal.q-output
+        match: \-([1-9]|1[0-689]|2[0-79]|3[01368]|120)!
+      - name: constant.language.null.q-output
+        match: \b0(N[ghijepmdznuvt]?|n)\b
+      - name: constant.language.boolean.q-output
+        match: \b[01]+b\b
+      - name: constant.language.infinity.q-output
+        match: -?0(W[hijepdnutv]?|wz?)\b
+      - name: constant.other.date
+        match: \b([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))\b
+      - name: constant.other.date.month
+        match: \b([12]\d{3}\.(0[1-9]|1[0-2])m)\b
+      - name: constant.other.date.time.q-output
+        match: \b([01]\d|2[0-3])(:([0-5]\d)(:([0-5]\d(\.\d{0,3})?))?)\b
+      - name: constant.other.date.timespan.q-output
+        match: \b\d+D(([01]\d|2[0-3])(:([0-5]\d)(:([0-5]\d(\.\d{0,9})?))?)?)?n?\b
+      - name: constant.other.timestamp.q-output
+        match: \b([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))(p|D|Dp|D(([01]\d|2[0-3])(:([0-5]\d)(:([0-5]\d(\.\d{0,9})?))?)?p?))\b
+      - name: constant.other.timestamp.datetime.q-output
+        match: \b([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))(z|T|Tz|T(([01]\d|2[0-3])(:([0-5]\d)(:([0-5]\d(\.\d{0,3})?))?)?z?))\b
+      - name: constant.numeric.byte
+        match: \b0x[0-9a-fA-F]+\b
+      - name: constant.numeric.guid.q-output
+        match: \b([\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})\b
+      - name: constant.numeric.decimal.q-output
+        match: |-
+          (?x)((?<=[^a-zA-Z0-9]|\s|^)-)?(?:
+            (?:\b[0-9]+(\.)[0-9]*e[+-]?[0-9]+[ef]?)|      # 1.1e+3
+            (?:\b[0-9]+(\.)e[+-]?[0-9]+[ef]?)|            # 1.e+3
+            (?:\B(\.)[0-9]+e[+-]?[0-9]+[ef]?)|            # .1e+3
+            (?:\b[0-9]+e[+-]?[0-9]+[ef]?)|                # 1e+3
+            (?:\b[0-9]+(\.)[0-9]*[ef]?)|                  # 1.1
+            (?:\b[0-9]+(\.)[ef]?)|                        # 1.
+            (?:\B(\.)[0-9]+[ef]?)|                        # .1
+            (?:\b[0-9]+[efhij]?(?!\.))                    # 1efhij
+          )
+      - name: support.type.q-output
+        match: '`(boolean|byte|short|int|long|real|float|char|symbol|timestamp|month|date|datetime|timespan|minute|second|time|year|mm|dd|hh|uu|ss)(?=\$)'
+      - name: support.attribute.q-output
+        match: "`[supg](?=#)"
+      # - name: support.cast.q-output
+      #   match: \"[b-jmnps-vxzB-JMNPS-VXZ]\"(?=\$)
+      - name: constant.other.symbol.q-output
+        match: '`(:[a-zA-Z\d_\.:/]*|[a-zA-Z\d_\.:]*)'
+        #<--
+      - name: constant.other.cmd.q-output
+        match: ^\\.+
+      - name: constant.other.namespace.q-output
+        match: ^[a-zA-Z]\)
+        # to capture `float$, `s# entity.name.type
+        #-->
+  keywords:
+    patterns:
+      - name: keyword.operator.q-output
+        match: (?<=\b|_)(abs|acos|all|and|any|asc|asin|asof|atan|attr|avg|avgs|bin|binr|ceiling|cols|cor|cos|count|cov|cross|csv|cut|deltas|desc|dev|differ|distinct|div|dsave|each|ema|enlist|eval|except|exec|exit|exp|fills|first|fkeys|flip|floor|get|getenv|group|gtime|hclose|hcount|hdel|hopen|hsym|iasc|idesc|in|inter|inv|key|keys|last|like|load|log|lower|lsq|ltime|ltrim|mavg|max|maxs|mcount|md5|mdev|med|meta|min|mins|mmax|mmin|mmu|mod|msum|neg|next|not|null|or|over|parse|peach|pj|prd|prds|prev|prior|rand|rank|ratios|raze|read0|read1|reciprocal|reval|reverse|rload|rotate|rsave|rtrim|save|scan|scov|sdev|set|setenv|show|signum|sin|sqrt|ss|ssr|string|sublist|sum|sums|sv|svar|system|tables|tan|til|trim|type|ungroup|union|upper|value|var|view|views|vs|wavg|within|wsum|xasc|xbar|xcol|xcols|xdesc|xexp|xgroup|xkey|xlog|xprev|xrank)\b
+      - name: keyword.control.q-output
+        match: \b(do|if|while)\b
+      - name: keyword.control.q-output
+        match: \$(?=\[)
+      - name: keyword.assign.q-output
+        match: "::?"
+      - name: keyword.iterator.q-output
+        match: (':?|\\:?|/:?)
+      - name: keyword.other.DML.q-output
+        match: \b(select|update|delete|exec|from|by|fby|where|aj|aj0|ajf|ajf0|ej|ij|ijf|lj|ljf|uj|ujf|wj|wj1|upsert|insert)\b
+      - name: keyword.operator.comparison.q-output
+        match: (=|<=?|>=?|~|<>)
+      - include: "#variables"
+      - name: keyword.operator.q-output
+        match: '[\@\.\$!?+\-\*%|&#^,_]'
+  variables:
+    patterns:
+      # gloabl function/variables
+      - name: entity.name.function.q-output
+        match: (?<![a-zA-Z\d])\.[a-zA-Z][a-zA-Z\d_]*(\.[a-zA-Z\d_]+)*
+      - name: variable.other.q
+        match: '[a-zA-Z][a-zA-Z\d_]*'
+  function:
+    patterns:
+      - begin: "{"
+        beginCaptures:
+          0: { name: punctuation.definition.function.body.begin.q-output }
+        end: "}"
+        endCaptures:
+          0: { name: punctuation.definition.function.body.end.q-output }
+        patterns:
+          - include: "#function_param"
+          - include: "#comments"
+          - include: "#outputs"
+          - include: "#strings"
+          - include: "#constants"
+          - include: "#keywords"
+          - include: "#invalids"
+          - include: "#function"
+          - name: entity.name.variable.parameter.q-output
+            match: \b(x|y|z)\b
+  function_param:
+    patterns:
+      - name: meta.parameters.q-output
+        begin: (?<={)\[
+        beginCaptures:
+          0: { name: punctuation.definition.parameters.begin.q-output }
+        end: "]"
+        endCaptures:
+          0: { name: punctuation.definition.parameters.end.q-output }
+        patterns:
+          - name: variable.parameter.q-output
+            match: \b[a-zA-Z][a-zA-Z\d_]*
+          - name: punctuation.separator.parameter.q-output
+            match: ";"

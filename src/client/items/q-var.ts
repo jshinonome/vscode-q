@@ -1,0 +1,32 @@
+import path from 'path';
+import { TreeItem, TreeItemCollapsibleState } from 'vscode';
+import QDictTreeItem from './q-dict';
+import { setCommand } from './q-utils';
+
+export default class QVarTreeItem extends TreeItem {
+    contextValue = 'qvar';
+    _parent: TreeItem;
+    _type: string;
+
+    constructor(name: string, parent: QDictTreeItem, type: string) {
+        super(name, TreeItemCollapsibleState.None);
+        this._parent = parent;
+        this._type = type;
+        parent.appendChild(this);
+        setCommand(this);
+        this.iconPath = {
+            light: path.join(__filename, '../../assets/svg/item/var.svg'),
+            dark: path.join(__filename, '../../assets/svg/item/var.svg')
+        };
+        this.tooltip = this._type;
+    }
+
+    getParent(): TreeItem {
+        return this._parent;
+    }
+
+    getTreeItem(e: QVarTreeItem): TreeItem {
+        return e;
+    }
+
+}

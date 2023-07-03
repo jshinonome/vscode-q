@@ -1,0 +1,8 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "colorize.languages": [
+    "json",
+    "typescript"
+  ],
+  "npm.packageManager": "npm"
+}
