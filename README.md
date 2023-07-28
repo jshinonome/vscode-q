@@ -248,4 +248,4 @@ If you'd like to contribute to this extension, please read the [contributing gui
 
 ## License
 
-[MIT](https://github.com/jshinonome/vscode-q/blob/master/LICENSE)
+[GPL-3.0 license](https://github.com/jshinonome/vscode-q/blob/master/LICENSE)
