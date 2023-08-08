@@ -5,7 +5,7 @@
 [![](https://img.shields.io/visual-studio-marketplace/d/jshinonome.vscode-q?labelColor=4a148c&color=9c27b0&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 [![Join the chat at https://gitter.im/vscode-q/community](https://badges.gitter.im/vscode-q/community.svg)](https://gitter.im/vscode-q/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This extension provides [kdb+\q language](https://code.kx.com/q/) support:
+This extension provides q language support:
 
 - q syntaxes
 - q notebook(\*.qnb)
