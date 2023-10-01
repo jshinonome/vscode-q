@@ -1,5 +1,11 @@
 # change log
 
+## 3.1.7
+
+### fixed
+
+- lang server: support vscode 1.82.0+
+
 ## 3.1.4
 
 ### added

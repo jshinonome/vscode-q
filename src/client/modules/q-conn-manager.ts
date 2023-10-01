@@ -28,7 +28,7 @@ class QConnManager {
     busyConn: QConn | undefined = undefined;
     queryWrapper = '';
     isLimited = true;
-    pollingId: NodeJS.Timer | undefined = undefined;
+    pollingId: NodeJS.Timeout | undefined = undefined;
     consoleSize: string;
     public static autoRefreshExplorer = workspace.getConfiguration().get('q-client.expl.autoRefresh') as boolean;
     public static queryMode = 'Console';
