@@ -1,5 +1,11 @@
 # change log
 
+## 3.2.1
+
+### fixed
+
+- lang server: Request textDocument/documentSymbol failed
+
 ## 3.1.7
 
 ### fixed

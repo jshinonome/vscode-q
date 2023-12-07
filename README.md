@@ -1,5 +1,7 @@
 # vscode-q
 
+This plugin is put into **maintenance** mode, which means I will not do any active development for it. All new features will be implemented for [vscode-k-pro](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-k-pro).
+
 [![](https://img.shields.io/visual-studio-marketplace/v/jshinonome.vscode-q?labelColor=4a148c&color=9c27b0&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 [![](https://img.shields.io/visual-studio-marketplace/i/jshinonome.vscode-q?labelColor=4a148c&color=9c27b0&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 [![](https://img.shields.io/visual-studio-marketplace/d/jshinonome.vscode-q?labelColor=4a148c&color=9c27b0&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)

@@ -180,7 +180,7 @@ export default class Analyzer {
      */
     public getSymbolsByUri(uri: string): SymbolInformation[] {
         const nameToSymInfos = this.uriToDefinition.get(uri)?.values();
-        return nameToSymInfos ? Array.from(nameToSymInfos).flat() : [];
+        return nameToSymInfos ? Array.from(nameToSymInfos).flat().filter(symInfo => symInfo.name !== '') : [];
     }
 
     /**
