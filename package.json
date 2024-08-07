@@ -761,7 +761,7 @@
         "@types/vscode-notebook-renderer": "^1.72.1",
         "@types/webpack-env": "^1.18.2",
         "@typescript-eslint/parser": "^6.7.3",
-        "ag-grid-community": "^29.0.0",
+        "ag-grid-community": "32.0.2",
         "babel-jest": "^29.7.0",
         "chart.js": "^4.4.0",
         "css-loader": "^6.8.1",
