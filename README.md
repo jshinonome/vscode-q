@@ -37,9 +37,7 @@ Powered by [tree-sitter](https://tree-sitter.github.io/tree-sitter/). Works offl
 - Completion (local identifiers, kdb+ process symbols, column names)
 - Completion resolve, signature help, semantic highlights, call hierarchy
 
-See the [changelog](https://github.com/jshinonome/vscode-q-pro/blob/master/CHANGELOG.md).
-
-For Neovim setup using the standalone language server, see [neovim.md](neovim.md).
+See the [changelog](https://github.com/jshinonome/vscode-q/blob/main/CHANGELOG.md).
 
 ## Configuration
 
@@ -70,6 +68,18 @@ Process lists can be imported and exported via `kest.json` ([schema](schemas/kes
 ## Language server
 
 The offline language server analyzes q and k files matched by `q-lang-server.sourceFiles.includeGlob`. To improve parsing accuracy, add `;` to mark the end of a statement when needed.
+
+### Standalone package (PyPI)
+
+The same server is published as [`q-lang-server`](https://pypi.org/project/q-lang-server/) and installs the `qls` binary:
+
+```bash
+pip install q-lang-server
+# or
+uv pip install q-lang-server
+```
+
+Use it with any LSP client (for example [chili-neovim](https://github.com/jshinonome/chili-neovim)).
 
 ### Linter and formatter directives
 
