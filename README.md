@@ -71,6 +71,14 @@ Process lists can be imported and exported via `kest.json` ([schema](schemas/kes
 
 The offline language server analyzes q and k files matched by `q-lang-server.sourceFiles.includeGlob`. To improve parsing accuracy, add `;` to mark the end of a statement when needed.
 
+The extension starts the standalone `qls` executable. If VS Code reports `spawn qls ENOENT`, install the language server and reload VS Code:
+
+```sh
+npm install --global @jo.shinonome/qls
+```
+
+When using the language server over stdio, stdout must contain only Language Server Protocol frames that start with `Content-Length`. If startup messages such as `Loaded build-in functions` appear on stdout, clients may fail with an error like `Header must provide a Content-Length property`. Those diagnostics should be written to stderr or to the LSP connection console instead.
+
 ### Linter and formatter directives
 
 - `// q-lang-server-ignore-linter` — ignore linter for the following block
