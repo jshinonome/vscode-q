@@ -1,3 +1,21 @@
+## 5.0.2
+
+### Features
+
+- grid: add pin button to keep current grid as a snapshot; the next query opens a new grid for comparison
+- process explorer: double-click a table/list/dict to query its full value, plus an inline query button next to preview
+- q lang server: wrap long symbol lists over 100 chars with `,` continuation lines (skipped inside q-sql phases, where `,` would change semantics)
+- add `q-processes.cfg.disableQueryWrapper` configuration, `Toggle Unwrapped Query` command and process view button to send queries as-is without the query wrapper
+- agent integration: add `q-pro_runQuery` language model tool (`#qQuery`) so copilot agent mode can query q processes, and `q-processes.executeQuery` command for programmatic access by any extension/agent
+
+### Bug Fixes
+
+- process config: enable TLS checkbox was not clickable
+- windows: tree view icons (process explorer etc.) did not show up — icon paths were built with `Uri.parse` instead of `Uri.file`
+- grid: show `true`/`false` text for boolean columns instead of a checkbox
+- grid: double-click a nested/long value to open a popup detail view (dict as key/value table, list as indexed table, string as text) with a close button, instead of `[object Object]` in a text editor
+- q lang server: formatting a comma-split symbol list was not idempotent — output kept changing on repeated formats
+
 ## 5.0.0
 
 ### Features
