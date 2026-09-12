@@ -69,17 +69,17 @@ Process lists can be imported and exported via `kest.json` ([schema](schemas/kes
 
 The offline language server analyzes q and k files matched by `q-lang-server.sourceFiles.includeGlob`. To improve parsing accuracy, add `;` to mark the end of a statement when needed.
 
-### Standalone package (PyPI)
+### Installation
 
-The same server is published as [`q-lang-server`](https://pypi.org/project/q-lang-server/) and installs the `qls` binary:
+The extension starts the `qls` binary from your `PATH` — without it, the linter, formatter, and navigation features are unavailable. Install it from [PyPI](https://pypi.org/project/q-lang-server/):
 
 ```bash
 pip install q-lang-server
 # or
-uv pip install q-lang-server
+uv tool install q-lang-server
 ```
 
-Use it with any LSP client (for example [chili-neovim](https://github.com/jshinonome/chili-neovim)).
+Then reload the window (`Developer: Reload Window`). The same binary works with any LSP client (for example [chili-neovim](https://github.com/jshinonome/chili-neovim)).
 
 ### Linter and formatter directives
 

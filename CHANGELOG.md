@@ -1,3 +1,20 @@
+## 5.0.3
+
+### Features
+
+- grid: click a cell to copy its displayed text (with a toast confirmation)
+- grid: detail popup can drill into nested tables (column-oriented `{col: values}` objects render as real tables), in addition to dicts and lists
+- grid: detail popup pages large values (2000 rows per page) and truncates cell previews with a character budget, so huge nested values never freeze the view; long strings become drillable to see the full text
+- grid: `Open in Grid` button in the detail popup opens the drilled table/list in its own independent grid panel with sorting, filtering, and CSV export
+- unwrapped query: raw list results now fit grid/visualization mode — a list of dicts becomes a table, other lists a single `value` column; dictionary values stay raw so nested lists/tables are drillable
+- process view: add a copy button on each process that copies its `tags,label` for use as the agent query label
+- agent integration: query results are returned as a JSON object — tables as `{columns, rowCount, data}` (data is an array of row arrays, no row cap), text as `{output}`, failures as `{error}`
+- q lang server: clear error message with install instructions when the `qls` binary is not found; README documents the required install
+
+### Bug Fixes
+
+- q lang server: an inline comment is no longer moved to its own line — neither after a top-level `;` nor inside a multi-line function body
+
 ## 5.0.2
 
 ### Features
@@ -15,6 +32,9 @@
 - grid: show `true`/`false` text for boolean columns instead of a checkbox
 - grid: double-click a nested/long value to open a popup detail view (dict as key/value table, list as indexed table, string as text) with a close button, instead of `[object Object]` in a text editor
 - q lang server: formatting a comma-split symbol list was not idempotent — output kept changing on repeated formats
+- q lang server: only wrap a symbol list when it is the rightmost term of its expression — wrapping before a trailing operator (e.g. `` `a`b`c!til 3 ``, `xasc`, `except`) inserted a `,` that changed program semantics
+- q lang server: formatting edits now use UTF-16 character offsets as LSP requires — edits on lines containing non-ASCII text landed at shifted positions
+- q lang server: an editor tab size of 0 produced column-0 continuation lines that split statements — fall back to 2
 
 ## 5.0.0
 
