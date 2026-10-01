@@ -1,3 +1,14 @@
+## 5.0.4
+
+### Features
+
+- agent integration: add a `#qGrid` Copilot tool that displays the query result in the selected mode while returning it to the agent; programmatic queries can request the same behavior with a standalone `#qGrid` line
+
+### Bug Fixes
+
+- q lang server: JSON documents are no longer sent to or analyzed by qls
+- grid: reduce memory use and repeated layout work when displaying large unlimited query results
+
 ## 5.0.3
 
 ### Features

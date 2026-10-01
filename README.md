@@ -170,6 +170,8 @@ Powered by [ag-grid-community](https://www.ag-grid.com/) and [plotly](https://pl
 
 Writes results to an output channel. Set **Console Size for Output** (`q-output.cfg.consoleSize`) to control table formatting. For non-table output, use `system "c rows columns"` in q.
 
+Use the Copilot `#qGrid` tool to run an agent query, show its result in the selected query mode, and return the result to the agent. The `#qQuery` tool returns results to the agent without opening a view. For the `q-processes.executeQuery` command, add `#qGrid` on a line by itself in the query to display the result; the marker is removed before the query is sent to q.
+
 ## Commands
 
 All commands are under the **q-pro** category in the Command Palette (<kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd>).
