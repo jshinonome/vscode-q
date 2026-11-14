@@ -1,3 +1,19 @@
+## 5.0.5
+
+### Features
+
+- grid: add a Dense rows toggle with 22px rows, smaller text, and reduced padding
+
+### Bug Fixes
+
+- show both the error and query text in failed Query History entry tooltips
+- show the active query in the status bar while it runs, with the complete query in its tooltip
+- allow selecting and copying text in Visualization cells
+- export date and datetime columns from Grid as formatted dates instead of millisecond numbers, preserve timestamp precision, and format bytes as hexadecimal
+- q lang server: exclude comments from unreachable-code diagnostics and recognize inline comments preceded by tabs in q and k
+- q lang server: resolve globals across the full file and distinguish locals used before definition from unknown names
+- q lang server: infer dictionary lengths through parentheses and symbol casts, skipping expressions whose length is unknown
+
 ## 5.0.4
 
 ### Features
